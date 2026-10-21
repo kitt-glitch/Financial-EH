@@ -1,0 +1,2453 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ระบบการเงินภาควิชา | Department Financial Hub</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Prompt & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- FontAwesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Prompt', 'Plus Jakarta Sans', 'sans-serif'],
+            mono: ['Plus Jakarta Sans', 'monospace']
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              200: '#c7d2fe',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+              800: '#3730a3',
+              900: '#312e81',
+              950: '#1e1b4b',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Prompt', sans-serif;
+      background-color: #0b0f19;
+      color: #0f172a;
+    }
+    
+    .glass-dark {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 min-h-screen flex flex-col antialiased selection:bg-brand-500 selection:text-white relative overflow-x-hidden text-slate-100">
+
+  <!-- Ambient Glow Background -->
+  <div class="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
+    <div class="absolute -top-40 -left-40 w-96 h-96 bg-brand-600/20 rounded-full blur-[140px]"></div>
+    <div class="absolute top-1/3 -right-40 w-96 h-96 bg-emerald-500/15 rounded-full blur-[150px]"></div>
+    <div class="absolute -bottom-40 left-1/3 w-[34rem] h-[34rem] bg-indigo-600/15 rounded-full blur-[160px]"></div>
+  </div>
+
+  <!-- Header Navigation -->
+  <header class="sticky top-0 z-40 glass-dark border-b border-slate-800/80 shadow-2xl transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-col md:flex-row items-center justify-between gap-4">
+      
+      <!-- Brand & Hub Name -->
+      <div class="flex items-center justify-between w-full md:w-auto">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-brand-600 via-indigo-600 to-indigo-400 p-[1px] shadow-lg shadow-brand-500/20 shrink-0">
+            <div class="w-full h-full bg-slate-950 rounded-[15px] flex items-center justify-center">
+              <i class="fa-solid fa-scale-balanced text-indigo-400 text-lg"></i>
+            </div>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 class="font-extrabold text-white text-base sm:text-lg tracking-tight">ระบบการเงินและเบิกจ่ายภาควิชา</h1>
+              <span class="px-2 py-0.5 text-[10px] font-bold rounded-md bg-emerald-500/15 text-emerald-400 border border-emerald-500/25 uppercase tracking-wider hidden sm:inline-block">
+                ระบบส่วนกลาง
+              </span>
+            </div>
+            <p class="text-xs text-slate-400 font-normal">สมุดบัญชีรายรับ-จ่าย • ตรวจสอบสถานะเบิกเงิน • ประกาศการเงิน</p>
+          </div>
+        </div>
+
+        <!-- Mobile Treasurer Button -->
+        <button onclick="requestTreasurerAccess()" class="md:hidden px-3 py-1.5 rounded-xl bg-slate-800 text-xs font-semibold text-amber-300 border border-slate-700 flex items-center gap-1.5">
+          <i id="mobile-treasurer-lock-icon" class="fa-solid fa-lock text-xs"></i>
+          <span id="mobile-treasurer-label">เหรัญญิก</span>
+        </button>
+      </div>
+
+      <!-- Navigation Tabs (Cleaned: Technical connection text removed) -->
+      <nav class="flex items-center gap-1.5 bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800 w-full md:w-auto overflow-x-auto custom-scrollbar">
+        <button id="nav-btn-ledger" onclick="switchMainTab('ledger')" 
+                class="flex-1 md:flex-none px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-300 flex items-center justify-center gap-2 bg-gradient-to-r from-brand-600 to-indigo-600 text-white shadow-md shadow-brand-500/20 whitespace-nowrap">
+          <i class="fa-solid fa-book-journal-whills text-xs"></i>
+          <span>สมุดบัญชีสาขา</span>
+        </button>
+
+        <button id="nav-btn-reimburse" onclick="switchMainTab('reimburse')" 
+                class="flex-1 md:flex-none px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-300 flex items-center justify-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800/60 whitespace-nowrap">
+          <i class="fa-solid fa-receipt text-xs"></i>
+          <span>ยื่นขอเบิกเงิน</span>
+          <span id="nav-pending-badge" class="bg-amber-500 text-slate-950 text-[10px] font-bold px-1.5 py-0.2 rounded-full hidden">0</span>
+        </button>
+
+        <button id="nav-btn-announcements" onclick="switchMainTab('announcements')" 
+                class="flex-1 md:flex-none px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-300 flex items-center justify-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800/60 whitespace-nowrap">
+          <i class="fa-solid fa-bullhorn text-xs"></i>
+          <span>ข่าวสารการเงิน</span>
+        </button>
+
+        <button id="nav-btn-treasurer" onclick="requestTreasurerAccess()" 
+                class="hidden md:flex flex-1 md:flex-none px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-300 items-center justify-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800/60 whitespace-nowrap">
+          <i id="nav-treasurer-lock-icon" class="fa-solid fa-lock text-amber-400 text-xs"></i>
+          <span>แผงควบคุมเหรัญญิก</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Financial Ticker Subbar -->
+  <div class="border-b border-slate-800/70 bg-slate-900/40 text-slate-300 py-3 px-4">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs">
+      <div class="flex items-center gap-2.5">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="text-slate-400">สถานะการเงินสาขา:</span>
+        <span class="text-white font-semibold flex items-center gap-1.5">
+          <span>ยอดคงเหลือสุทธิ</span>
+          <span id="ticker-net-fund" class="text-emerald-400 font-mono font-extrabold text-sm ml-1">฿0.00</span>
+        </span>
+      </div>
+
+      <div class="flex items-center gap-4 text-xs font-mono ml-auto">
+        <div class="flex items-center gap-1.5">
+          <span class="text-slate-400">ยอดเงินเข้ารวม:</span>
+          <span id="ticker-income-sum" class="text-emerald-400 font-bold">฿0.00</span>
+        </div>
+        <div class="h-3 w-[1px] bg-slate-800"></div>
+        <div class="flex items-center gap-1.5">
+          <span class="text-slate-400">ยอดจ่ายออกรวม:</span>
+          <span id="ticker-expense-sum" class="text-rose-400 font-bold">฿0.00</span>
+        </div>
+        <div class="h-3 w-[1px] bg-slate-800 hidden sm:block"></div>
+        <div class="hidden sm:flex items-center gap-1.5">
+          <span class="text-slate-400">รอโอนคืน:</span>
+          <span id="ticker-pending-reimburse" class="text-amber-400 font-bold">฿0.00</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-8">
+
+    <!-- ================================================================= -->
+    <!-- TAB 1: DEPARTMENT FINANCIAL LEDGER (สมุดบัญชีสาขา) -->
+    <!-- ================================================================= -->
+    <section id="tab-ledger" class="space-y-6">
+
+      <!-- Hero Summary Banner -->
+      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950/70 to-slate-900 border border-slate-800 p-6 sm:p-8 shadow-2xl">
+        <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div class="space-y-2 max-w-2xl">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-brand-500/10 text-indigo-400 border border-brand-500/20">
+              <i class="fa-solid fa-chart-pie text-[10px]"></i> บัญชีการเงินส่วนกลางสาขา
+            </span>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+              บัญชีรายรับ-รายจ่าย
+            </h2>
+            <p class="text-slate-400 text-xs sm:text-sm leading-relaxed">
+              แสดงความเคลื่อนไหวทางการเงินทั้งหมดของภาควิชา ทั้งเงินเก็บประจำเดือน ค่ากิจกรรม สปอนเซอร์ และค่าใช้จ่ายส่วนกลาง สมาชิกทุกคนสามารถร่วมตรวจสอบความถูกต้องได้
+            </p>
+          </div>
+
+          <!-- Fund Metric Cards -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 w-full lg:w-auto">
+            <div class="bg-slate-900/90 border border-slate-800 p-4 rounded-2xl flex flex-col justify-center min-w-[150px]">
+              <span class="text-[11px] text-emerald-400 font-medium flex items-center gap-1">
+                <i class="fa-solid fa-arrow-down-left"></i> รายรับสะสม
+              </span>
+              <span id="ledger-stat-income" class="text-xl font-extrabold text-emerald-400 font-mono mt-1">฿0.00</span>
+              <span id="ledger-stat-income-count" class="text-[10px] text-slate-500 mt-0.5">0 รายการ</span>
+            </div>
+
+            <div class="bg-slate-900/90 border border-slate-800 p-4 rounded-2xl flex flex-col justify-center min-w-[150px]">
+              <span class="text-[11px] text-rose-400 font-medium flex items-center gap-1">
+                <i class="fa-solid fa-arrow-up-right"></i> รายจ่ายสะสม
+              </span>
+              <span id="ledger-stat-expense" class="text-xl font-extrabold text-rose-400 font-mono mt-1">฿0.00</span>
+              <span id="ledger-stat-expense-count" class="text-[10px] text-slate-500 mt-0.5">0 รายการ</span>
+            </div>
+
+            <div class="bg-slate-900/90 border border-brand-500/30 p-4 rounded-2xl flex flex-col justify-center min-w-[160px] bg-gradient-to-b from-brand-950/20 to-slate-900">
+              <span class="text-[11px] text-indigo-300 font-medium flex items-center gap-1">
+                <i class="fa-solid fa-vault"></i> ยอดคงเหลือสุทธิ
+              </span>
+              <span id="ledger-stat-balance" class="text-2xl font-black text-white font-mono mt-1">฿0.00</span>
+              <span class="text-[10px] text-emerald-400 font-medium mt-0.5">พร้อมจัดสรรกิจกรรม</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-5">
+        
+        <!-- Controls: Category, Type filter, Search & Add Button -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+          <div class="flex flex-wrap items-center gap-2">
+            <div class="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs">
+              <button onclick="filterTransactions('all')" id="btn-tx-all" class="px-3 py-1.5 rounded-lg font-medium text-white bg-slate-800 shadow">ทั้งหมด</button>
+              <button onclick="filterTransactions('income')" id="btn-tx-income" class="px-3 py-1.5 rounded-lg font-medium text-slate-400 hover:text-emerald-400 flex items-center gap-1">
+                <i class="fa-solid fa-plus text-[10px]"></i> รายรับ
+              </button>
+              <button onclick="filterTransactions('expense')" id="btn-tx-expense" class="px-3 py-1.5 rounded-lg font-medium text-slate-400 hover:text-rose-400 flex items-center gap-1">
+                <i class="fa-solid fa-minus text-[10px]"></i> รายจ่าย
+              </button>
+            </div>
+
+            <select id="tx-category-filter" onchange="renderTransactionsTable()" 
+                    class="px-3 py-2 text-xs bg-slate-950 border border-slate-800 rounded-xl text-slate-300 focus:outline-none focus:border-brand-500 cursor-pointer">
+              <option value="all">ทุกหมวดหมู่รายการ</option>
+              <option value="เงินประจำเดือน">เงินประจำเดือน</option>
+              <option value="เงินสนับสนุน / สปอนเซอร์">เงินสนับสนุน / สปอนเซอร์</option>
+              <option value="กิจกรรมและสันทนาการ">กิจกรรมและสันทนาการ</option>
+              <option value="วิชาการ / สัมมนา / โครงงาน">วิชาการ / สัมมนา / โครงงาน</option>
+              <option value="อุปกรณ์และพัสดุ">อุปกรณ์และพัสดุ</option>
+              <option value="สรุปเบิกจ่ายคืน">สรุปเบิกจ่ายคืน</option>
+              <option value="อื่นๆ">อื่นๆ</option>
+            </select>
+          </div>
+
+          <div class="flex items-center gap-2.5">
+            <div class="relative flex-1 md:w-64">
+              <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500 text-xs"></i>
+              <input type="text" id="tx-search-input" oninput="renderTransactionsTable()" placeholder="ค้นหารายการ, หมายเหตุ..." 
+                     class="w-full pl-8 pr-3 py-2 text-xs bg-slate-950 border border-slate-800 rounded-xl focus:outline-none focus:border-brand-500 text-white placeholder-slate-600">
+            </div>
+
+            <!-- Add Transaction Button -->
+            <button onclick="openAddTransactionModal()" 
+                    class="px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-emerald-500/20 flex items-center gap-2 shrink-0 transition">
+              <i class="fa-solid fa-plus-circle"></i>
+              <span>บันทึกรายรับ-รายจ่าย</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Transactions Ledger Table -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="bg-slate-950/70 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
+              <tr>
+                <th class="py-3.5 px-4 font-semibold">วันที่</th>
+                <th class="py-3.5 px-4 font-semibold">รายการ</th>
+                <th class="py-3.5 px-4 font-semibold">ประเภท</th>
+                <th class="py-3.5 px-4 font-semibold text-right">จำนวนเงิน (บาท)</th>
+                <th class="py-3.5 px-4 font-semibold text-right">ยอดคงเหลือ (บาท)</th>
+                <th class="py-3.5 px-4 font-semibold">หมายเหตุ</th>
+                <th class="py-3.5 px-4 font-semibold text-center">หลักฐาน</th>
+                <th id="th-tx-action" class="py-3.5 px-4 font-semibold text-right hidden">จัดการ</th>
+              </tr>
+            </thead>
+            <tbody id="ledger-table-body" class="divide-y divide-slate-800/60">
+              <!-- Dynamically populated via JavaScript -->
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- TAB 2: REIMBURSEMENT HUB (แบบฟอร์ม & ติดตามสถานะ) -->
+    <!-- ================================================================= -->
+    <section id="tab-reimburse" class="hidden space-y-6">
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- LEFT: Reimbursement Form -->
+        <div class="lg:col-span-5 bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-7 shadow-2xl space-y-5 text-white relative">
+          
+          <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+            <div>
+              <h3 class="font-bold text-white text-lg flex items-center gap-2">
+                <i class="fa-solid fa-pen-to-square text-brand-500"></i>
+                <span>แบบฟอร์มขอเบิกเงินสำรองจ่าย</span>
+              </h3>
+              <p class="text-xs text-slate-400 mt-0.5">แนบหลักฐานการสำรองจ่ายเพื่อให้เหรัญญิกตรวจสอบและโอนคืน</p>
+            </div>
+            <span class="w-9 h-9 rounded-xl bg-brand-500/10 text-brand-400 border border-brand-500/20 flex items-center justify-center text-sm font-bold">
+              <i class="fa-solid fa-file-invoice"></i>
+            </span>
+          </div>
+
+          <form id="reimbursement-form" onsubmit="handleMemberSubmit(event)" class="space-y-4">
+            
+            <!-- Applicant Full Name -->
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1.5">
+                ชื่อ-นามสกุล ผู้ขอเบิก <span class="text-rose-400">*</span>
+              </label>
+              <div class="relative">
+                <span class="absolute left-3.5 top-3 text-slate-500 text-xs"><i class="fa-solid fa-user"></i></span>
+                <input type="text" id="member-name" required placeholder="เช่น นายสิรวิชญ์ พงษ์ศิริ" 
+                       class="w-full pl-9 pr-3.5 py-2.5 text-xs bg-slate-950/70 border border-slate-800 rounded-xl focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 text-white placeholder-slate-600 transition">
+              </div>
+            </div>
+
+            <!-- Expense Title -->
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1.5">
+                รายการค่าใช้จ่าย (ระบุกิจกรรม/งาน) <span class="text-rose-400">*</span>
+              </label>
+              <div class="relative">
+                <span class="absolute left-3.5 top-3 text-slate-500 text-xs"><i class="fa-solid fa-tag"></i></span>
+                <input type="text" id="expense-title" required placeholder="เช่น ค่าอุปกรณ์จัดซุ้มงาน OPH, ค่าเช่าสนามคัดตัว" 
+                       class="w-full pl-9 pr-3.5 py-2.5 text-xs bg-slate-950/70 border border-slate-800 rounded-xl focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 text-white placeholder-slate-600 transition">
+              </div>
+            </div>
+
+            <!-- Amount & Expense Date -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              <div>
+                <label class="block text-xs font-medium text-slate-300 mb-1.5">
+                  จำนวนเงินที่ขอเบิก (บาท) <span class="text-rose-400">*</span>
+                </label>
+                <div class="relative">
+                  <span class="absolute left-3.5 top-2.5 text-xs font-bold text-brand-400">฿</span>
+                  <input type="number" id="expense-amount" step="0.01" min="1" required placeholder="0.00" 
+                         class="w-full pl-8 pr-3 py-2.5 text-xs font-mono font-bold bg-slate-950/70 border border-slate-800 rounded-xl focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 text-emerald-400 placeholder-slate-600 transition">
+                </div>
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-slate-300 mb-1.5">
+                  วันที่ชำระเงินตามใบเสร็จ <span class="text-rose-400">*</span>
+                </label>
+                <input type="date" id="expense-date" required 
+                       class="w-full px-3 py-2.5 text-xs bg-slate-950/70 border border-slate-800 rounded-xl focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 text-slate-300 transition">
+              </div>
+            </div>
+
+            <!-- Payout Information Box -->
+            <div class="p-4 bg-slate-950/80 rounded-2xl border border-slate-800 space-y-3.5">
+              <label class="block text-xs font-bold text-slate-200 flex items-center justify-between">
+                <span>ช่องทางรับเงินคืน (เข้าบัญชีของผู้ขอเบิก)</span>
+                <span class="text-[10px] text-brand-400 font-normal">โอนตรงตามข้อมูลนี้</span>
+              </label>
+
+              <!-- Option Switcher Cards -->
+              <div class="grid grid-cols-2 gap-2.5">
+                <label class="payout-card flex items-center gap-2.5 p-3 rounded-xl border border-slate-800 cursor-pointer bg-slate-900/60 hover:border-brand-500/60 transition group has-[:checked]:border-brand-500 has-[:checked]:bg-brand-500/10">
+                  <input type="radio" name="payout-type" value="promptpay" checked onchange="toggleAccountFields()" 
+                         class="accent-brand-500">
+                  <div>
+                    <span class="block text-xs font-semibold text-slate-200 group-hover:text-white">พร้อมเพย์</span>
+                    <span class="block text-[10px] text-slate-400">PromptPay</span>
+                  </div>
+                </label>
+                
+                <label class="payout-card flex items-center gap-2.5 p-3 rounded-xl border border-slate-800 cursor-pointer bg-slate-900/60 hover:border-brand-500/60 transition group has-[:checked]:border-brand-500 has-[:checked]:bg-brand-500/10">
+                  <input type="radio" name="payout-type" value="bank" onchange="toggleAccountFields()" 
+                         class="accent-brand-500">
+                  <div>
+                    <span class="block text-xs font-semibold text-slate-200 group-hover:text-white">บัญชีธนาคาร</span>
+                    <span class="block text-[10px] text-slate-400">Bank Transfer</span>
+                  </div>
+                </label>
+              </div>
+
+              <!-- Bank Selector -->
+              <div id="bank-select-wrapper" class="hidden space-y-1.5">
+                <label class="block text-[11px] font-medium text-slate-400">เลือกธนาคารปลายทาง</label>
+                <div class="relative">
+                  <select id="payout-bank" class="w-full px-3 py-2 text-xs bg-slate-900 border border-slate-700 rounded-xl focus:outline-none focus:border-brand-500 text-white appearance-none cursor-pointer">
+                    <option value="" disabled selected>-- เลือกธนาคาร --</option>
+                      <option value="กสิกรไทย (KBANK)">กสิกรไทย (KBANK)</option>
+                      <option value="ไทยพาณิชย์ (SCB)">ไทยพาณิชย์ (SCB)</option>
+                      <option value="กรุงไทย (KTB)">กรุงไทย (KTB)</option>
+                      <option value="กรุงเทพ (BBL)">กรุงเทพ (BBL)</option>
+                      <option value="กรุงศรีอยุธยา (BAY)">กรุงศรีอยุธยา (BAY)</option>
+                      <option value="ทหารไทยธนชาต (ttb)">ทหารไทยธนชาต (ttb)</option>
+                      <option value="ออมสิน (GSB)">ออมสิน (GSB)</option>
+                      <option value="เพื่อการเกษตรฯ (ธ.ก.ส.)">เพื่อการเกษตรและสหกรณ์การเกษตร (ธ.ก.ส.)</option>
+                      <option value="อาคารสงเคราะห์ (ธอส.)">อาคารสงเคราะห์ (ธอส.)</option>
+                      <option value="อิสลามแห่งประเทศไทย (iBank)">อิสลามแห่งประเทศไทย (iBank)</option>
+                      <option value="ยูโอบี (UOB)">ยูโอบี (UOB)</option>
+                      <option value="เกียรตินาคินภัทร (KKP / Dime)">เกียรตินาคินภัทร (KKP / Dime)</option>
+                      <option value="ซีไอเอ็มบี ไทย (CIMB)">ซีไอเอ็มบี ไทย (CIMB)</option>
+                      <option value="แลนด์ แอนด์ เฮ้าส์ (LH Bank)">แลนด์ แอนด์ เฮ้าส์ (LH Bank)</option>
+                      <option value="ทิสโก้ (TISCO)">ทิสโก้ (TISCO)</option>
+                      <option value="ไทยเครดิต (Thai Credit)">ไทยเครดิต (Thai Credit)</option>
+                  </select>
+                  <i class="fa-solid fa-chevron-down absolute right-3 top-3 text-[10px] text-slate-400 pointer-events-none"></i>
+                </div>
+              </div>
+
+              <!-- Account Number / PromptPay ID -->
+              <div>
+                <label id="account-number-label" class="block text-[11px] font-medium text-slate-400 mb-1">
+                  หมายเลขพร้อมเพย์ หรือ หมายเลขบัญชีธนาคาร
+                </label>
+                <input type="text" id="payout-account-number" required placeholder="เช่น 0812345678" 
+                       class="w-full px-3.5 py-2 text-xs font-mono bg-slate-900 border border-slate-700 rounded-xl focus:outline-none focus:border-brand-500 text-white placeholder-slate-600 transition">
+              </div>
+
+              <!-- Account Holder Name -->
+              <div>
+                <label class="block text-[11px] font-medium text-slate-400 mb-1">
+                  ชื่อบัญชีผู้รับเงิน
+                </label>
+                <input type="text" id="payout-account-name" required placeholder="ชื่อ-นามสกุลเจ้าของบัญชี" 
+                       class="w-full px-3.5 py-2 text-xs bg-slate-900 border border-slate-700 rounded-xl focus:outline-none focus:border-brand-500 text-white placeholder-slate-600 transition">
+              </div>
+            </div>
+
+            <!-- Receipt File Upload Box -->
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1.5">
+                แนบภาพถ่ายใบเสร็จ หรือ สลิปที่สำรองจ่าย <span class="text-rose-400">*</span>
+              </label>
+
+              <div class="border-2 border-dashed border-slate-700 hover:border-brand-500 rounded-2xl p-4 text-center cursor-pointer transition-all duration-300 bg-slate-950/60 relative group"
+                   onclick="document.getElementById('receipt-file-input').click()">
+                <input type="file" id="receipt-file-input" accept="image/*" class="hidden" onchange="previewReceiptImage(event)">
+
+                <div id="receipt-preview-placeholder" class="space-y-1.5 py-3">
+                  <div class="w-12 h-12 rounded-2xl bg-brand-500/10 text-brand-400 flex items-center justify-center mx-auto text-xl group-hover:scale-110 transition duration-300">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                  </div>
+                  <p class="text-xs font-semibold text-slate-200">แตะเพื่อถ่ายรูป หรือ เลือกรูปหลักฐาน</p>
+                  <p class="text-[11px] text-slate-500">รองรับไฟล์ JPG, PNG (ย่อขนาดอัตโนมัติ)</p>
+                </div>
+
+                <div id="receipt-preview-container" class="hidden relative inline-block">
+                  <img id="receipt-preview-img" src="" alt="Receipt Preview" class="max-h-40 rounded-xl border border-slate-700 shadow-xl mx-auto">
+                  <button type="button" onclick="event.stopPropagation(); removeReceiptImage()" 
+                          class="absolute -top-2.5 -right-2.5 w-7 h-7 rounded-full bg-rose-500 hover:bg-rose-600 text-white flex items-center justify-center text-xs shadow-lg transition">
+                    <i class="fa-solid fa-xmark"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Additional Notes -->
+            <div>
+              <label class="block text-xs font-medium text-slate-400 mb-1">หมายเหตุเพิ่มเติม (ถ้ามี)</label>
+              <textarea id="expense-notes" rows="2" placeholder="เช่น สำรองจ่ายด้วยเงินสด" 
+                        class="w-full px-3 py-2 text-xs bg-slate-950/70 border border-slate-800 rounded-xl focus:outline-none focus:border-brand-500 text-slate-300 placeholder-slate-600 transition"></textarea>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" id="btn-submit-request" 
+                    class="w-full py-3 px-4 bg-gradient-to-r from-brand-600 via-indigo-600 to-indigo-500 hover:from-brand-500 hover:to-indigo-400 text-white text-xs font-bold rounded-xl shadow-lg shadow-brand-500/25 transition-all duration-300 flex items-center justify-center gap-2 transform active:scale-[0.99]">
+              <i class="fa-solid fa-paper-plane"></i>
+              <span>ส่งคำขอเบิกเงิน</span>
+            </button>
+          </form>
+
+        </div>
+
+        <!-- RIGHT: Transparent Requests Ledger -->
+        <div class="lg:col-span-7 space-y-4">
+          
+          <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-5">
+            
+            <!-- Header & Filter Row -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
+              <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center text-sm font-bold">
+                  <i class="fa-solid fa-list-check"></i>
+                </div>
+                <div>
+                  <h3 class="font-bold text-white text-base">กระดานตรวจสอบสถานะคำขอเบิก</h3>
+                  <p class="text-xs text-slate-400">ติดตามสถานะและตรวจสอบสลิปการโอนเงินคืนจากเหรัญญิก</p>
+                </div>
+              </div>
+
+              <!-- Quick Status Filter Pills -->
+              <div class="flex items-center gap-1.5 bg-slate-950 p-1 rounded-xl border border-slate-800 self-start sm:self-auto text-xs">
+                <button onclick="setLedgerFilter('all')" id="btn-ledger-filter-all" class="px-2.5 py-1 rounded-lg font-medium text-white bg-slate-800 shadow">ทั้งหมด</button>
+                <button onclick="setLedgerFilter('pending')" id="btn-ledger-filter-pending" class="px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-white">รอตรวจ</button>
+                <button onclick="setLedgerFilter('paid')" id="btn-ledger-filter-paid" class="px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-white">โอนแล้ว</button>
+              </div>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="relative">
+              <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-500 text-xs"></i>
+              <input type="text" id="ledger-search-input" oninput="renderTransparentLedger()" 
+                     placeholder="ค้นหาชื่อผู้ขอเบิก, รายการ, หรือรหัสคำขอ..." 
+                     class="w-full pl-9 pr-4 py-2.5 text-xs bg-slate-950 border border-slate-800 rounded-2xl focus:outline-none focus:border-brand-500 text-white placeholder-slate-600 transition">
+            </div>
+
+            <div id="transparent-ledger-container" class="space-y-3.5 max-h-[720px] overflow-y-auto custom-scrollbar pr-1">
+              <!-- Dynamically rendered via JavaScript -->
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- TAB 3: FINANCIAL NOTICES (ข่าวสารการเงิน) -->
+    <!-- ================================================================= -->
+    <section id="tab-announcements" class="hidden space-y-6">
+
+      <div class="bg-gradient-to-r from-slate-900 via-indigo-950/60 to-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-7 shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="space-y-1.5">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-brand-500/10 text-indigo-400 border border-brand-500/20">
+            <i class="fa-solid fa-bullhorn text-[10px]"></i> กระดานข่าวสารและแถลงการณ์การเงิน
+          </span>
+          <h2 class="text-xl sm:text-2xl font-extrabold text-white">ประกาศการเงินประจำภาควิชา</h2>
+          <p class="text-xs text-slate-400">แจ้งกำหนดการเก็บเงินประจำเดือน, สรุปงบปิดกิจกรรม, หรือแนวปฏิบัติทางการเงิน</p>
+        </div>
+
+        <button onclick="openPostAnnouncementModal()" 
+                class="px-4 py-2.5 bg-brand-600 hover:bg-brand-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-brand-500/25 flex items-center gap-2 self-start md:self-auto transition">
+          <i class="fa-solid fa-pen-nib"></i>
+          <span>สร้างประกาศใหม่</span>
+        </button>
+      </div>
+
+      <div id="announcements-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <!-- Dynamically rendered via JavaScript -->
+      </div>
+
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- TAB 4: TREASURER WORKBENCH (แผงควบคุมเหรัญญิก) -->
+    <!-- ================================================================= -->
+    <section id="tab-treasurer" class="hidden space-y-6">
+
+      <!-- Treasurer Action Banner -->
+      <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div class="flex items-center gap-3.5">
+          <div class="w-12 h-12 rounded-2xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 flex items-center justify-center text-xl shrink-0">
+            <i class="fa-solid fa-vault"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 class="text-lg font-bold text-white">โต๊ะทำงานเหรัญญิกภาควิชา (Treasurer Workbench)</h2>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
+                <i class="fa-solid fa-shield-check"></i> โหมดเหรัญญิก
+              </span>
+            </div>
+            <p class="text-xs text-slate-400">ตรวจเอกสารคำขอเบิก โอนเงินคืน แนบสลิป และสรุปรวมยอดตัดจ่ายเข้าบัญชีหลัก</p>
+          </div>
+        </div>
+
+        <!-- Quick actions buttons -->
+        <div class="flex flex-wrap items-center gap-2 self-end md:self-auto">
+          <button onclick="openBatchSettleModal()" class="px-3.5 py-2 bg-gradient-to-r from-indigo-600 to-brand-600 hover:from-indigo-500 hover:to-brand-500 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-lg shadow-indigo-600/20 transition">
+            <i class="fa-solid fa-layer-group"></i>
+            <span>📦 สรุปยอดเบิกตัดจ่ายรวม (1 แถว)</span>
+          </button>
+
+          <button onclick="fetchDataFromGoogleSheet()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition" title="ดึงข้อมูลล่าสุดจากระบบฐานข้อมูล">
+            <i id="btn-sync-icon" class="fa-solid fa-arrows-rotate"></i>
+            <span>ซิงค์ข้อมูล</span>
+          </button>
+
+          <button onclick="openSheetConfigModal()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition" title="ตั้งค่าการเชื่อมต่อฐานข้อมูลชีต">
+            <i class="fa-solid fa-gear"></i>
+            <span>ตั้งค่าระบบฐานข้อมูล</span>
+          </button>
+
+          <button onclick="exportTransactionsCSV()" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow transition">
+            <i class="fa-solid fa-file-excel"></i>
+            <span>ส่งออก CSV บัญชี</span>
+          </button>
+          
+          <button onclick="promptChangePin()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition">
+            <i class="fa-solid fa-key"></i>
+            <span>เปลี่ยนรหัสผ่าน</span>
+          </button>
+
+          <button onclick="lockTreasurerSession()" class="px-3 py-2 bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition">
+            <i class="fa-solid fa-lock"></i>
+            <span>ล็อกหน้าจอ</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Metrics Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-slate-900/90 border border-slate-800 p-5 rounded-2xl shadow-xl flex items-center gap-3.5">
+          <div class="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center text-xl shrink-0">
+            <i class="fa-solid fa-hourglass-half"></i>
+          </div>
+          <div>
+            <p class="text-xs text-slate-400 font-medium">คำขอรอตรวจ / รอโอน</p>
+            <h4 id="stat-pending-count" class="text-xl font-extrabold text-white">0 รายการ</h4>
+            <p id="stat-pending-sum" class="text-xs font-mono font-bold text-amber-400">฿0.00</p>
+          </div>
+        </div>
+
+        <div class="bg-slate-900/90 border border-slate-800 p-5 rounded-2xl shadow-xl flex items-center gap-3.5">
+          <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center text-xl shrink-0">
+            <i class="fa-solid fa-circle-check"></i>
+          </div>
+          <div>
+            <p class="text-xs text-slate-400 font-medium">โอนเงินคืนสำเร็จแล้ว</p>
+            <h4 id="stat-paid-count" class="text-xl font-extrabold text-white">0 รายการ</h4>
+            <p id="stat-paid-sum" class="text-xs font-mono font-bold text-emerald-400">฿0.00</p>
+          </div>
+        </div>
+
+        <div class="bg-slate-900/90 border border-slate-800 p-5 rounded-2xl shadow-xl flex items-center gap-3.5">
+          <div class="w-12 h-12 rounded-2xl bg-brand-500/10 text-brand-400 border border-brand-500/20 flex items-center justify-center text-xl shrink-0">
+            <i class="fa-solid fa-hand-holding-dollar"></i>
+          </div>
+          <div>
+            <p class="text-xs text-slate-400 font-medium">รายรับสะสมทั้งหมด</p>
+            <h4 id="stat-treasurer-income" class="text-xl font-extrabold text-emerald-400 font-mono">฿0.00</h4>
+            <p id="stat-treasurer-income-count" class="text-xs text-slate-500">0 รายการ</p>
+          </div>
+        </div>
+
+        <div class="bg-slate-900/90 border border-slate-800 p-5 rounded-2xl shadow-xl flex items-center gap-3.5">
+          <div class="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-400 border border-rose-500/20 flex items-center justify-center text-xl shrink-0">
+            <i class="fa-solid fa-money-bill-transfer"></i>
+          </div>
+          <div>
+            <p class="text-xs text-slate-400 font-medium">รายจ่ายสะสมทั้งหมด</p>
+            <h4 id="stat-treasurer-expense" class="text-xl font-extrabold text-rose-400 font-mono">฿0.00</h4>
+            <p id="stat-treasurer-expense-count" class="text-xs text-slate-500">0 รายการ</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Treasurer Reimbursement Verification Table -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden space-y-4">
+        
+        <div class="p-4 sm:p-5 border-b border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div class="flex items-center gap-2">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-list-check text-brand-400"></i>
+              <span>คิวตรวจสอบและโอนเงินคืนสมาชิก</span>
+            </h3>
+            <div class="flex items-center gap-1 ml-3">
+              <button onclick="setTreasurerFilter('all')" id="filter-btn-all" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-brand-600 text-white shadow">ทั้งหมด</button>
+              <button onclick="setTreasurerFilter('pending')" id="filter-btn-pending" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-400 hover:text-white">รอตรวจ</button>
+              <button onclick="setTreasurerFilter('paid')" id="filter-btn-paid" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-400 hover:text-white">โอนแล้ว</button>
+            </div>
+          </div>
+
+          <div class="relative w-full sm:w-64">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500 text-xs"></i>
+            <input type="text" id="treasurer-search-input" oninput="renderTreasurerTable()" placeholder="ค้นหารายการเหรัญญิก..." 
+                   class="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-950 border border-slate-800 rounded-xl focus:outline-none focus:border-brand-500 text-white placeholder-slate-600">
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="bg-slate-950/60 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
+              <tr>
+                <th class="py-3.5 px-4 font-semibold">รหัส / วันที่ยื่น</th>
+                <th class="py-3.5 px-4 font-semibold">ผู้ขอเบิก</th>
+                <th class="py-3.5 px-4 font-semibold">รายการค่าใช้จ่าย</th>
+                <th class="py-3.5 px-4 font-semibold text-right">ยอดเงิน</th>
+                <th class="py-3.5 px-4 font-semibold">ช่องทางรับเงิน</th>
+                <th class="py-3.5 px-4 font-semibold text-center">หลักฐาน</th>
+                <th class="py-3.5 px-4 font-semibold text-center">สถานะ</th>
+                <th class="py-3.5 px-4 font-semibold text-right">การจัดการ</th>
+              </tr>
+            </thead>
+            <tbody id="treasurer-table-body" class="divide-y divide-slate-800/60">
+              <!-- Dynamically populated via JavaScript -->
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ================================================================= -->
+  <!-- MODALS & DIALOGS -->
+  <!-- ================================================================= -->
+
+  <!-- MODAL: Treasurer Process & Transfer Slip Attachment Modal -->
+  <div id="treasurer-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-xl w-full p-6 text-white shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto custom-scrollbar">
+      
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div>
+          <span id="modal-req-id" class="px-2 py-0.5 rounded-md text-[11px] font-mono font-bold bg-brand-500/20 text-indigo-400 border border-brand-500/30">REQ-XXXX</span>
+          <h3 id="modal-req-title" class="font-bold text-white text-base mt-1.5">รายละเอียดคำขอเบิกเงิน</h3>
+        </div>
+        <button onclick="closeTreasurerModal()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <!-- Applicant and Account Info Card -->
+      <div class="bg-slate-950/80 p-4 rounded-2xl border border-slate-800 space-y-3">
+        <div class="flex items-center justify-between text-xs">
+          <span class="text-slate-400">ผู้ขอเบิก:</span>
+          <span id="modal-req-name" class="font-bold text-white text-sm">-</span>
+        </div>
+        <div class="flex items-center justify-between text-xs">
+          <span class="text-slate-400">ยอดที่ต้องโอน:</span>
+          <span id="modal-req-amount" class="text-lg font-extrabold text-emerald-400 font-mono">฿0.00</span>
+        </div>
+        <div class="flex items-center justify-between text-xs pt-2 border-t border-slate-800/80">
+          <span class="text-slate-400">ช่องทางโอน:</span>
+          <span id="modal-req-bank" class="font-semibold text-indigo-300">-</span>
+        </div>
+
+        <!-- Account details with 1-click copy -->
+        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
+          <div>
+            <span class="text-[10px] text-slate-500 block">เลขบัญชี / เบอร์พร้อมเพย์</span>
+            <span id="modal-req-account-num" class="text-sm font-mono font-bold text-white tracking-wider">000-0-00000-0</span>
+            <span id="modal-req-account-name" class="text-[11px] text-slate-400 block mt-0.5">ชื่อ: -</span>
+          </div>
+          <button onclick="copyModalAccount()" class="px-3 py-1.5 bg-brand-600 hover:bg-brand-500 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow transition">
+            <i class="fa-regular fa-copy"></i>
+            <span>คัดลอกเลข</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- View Member's Original Receipt -->
+      <div>
+        <button id="modal-btn-view-receipt" type="button" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-xl flex items-center justify-center gap-2 transition">
+          <i class="fa-solid fa-eye text-brand-400"></i>
+          <span>กดเพื่อดูรูปหลักฐานใบเสร็จ</span>
+        </button>
+      </div>
+
+      <!-- Transfer Slip Attachment Zone -->
+      <div class="bg-emerald-950/20 border border-emerald-500/30 p-4 rounded-2xl space-y-3">
+        <label class="block text-xs font-bold text-emerald-300 flex items-center gap-1.5">
+          <i class="fa-solid fa-file-invoice-dollar"></i>
+          <span>แนบสลิปการโอนเงินคืน (หลังเหรัญญิกโอนสำเร็จ)</span>
+        </label>
+        <p class="text-[11px] text-emerald-400/80">
+          เมื่อยืนยัน ระบบจะปรับสถานะเป็น "โอนแล้ว" เพื่อให้สมาชิกผู้ขอเบิกสามารถกดดูสลิปยืนยันได้ทันที
+        </p>
+
+        <div class="border-2 border-dashed border-emerald-500/40 hover:border-emerald-400 rounded-xl p-3 text-center cursor-pointer bg-slate-950/50 transition" 
+             onclick="document.getElementById('transfer-slip-input').click()">
+          <input type="file" id="transfer-slip-input" accept="image/*" class="hidden" onchange="previewTransferSlip(event)">
+          
+          <div id="transfer-slip-placeholder" class="py-2">
+            <i class="fa-solid fa-cloud-arrow-up text-emerald-400 text-xl mb-1"></i>
+            <p class="text-xs font-medium text-slate-300">แตะเพื่ออัปโหลดรูปสลิปจากแอปธนาคาร</p>
+          </div>
+
+          <div id="transfer-slip-preview-container" class="hidden relative inline-block">
+            <img id="transfer-slip-preview-img" src="" alt="Transfer Slip" class="max-h-36 rounded-lg border border-emerald-500/40 mx-auto">
+            <span class="text-[10px] text-emerald-400 font-semibold block mt-1">รูปสลิปพร้อมบันทึก</span>
+          </div>
+        </div>
+
+        <button onclick="confirmApproveAndPay()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-emerald-600/30 transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-circle-check"></i>
+          <span>ยืนยันการโอนเงินคืนเรียบร้อย</span>
+        </button>
+      </div>
+
+      <!-- Reject option -->
+      <div class="pt-2 border-t border-slate-800 flex items-center justify-between">
+        <button onclick="promptRejectCurrentRequest()" class="text-xs text-rose-400 hover:text-rose-300 font-medium flex items-center gap-1.5">
+          <i class="fa-solid fa-ban"></i> ส่งกลับแก้ไข / ไม่อนุมัติ
+        </button>
+        <button onclick="closeTreasurerModal()" class="px-3 py-1.5 text-xs text-slate-400 hover:text-white">
+          ปิดหน้าต่าง
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL: Add Income / Expense Transaction Modal -->
+  <div id="transaction-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-lg w-full p-6 text-white shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto custom-scrollbar">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-sm font-bold">
+            <i class="fa-solid fa-plus-minus"></i>
+          </div>
+          <h3 class="font-bold text-base text-white">บันทึกรายการบัญชีสาขา</h3>
+        </div>
+        <button onclick="closeAddTransactionModal()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <form id="tx-form" onsubmit="handleTransactionSubmit(event)" class="space-y-4 text-xs">
+        
+        <!-- Transaction Type Switcher -->
+        <div>
+          <label class="block font-medium text-slate-300 mb-1.5">ประเภทรายการ <span class="text-rose-400">*</span></label>
+          <div class="grid grid-cols-2 gap-2">
+            <label class="flex items-center justify-center gap-2 p-2.5 rounded-xl border border-slate-800 cursor-pointer bg-slate-950 hover:border-emerald-500 has-[:checked]:border-emerald-500 has-[:checked]:bg-emerald-500/10 transition">
+              <input type="radio" name="tx-type" value="income" checked class="accent-emerald-500">
+              <span class="font-bold text-emerald-400"><i class="fa-solid fa-circle-plus"></i> รายรับ (เงินเข้า)</span>
+            </label>
+            <label class="flex items-center justify-center gap-2 p-2.5 rounded-xl border border-slate-800 cursor-pointer bg-slate-950 hover:border-rose-500 has-[:checked]:border-rose-500 has-[:checked]:bg-rose-500/10 transition">
+              <input type="radio" name="tx-type" value="expense" class="accent-rose-500">
+              <span class="font-bold text-rose-400"><i class="fa-solid fa-circle-minus"></i> รายจ่าย (เงินออก)</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Category -->
+        <div>
+          <label class="block font-medium text-slate-300 mb-1.5">หมวดหมู่รายการ <span class="text-rose-400">*</span></label>
+          <select id="tx-category" required class="w-full px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl focus:border-brand-500 text-white">
+            <option value="เงินประจำเดือน">เงินประจำเดือน</option>
+            <option value="เงินสนับสนุน / สปอนเซอร์">เงินสนับสนุน / สปอนเซอร์</option>
+            <option value="กิจกรรมและสันทนาการ">กิจกรรมและสันทนาการ</option>
+            <option value="วิชาการ / สัมมนา / โครงงาน">วิชาการ / สัมมนา / โครงงาน</option>
+            <option value="อุปกรณ์และพัสดุ">อุปกรณ์และพัสดุ</option>
+            <option value="สรุปเบิกจ่ายคืน">สรุปเบิกจ่ายคืน</option>
+            <option value="อื่นๆ">อื่นๆ</option>
+          </select>
+        </div>
+
+        <!-- Title -->
+        <div>
+          <label class="block font-medium text-slate-300 mb-1.5">ชื่อรายการ / รายละเอียด <span class="text-rose-400">*</span></label>
+          <input type="text" id="tx-title" required placeholder="เช่น เก็บเงินประจำเดือนพฤศจิกายน, ค่าอุปกรณ์จัดซุ้ม" 
+                 class="w-full px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl focus:border-brand-500 text-white placeholder-slate-600">
+        </div>
+
+        <!-- Amount and Date -->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-medium text-slate-300 mb-1.5">จำนวนเงิน (บาท) <span class="text-rose-400">*</span></label>
+            <input type="number" id="tx-amount" step="0.01" min="1" required placeholder="0.00" 
+                   class="w-full px-3 py-2.5 font-mono font-bold text-emerald-400 bg-slate-950 border border-slate-700 rounded-xl focus:border-brand-500">
+          </div>
+          <div>
+            <label class="block font-medium text-slate-300 mb-1.5">วันที่เกิดรายการ <span class="text-rose-400">*</span></label>
+            <input type="text" id="tx-date" required placeholder="dd/MM/yy" class="w-full px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl focus:border-brand-500 text-slate-200">
+          </div>
+        </div>
+
+        <!-- Proof upload (optional) -->
+        <div>
+          <label class="block font-medium text-slate-300 mb-1.5">รูปภาพหลักฐาน / สลิปโอนเงิน (ถ้ามี)</label>
+          <div class="border border-dashed border-slate-700 hover:border-brand-500 rounded-xl p-3 text-center cursor-pointer bg-slate-950"
+               onclick="document.getElementById('tx-proof-input').click()">
+            <input type="file" id="tx-proof-input" accept="image/*" class="hidden" onchange="previewTxProof(event)">
+            <div id="tx-proof-placeholder" class="text-slate-400 py-1">
+              <i class="fa-solid fa-paperclip text-sm mb-1"></i>
+              <p class="text-[11px]">แตะเพื่อแนบรูปภาพสลิปหรือใบเสร็จ</p>
+            </div>
+            <div id="tx-proof-preview-container" class="hidden relative inline-block">
+              <img id="tx-proof-img" src="" alt="Proof" class="max-h-24 rounded-lg border border-slate-700 mx-auto">
+              <button type="button" onclick="event.stopPropagation(); removeTxProof()" class="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-rose-500 text-white flex items-center justify-center text-xs">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Note / Reference -->
+        <div>
+          <label class="block font-medium text-slate-300 mb-1.5">หมายเหตุ (เช่น ยังไม่จ่าย 3 คน, เงินกองกลาง)</label>
+          <input type="text" id="tx-note" placeholder="หมายเหตุเพิ่มเติม" 
+                 class="w-full px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl focus:border-brand-500 text-white placeholder-slate-600">
+        </div>
+
+        <button type="submit" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold rounded-xl shadow-lg transition">
+          บันทึกลงสมุดบัญชี
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Post Announcement Modal -->
+  <div id="announcement-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 text-white shadow-2xl space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <h3 class="font-bold text-base text-white flex items-center gap-2">
+          <i class="fa-solid fa-bullhorn text-brand-400"></i>
+          <span>สร้างประกาศการเงินใหม่</span>
+        </h3>
+        <button onclick="closePostAnnouncementModal()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <form id="ann-form" onsubmit="handleAnnouncementSubmit(event)" class="space-y-3.5 text-xs">
+        <div>
+          <label class="block font-medium text-slate-300 mb-1">หัวข้อประกาศ <span class="text-rose-400">*</span></label>
+          <input type="text" id="ann-title" required placeholder="เช่น กำหนดการเก็บเงินบำรุงประจำภาคเรียนที่ 1/2569" 
+                 class="w-full px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl focus:border-brand-500 text-white">
+        </div>
+
+        <div>
+          <label class="block font-medium text-slate-300 mb-1">หมวดหมู่ประกาศ</label>
+          <select id="ann-badge" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-white">
+            <option value="แจ้งยอดชำระ">แจ้งยอดชำระ</option>
+            <option value="สรุปงบประมาณ">สรุปงบประมาณ</option>
+            <option value="ด่วนที่สุด">ด่วนที่สุด</option>
+            <option value="ทั่วไป">ทั่วไป</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-medium text-slate-300 mb-1">เนื้อหาประกาศ <span class="text-rose-400">*</span></label>
+          <textarea id="ann-content" rows="4" required placeholder="ระบุรายละเอียด เช่น อัตราคนละ 300 บาท โอนเข้าบัญชีส่วนกลางภายในวันที่..." 
+                    class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl focus:border-brand-500 text-white"></textarea>
+        </div>
+
+        <button type="submit" class="w-full py-2.5 bg-brand-600 hover:bg-brand-500 text-white font-bold rounded-xl shadow-lg transition">
+          เผยแพร่ประกาศ
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Treasurer PIN Unlock -->
+  <div id="pin-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-6 text-center text-white shadow-2xl space-y-4">
+      <div class="w-14 h-14 bg-brand-500/10 text-brand-400 border border-brand-500/20 rounded-2xl flex items-center justify-center text-2xl mx-auto shadow-inner">
+        <i class="fa-solid fa-key"></i>
+      </div>
+      <div>
+        <h3 class="font-bold text-white text-lg">เข้าสู่พื้นที่เหรัญญิก</h3>
+        <p class="text-xs text-slate-400 mt-1">กรุณาระบุรหัสผ่านเพื่อเข้าจัดการบัญชี ตรวจสอบ และอนุมัติสลิป</p>
+      </div>
+
+      <div>
+        <input type="password" id="input-treasurer-pin" maxlength="16" placeholder="กรอกรหัสผ่าน" autofocus
+               onkeyup="if(event.key === 'Enter') submitTreasurerPin()" 
+               class="w-full text-center text-xl tracking-widest font-mono py-2.5 px-3 bg-slate-950 border border-slate-700 rounded-2xl focus:border-brand-500 focus:outline-none text-white">
+        <p id="pin-error-msg" class="text-xs text-rose-400 mt-2 hidden font-medium">รหัสผ่านไม่ถูกต้อง โปรดลองอีกครั้ง</p>
+      </div>
+
+      <div class="flex gap-2">
+        <button onclick="closePinModal()" class="flex-1 py-2.5 text-xs font-semibold text-slate-400 bg-slate-800 hover:bg-slate-700 rounded-xl transition">
+          ยกเลิก
+        </button>
+        <button onclick="submitTreasurerPin()" class="flex-1 py-2.5 text-xs font-semibold text-white bg-brand-600 hover:bg-brand-500 rounded-xl shadow-lg transition">
+          ปลดล็อก
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Lightbox Image Viewer -->
+  <div id="lightbox-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="relative max-w-2xl w-full bg-slate-900 rounded-3xl overflow-hidden shadow-2xl flex flex-col items-center border border-slate-800">
+      <div class="w-full flex justify-between items-center px-5 py-3.5 bg-slate-950 text-white border-b border-slate-800">
+        <span id="lightbox-title" class="font-semibold text-xs sm:text-sm flex items-center gap-2">
+          <i class="fa-solid fa-file-image text-brand-400"></i> ดูเอกสารหลักฐาน
+        </span>
+        <button onclick="closeLightbox()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-300 hover:text-white transition">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="p-3 sm:p-5 max-h-[75vh] flex items-center justify-center overflow-auto w-full">
+        <img id="lightbox-img" src="" alt="Proof Preview" class="max-h-[70vh] max-w-full rounded-xl object-contain shadow-2xl">
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Batch Payout Settlement to Finance Sheet -->
+  <div id="batch-settle-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-lg w-full p-6 text-white shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto custom-scrollbar">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div class="flex items-center gap-2">
+          <div class="w-9 h-9 rounded-xl bg-brand-500/10 text-brand-400 flex items-center justify-center text-base">
+            <i class="fa-solid fa-layer-group"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-base text-white">สรุปรวมยอดเบิกจ่ายเข้าสมุดบัญชี</h3>
+            <p class="text-[11px] text-slate-400">รวมหลายรายการที่โอนแล้วเป็นรายจ่าย 1 แถวในตาราง Finance</p>
+          </div>
+        </div>
+        <button onclick="closeBatchSettleModal()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3.5 text-xs">
+        <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-slate-400">รายการที่โอนเงินสำเร็จแล้ว:</span>
+            <span id="batch-selected-count" class="font-bold text-brand-400">0 รายการ</span>
+          </div>
+          <div class="flex items-center justify-between text-sm pt-1 border-t border-slate-800/80">
+            <span class="text-slate-300 font-semibold">ยอดรวมที่จะตัดจ่าย:</span>
+            <span id="batch-selected-total" class="font-mono font-black text-emerald-400 text-lg">฿0.00</span>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-medium text-slate-300 mb-1.5">เลือกรายการที่ต้องการรวบยอดตัดบัญชี:</label>
+          <div id="batch-items-list" class="max-h-48 overflow-y-auto custom-scrollbar space-y-1.5 p-1 bg-slate-950/60 rounded-xl border border-slate-800">
+            <!-- Dynamically populated via JS -->
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-medium text-slate-300 mb-1">ชื่อรายการที่จะปรากฏในสมุดบัญชี <span class="text-rose-400">*</span></label>
+          <input type="text" id="batch-title-input" class="w-full px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl focus:border-brand-500 text-white" 
+                 placeholder="เช่น สรุปเบิกจ่ายคืนค่าอุปกรณ์และของว่าง">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-medium text-slate-300 mb-1">วันที่บันทึกบัญชี</label>
+            <input type="text" id="batch-date-input" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-slate-200" placeholder="dd/MM/yy">
+          </div>
+          <div>
+            <label class="block font-medium text-slate-300 mb-1">หมายเหตุ</label>
+            <input type="text" id="batch-note-input" value="สรุปเบิกจ่ายรวม" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-slate-200">
+          </div>
+        </div>
+
+        <button onclick="submitBatchSettlement()" class="w-full py-3 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-bold rounded-xl shadow-lg transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-file-export"></i>
+          <span>บันทึกตัดยอดเข้าสมุดบัญชีทันที</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Backend Connection Config (Accessed from Treasurer Workbench) -->
+  <div id="sheet-config-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 text-white shadow-2xl space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-database text-emerald-400 text-lg"></i>
+          <h3 class="font-bold text-base text-white">ตั้งค่าการเชื่อมต่อฐานข้อมูลส่วนกลาง</h3>
+        </div>
+        <button onclick="closeSheetConfigModal()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs text-slate-300">
+        <p class="leading-relaxed text-slate-400">
+          นำลิงก์ <b>Web app URL</b> ที่ได้จากการ Deploy สคริปต์ใน Google Sheets มาวางที่นี่ เพื่อให้ระบบซิงค์ข้อมูลบัญชีและคำขอเบิกเงินแบบอัตโนมัติ
+        </p>
+
+        <div>
+          <label class="block font-medium text-slate-200 mb-1">Service Web App URL:</label>
+          <input type="url" id="input-apps-script-url" placeholder="https://script.google.com/macros/s/.../exec" 
+                 class="w-full px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl focus:border-brand-500 font-mono text-[11px] text-white">
+        </div>
+
+        <div class="flex gap-2 pt-2">
+          <button onclick="closeSheetConfigModal()" class="flex-1 py-2 text-xs font-semibold text-slate-400 bg-slate-800 rounded-xl">ปิด</button>
+          <button onclick="saveSheetConfig()" class="flex-1 py-2 text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-500 rounded-xl shadow transition">บันทึก & ซิงค์ข้อมูล</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Prompt / Custom Message Box -->
+  <div id="custom-prompt-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-6 text-white shadow-2xl space-y-4">
+      <h3 id="custom-prompt-title" class="font-bold text-base">ระบุข้อมูล</h3>
+      <p id="custom-prompt-desc" class="text-xs text-slate-400">รายละเอียด</p>
+      <input type="text" id="custom-prompt-input" class="w-full px-3.5 py-2 text-xs bg-slate-950 border border-slate-700 rounded-xl focus:outline-none focus:border-brand-500 text-white">
+      <div class="flex gap-2">
+        <button onclick="closeCustomPrompt(false)" class="flex-1 py-2 text-xs font-semibold text-slate-400 bg-slate-800 rounded-xl">ยกเลิก</button>
+        <button onclick="closeCustomPrompt(true)" class="flex-1 py-2 text-xs font-semibold text-white bg-brand-600 rounded-xl">ตกลง</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform transition-all duration-300 translate-y-24 opacity-0 pointer-events-none max-w-sm w-full bg-slate-900/95 border border-slate-700 text-white rounded-2xl shadow-2xl p-4 flex items-start gap-3 backdrop-blur-lg">
+    <div id="toast-icon-wrapper" class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 text-sm">
+      <i id="toast-icon" class="fa-solid fa-check"></i>
+    </div>
+    <div class="flex-1 pr-1">
+      <h5 id="toast-title" class="font-bold text-white text-xs">แจ้งเตือน</h5>
+      <p id="toast-desc" class="text-[11px] text-slate-400 mt-0.5">รายละเอียด</p>
+    </div>
+    <button onclick="hideToast()" class="text-slate-400 hover:text-white text-xs p-1">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+
+  <script>
+    // =========================================================================
+    // STATE MANAGEMENT: GENERAL LEDGER, REIMBURSEMENTS & ANNOUNCEMENTS
+    // =========================================================================
+    const PASSWORD_SALT = "dept-treasury-unified-2026";
+    // Default PIN: 2569
+    let storedTreasurerHash = "e87b7a70a8d6f51cb3298ec48c5b05611f71f654b0ebf84d08e515d688fa53d5";
+
+    // Service Endpoint URL (stored in localStorage)
+    let APPS_SCRIPT_URL = localStorage.getItem("dept_treasury_script_url") || "";
+
+    let isTreasurerAuthenticated = false;
+    let currentMainTab = 'ledger';
+    let currentLedgerFilter = 'all';
+    let currentTreasurerFilter = 'all';
+    let currentTxTypeFilter = 'all';
+
+    let currentOperatingReqId = null;
+    let tempReceiptDataUrl = null;
+    let tempTransferSlipDataUrl = null;
+    let tempTxProofDataUrl = null;
+
+    // 1. General Ledger Transactions
+    let transactions = [
+      {
+        id: "ROW-2",
+        type: "income",
+        category: "เงินประจำเดือน",
+        title: "เก็บเงินประจำเดือนตุลาคม",
+        amount: 1020.00,
+        balance: 1020.00,
+        date: "24/10/68",
+        recordedBy: "เหรัญญิก",
+        receiptUrl: null,
+        note: "ยังไม่จ่าย 5 คน"
+      },
+      {
+        id: "ROW-3",
+        type: "expense",
+        category: "กิจกรรมและสันทนาการ",
+        title: "ค่าเช่าสนามคัดตัวนักกีฬาMedSci",
+        amount: 260.00,
+        balance: 760.00,
+        date: "13/01/69",
+        recordedBy: "เหรัญญิก",
+        receiptUrl: null,
+        note: ""
+      },
+      {
+        id: "ROW-4",
+        type: "income",
+        category: "เงินสนับสนุน / สปอนเซอร์",
+        title: "MedSci Welfare",
+        amount: 1020.00,
+        balance: 1780.00,
+        date: "28/01/69",
+        recordedBy: "เหรัญญิก",
+        receiptUrl: null,
+        note: "ยังไม่จ่าย 5 คน"
+      }
+    ];
+
+    // 2. Member Reimbursement Claims
+    let requests = [];
+
+    // 3. Department Financial Notices
+    let announcements = [
+      {
+        id: "ANN-1",
+        title: "ยินดีต้อนรับสู่ระบบการเงินและเบิกจ่ายภาควิชา",
+        badge: "ทั่วไป",
+        content: "สมาชิกสามารถยื่นคำขอเบิกเงินสำรองจ่ายพร้อมแนบรูปหลักฐาน และสามารถติดตามสถานะการโอนเงินคืนจากเหรัญญิกได้",
+        date: "21/10/69",
+        author: "เหรัญญิก"
+      }
+    ];
+
+    // =========================================================================
+    // DATA SYNC & NETWORK
+    // =========================================================================
+    async function fetchDataFromGoogleSheet() {
+      if (!APPS_SCRIPT_URL) return;
+
+      const syncIcon = document.getElementById('btn-sync-icon');
+      if (syncIcon) syncIcon.classList.add('fa-spin');
+
+      try {
+        const response = await fetch(APPS_SCRIPT_URL);
+        const data = await response.json();
+
+        if (data.status === "success") {
+          if (data.finance && data.finance.length > 0) {
+            transactions = data.finance.map(item => ({
+              id: item.id,
+              type: item.type,
+              category: item.rawType || (item.type === 'income' ? 'รายรับ' : 'รายจ่าย'),
+              title: item.title,
+              amount: item.amount,
+              balance: item.balance,
+              date: item.date,
+              recordedBy: "ระบบส่วนกลาง",
+              receiptUrl: null,
+              note: item.note
+            })).reverse();
+          }
+
+          if (data.reimbursements) {
+            requests = data.reimbursements.map(r => ({
+              id: r.id,
+              name: r.name,
+              title: r.title,
+              amount: r.amount,
+              bankName: r.bankName,
+              accountNumber: r.accountNumber,
+              accountName: r.accountName,
+              receiptImage: r.receiptImage,
+              status: r.status,
+              transferSlipImage: r.transferSlipImage,
+              createdAt: r.createdAt,
+              paidAt: r.paidAt,
+              notes: r.notes
+            }));
+          }
+
+          if (data.announcements && data.announcements.length > 0) {
+            announcements = data.announcements;
+          }
+
+          renderTransactionsTable();
+          renderTransparentLedger();
+          renderAnnouncements();
+          renderTreasurerTable();
+          updateGlobalStats();
+          showToast('ซิงค์ข้อมูลสำเร็จ', 'อัปเดตข้อมูลล่าสุดเข้าสู่ระบบเรียบร้อย');
+        }
+      } catch (err) {
+        showToast('การเชื่อมต่อขัดข้อง', 'ไม่สามารถเชื่อมต่อฐานข้อมูลได้ในขณะนี้', false);
+      } finally {
+        if (syncIcon) syncIcon.classList.remove('fa-spin');
+      }
+    }
+
+    async function sendPostToScript(action, payload) {
+      if (!APPS_SCRIPT_URL) return { status: "local_only" };
+      try {
+        const response = await fetch(APPS_SCRIPT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({ action: action, payload: payload })
+        });
+        return await response.json();
+      } catch (err) {
+        return { status: "error", error: err };
+      }
+    }
+
+    function openSheetConfigModal() {
+      document.getElementById('input-apps-script-url').value = APPS_SCRIPT_URL;
+      document.getElementById('sheet-config-modal').classList.remove('hidden');
+    }
+
+    function closeSheetConfigModal() {
+      document.getElementById('sheet-config-modal').classList.add('hidden');
+    }
+
+    function saveSheetConfig() {
+      const url = document.getElementById('input-apps-script-url').value.trim();
+      APPS_SCRIPT_URL = url;
+      localStorage.setItem("dept_treasury_script_url", url);
+      closeSheetConfigModal();
+      if (url) {
+        fetchDataFromGoogleSheet();
+      }
+    }
+
+    // =========================================================================
+    // UI NAVIGATION TABS
+    // =========================================================================
+    function switchMainTab(tab) {
+      currentMainTab = tab;
+
+      const tabs = ['ledger', 'reimburse', 'announcements', 'treasurer'];
+      tabs.forEach(t => {
+        const sec = document.getElementById(`tab-${t}`);
+        const btn = document.getElementById(`nav-btn-${t}`);
+        if (!sec || !btn) return;
+
+        if (t === tab) {
+          sec.classList.remove('hidden');
+          btn.className = "flex-1 md:flex-none px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-300 flex items-center justify-center gap-2 bg-gradient-to-r from-brand-600 to-indigo-600 text-white shadow-md shadow-brand-500/20 whitespace-nowrap";
+        } else {
+          sec.classList.add('hidden');
+          btn.className = "flex-1 md:flex-none px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-300 flex items-center justify-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800/60 whitespace-nowrap";
+        }
+      });
+    }
+
+    function requestTreasurerAccess() {
+      if (isTreasurerAuthenticated) {
+        switchMainTab('treasurer');
+      } else {
+        openPinModal();
+      }
+    }
+
+    // =========================================================================
+    // PIN & AUTHENTICATION
+    // =========================================================================
+    async function hashString(str) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(str + PASSWORD_SALT);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    function openPinModal() {
+      document.getElementById('input-treasurer-pin').value = '';
+      document.getElementById('pin-error-msg').classList.add('hidden');
+      document.getElementById('pin-modal').classList.remove('hidden');
+      setTimeout(() => document.getElementById('input-treasurer-pin').focus(), 100);
+    }
+
+    function closePinModal() {
+      document.getElementById('pin-modal').classList.add('hidden');
+    }
+
+    async function submitTreasurerPin() {
+      const pinInput = document.getElementById('input-treasurer-pin').value;
+      const hashed = await hashString(pinInput);
+
+      if (hashed === storedTreasurerHash) {
+        isTreasurerAuthenticated = true;
+        closePinModal();
+
+        // Update indicators
+        const navLock = document.getElementById('nav-treasurer-lock-icon');
+        const mobileLock = document.getElementById('mobile-treasurer-lock-icon');
+        if (navLock) navLock.className = "fa-solid fa-lock-open text-emerald-400 text-xs";
+        if (mobileLock) mobileLock.className = "fa-solid fa-lock-open text-emerald-400 text-xs";
+        
+        document.getElementById('th-tx-action').classList.remove('hidden');
+
+        switchMainTab('treasurer');
+        renderTransactionsTable();
+        showToast('เข้าสู่ระบบสำเร็จ', 'ปลดล็อกสิทธิ์เหรัญญิกเรียบร้อย');
+      } else {
+        document.getElementById('pin-error-msg').classList.remove('hidden');
+      }
+    }
+
+    function lockTreasurerSession() {
+      isTreasurerAuthenticated = false;
+      const navLock = document.getElementById('nav-treasurer-lock-icon');
+      const mobileLock = document.getElementById('mobile-treasurer-lock-icon');
+      if (navLock) navLock.className = "fa-solid fa-lock text-amber-400 text-xs";
+      if (mobileLock) mobileLock.className = "fa-solid fa-lock text-amber-400 text-xs";
+      
+      document.getElementById('th-tx-action').classList.add('hidden');
+
+      switchMainTab('ledger');
+      showToast('ล็อกหน้าจอแล้ว', 'พื้นที่เหรัญญิกถูกล็อกเพื่อความปลอดภัย');
+    }
+
+    async function promptChangePin() {
+      openCustomPrompt('เปลี่ยนรหัสผ่านเหรัญญิก', 'ระบุรหัสผ่านใหม่ (อย่างน้อย 4 ตัวอักษร):', async (newPin) => {
+        if (!newPin || newPin.length < 4) {
+          showToast('ไม่สำเร็จ', 'รหัสผ่านต้องมีความยาวอย่างน้อย 4 ตัวอักษร', false);
+          return;
+        }
+        storedTreasurerHash = await hashString(newPin);
+        showToast('เปลี่ยนรหัสผ่านแล้ว', 'โปรดจำรหัสผ่านใหม่สำหรับการเข้าใช้งานครั้งถัดไป');
+      });
+    }
+
+    // =========================================================================
+    // TRANSACTIONS & GENERAL LEDGER
+    // =========================================================================
+    function filterTransactions(type) {
+      currentTxTypeFilter = type;
+      ['all', 'income', 'expense'].forEach(t => {
+        const btn = document.getElementById(`btn-tx-${t}`);
+        if (t === type) {
+          btn.className = "px-3 py-1.5 rounded-lg font-medium text-white bg-slate-800 shadow";
+        } else {
+          btn.className = "px-3 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white";
+        }
+      });
+      renderTransactionsTable();
+    }
+
+    function renderTransactionsTable() {
+      const tbody = document.getElementById('ledger-table-body');
+      const search = (document.getElementById('tx-search-input')?.value || '').toLowerCase().trim();
+      const catFilter = document.getElementById('tx-category-filter')?.value || 'all';
+
+      let filtered = transactions.filter(tx => {
+        const matchType = currentTxTypeFilter === 'all' || tx.type === currentTxTypeFilter;
+        const matchCat = catFilter === 'all' || tx.category === catFilter;
+        const matchSearch = !search || 
+          tx.title.toLowerCase().includes(search) || 
+          (tx.note && tx.note.toLowerCase().includes(search));
+        return matchType && matchCat && matchSearch;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="8" class="text-center py-10 text-slate-500 text-xs">
+              <i class="fa-solid fa-folder-open text-2xl block mb-2 opacity-50"></i>
+              ไม่พบรายการที่ตรงกับเงื่อนไขการค้นหา
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(tx => {
+        const isInc = tx.type === 'income';
+        const typeBadge = isInc 
+          ? `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">รายรับ</span>`
+          : `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20">รายจ่าย</span>`;
+        
+        const proofBtn = tx.receiptUrl 
+          ? `<button onclick="openLightbox('${tx.receiptUrl}', '${escapeHtml(tx.title)}')" class="text-indigo-400 hover:text-indigo-300 font-semibold flex items-center justify-center gap-1 mx-auto"><i class="fa-solid fa-file-invoice text-xs"></i> <span>ดูสลิป</span></button>`
+          : `<span class="text-slate-600">-</span>`;
+
+        const deleteAction = isTreasurerAuthenticated 
+          ? `<td class="py-3 px-4 text-right">
+              <button onclick="deleteTransaction('${tx.id}')" class="text-slate-500 hover:text-rose-400 transition" title="ลบรายการ">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+             </td>`
+          : `<td class="py-3 px-4 text-right hidden"></td>`;
+
+        return `
+          <tr class="hover:bg-slate-800/30 transition">
+            <td class="py-3.5 px-4 font-mono text-slate-300 whitespace-nowrap">${escapeHtml(tx.date)}</td>
+            <td class="py-3.5 px-4 font-semibold text-white max-w-[220px] truncate" title="${escapeHtml(tx.title)}">${escapeHtml(tx.title)}</td>
+            <td class="py-3.5 px-4 whitespace-nowrap">${typeBadge}</td>
+            <td class="py-3.5 px-4 text-right font-mono font-bold ${isInc ? 'text-emerald-400' : 'text-rose-400'} whitespace-nowrap">
+              ${isInc ? '+' : '-'}฿${formatMoney(tx.amount)}
+            </td>
+            <td class="py-3.5 px-4 text-right font-mono text-slate-300 whitespace-nowrap">
+              ${tx.balance !== undefined ? '฿' + formatMoney(tx.balance) : '-'}
+            </td>
+            <td class="py-3.5 px-4 text-slate-400 max-w-[180px] truncate" title="${escapeHtml(tx.note || '')}">${escapeHtml(tx.note || '-')}</td>
+            <td class="py-3.5 px-4 text-center whitespace-nowrap">${proofBtn}</td>
+            ${deleteAction}
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function openAddTransactionModal() {
+      if (!isTreasurerAuthenticated) {
+        openPinModal();
+        return;
+      }
+      document.getElementById('tx-form').reset();
+      const today = new Date();
+      const dd = String(today.getDate()).padStart(2, '0');
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const yy = String(today.getFullYear() + 543).slice(-2);
+      document.getElementById('tx-date').value = `${dd}/${mm}/${yy}`;
+      removeTxProof();
+      document.getElementById('transaction-modal').classList.remove('hidden');
+    }
+
+    function closeAddTransactionModal() {
+      document.getElementById('transaction-modal').classList.add('hidden');
+    }
+
+    async function handleTransactionSubmit(event) {
+      event.preventDefault();
+      const type = document.querySelector('input[name="tx-type"]:checked').value;
+      const category = document.getElementById('tx-category').value;
+      const title = document.getElementById('tx-title').value.trim();
+      const amount = parseFloat(document.getElementById('tx-amount').value);
+      const date = document.getElementById('tx-date').value.trim();
+      const note = document.getElementById('tx-note').value.trim();
+
+      const newTx = {
+        id: `TX-${Date.now()}`,
+        type: type,
+        category: category,
+        title: title,
+        amount: amount,
+        date: date,
+        recordedBy: "เหรัญญิก",
+        receiptUrl: tempTxProofDataUrl,
+        note: note
+      };
+
+      transactions.unshift(newTx);
+      closeAddTransactionModal();
+      updateGlobalStats();
+      renderTransactionsTable();
+      showToast('บันทึกสำเร็จ', 'เพิ่มรายการลงในสมุดบัญชีเรียบร้อยแล้ว');
+
+      if (APPS_SCRIPT_URL) {
+        sendPostToScript("ADD_TRANSACTION", {
+          date: date,
+          title: title,
+          type: type,
+          amount: amount,
+          note: note
+        }).then(() => {
+          fetchDataFromGoogleSheet();
+        });
+      }
+    }
+
+    function deleteTransaction(id) {
+      if (!isTreasurerAuthenticated) return;
+      openCustomPrompt('ยืนยันการลบ', 'พิมพ์คำว่า "ยืนยัน" เพื่อลบรายการนี้ออกจากระบบ:', (val) => {
+        if (val === 'ยืนยัน') {
+          transactions = transactions.filter(t => t.id !== id);
+          updateGlobalStats();
+          renderTransactionsTable();
+          showToast('ลบรายการแล้ว', 'รายการดังกล่าวถูกลบออกจากระบบ');
+        }
+      });
+    }
+
+    // =========================================================================
+    // MEMBER REIMBURSEMENT WORKFLOW
+    // =========================================================================
+    async function handleMemberSubmit(event) {
+      event.preventDefault();
+
+      if (!tempReceiptDataUrl) {
+        showToast('กรุณาแนบรูปหลักฐาน', 'จำเป็นต้องมีภาพถ่ายใบเสร็จหรือสลิปที่สำรองจ่าย', false);
+        return;
+      }
+
+      const payoutType = document.querySelector('input[name="payout-type"]:checked').value;
+      let bankName = 'พร้อมเพย์ (PromptPay)';
+      if (payoutType === 'bank') {
+        const bankSelect = document.getElementById('payout-bank');
+        if (!bankSelect.value) {
+          showToast('โปรดเลือกธนาคาร', 'กรุณาระบุธนาคารผู้รับเงิน', false);
+          bankSelect.focus();
+          return;
+        }
+        bankName = bankSelect.value;
+      }
+
+      const name = document.getElementById('member-name').value.trim();
+      const title = document.getElementById('expense-title').value.trim();
+      const amount = parseFloat(document.getElementById('expense-amount').value);
+      const expenseDate = document.getElementById('expense-date').value;
+      const accountNumber = document.getElementById('payout-account-number').value.trim();
+      const accountName = document.getElementById('payout-account-name').value.trim();
+      const notes = document.getElementById('expense-notes').value.trim();
+
+      const newId = `REQ-${new Date().getFullYear()}-${Math.floor(100 + Math.random() * 900)}`;
+
+      const newRecord = {
+        id: newId,
+        name: name,
+        title: title,
+        amount: amount,
+        expenseDate: expenseDate,
+        payoutType: payoutType,
+        bankName: bankName,
+        accountNumber: accountNumber,
+        accountName: accountName,
+        receiptImage: tempReceiptDataUrl,
+        receiptImageBase64: tempReceiptDataUrl,
+        notes: notes,
+        status: 'pending',
+        createdAt: new Date().toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' }) + ' ' + new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
+        transferSlipImage: null,
+        paidAt: null,
+        rejectionReason: null
+      };
+
+      requests.unshift(newRecord);
+
+      // Reset form
+      document.getElementById('reimbursement-form').reset();
+      removeReceiptImage();
+      toggleAccountFields();
+      document.getElementById('expense-date').value = new Date().toISOString().slice(0, 10);
+
+      updateGlobalStats();
+      renderTransparentLedger();
+      renderTreasurerTable();
+
+      showToast('ส่งคำขอเบิกเงินสำเร็จ', `รหัสรายการ ${newId} ถูกส่งเข้าสู่ระบบเรียบร้อย`);
+
+      if (APPS_SCRIPT_URL) {
+        sendPostToScript("SUBMIT_REIMBURSEMENT", newRecord).then(res => {
+          if (res && res.receiptUrl) {
+            newRecord.receiptImage = res.receiptUrl;
+            renderTransparentLedger();
+          }
+        });
+      }
+    }
+
+    function setLedgerFilter(filter) {
+      currentLedgerFilter = filter;
+      ['all', 'pending', 'paid'].forEach(f => {
+        const btn = document.getElementById(`btn-ledger-filter-${f}`);
+        if (f === filter) {
+          btn.className = "px-2.5 py-1 rounded-lg font-medium text-white bg-slate-800 shadow";
+        } else {
+          btn.className = "px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-white";
+        }
+      });
+      renderTransparentLedger();
+    }
+
+    function renderTransparentLedger() {
+      const container = document.getElementById('transparent-ledger-container');
+      const search = (document.getElementById('ledger-search-input')?.value || '').toLowerCase().trim();
+
+      let filtered = requests.filter(r => {
+        const matchStatus = currentLedgerFilter === 'all' || r.status === currentLedgerFilter;
+        const matchSearch = !search || 
+          r.name.toLowerCase().includes(search) || 
+          r.title.toLowerCase().includes(search) || 
+          r.id.toLowerCase().includes(search);
+        return matchStatus && matchSearch;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12 text-slate-500 text-xs">
+            <i class="fa-solid fa-receipt text-3xl mb-2 opacity-40"></i>
+            <p>ยังไม่มีรายการคำขอเบิกเงินในขณะนี้</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(r => {
+        const isPaid = r.status === 'paid';
+        const isRejected = r.status === 'rejected';
+
+        let statusBadge = '';
+        if (isPaid) {
+          statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/25">
+            <i class="fa-solid fa-circle-check text-[9px]"></i> โอนแล้ว
+          </span>`;
+        } else if (isRejected) {
+          statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/10 text-rose-400 border border-rose-500/25">
+            <i class="fa-solid fa-ban text-[9px]"></i> ส่งกลับแก้ไข
+          </span>`;
+        } else {
+          statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/25">
+            <i class="fa-solid fa-clock text-[9px]"></i> รอตรวจ/รอโอน
+          </span>`;
+        }
+
+        const slipButton = isPaid && r.transferSlipImage
+          ? `<button onclick="openLightbox('${r.transferSlipImage}', 'สลิปโอนเงินคืน - ${escapeHtml(r.name)}')" 
+                     class="px-2.5 py-1 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 rounded-lg text-[11px] font-semibold flex items-center gap-1 transition">
+              <i class="fa-solid fa-receipt text-[10px]"></i> ดูสลิปโอนคืน
+            </button>`
+          : '';
+
+        const receiptButton = r.receiptImage 
+          ? `<button onclick="openLightbox('${r.receiptImage}', 'ใบเสร็จที่สำรองจ่าย - ${escapeHtml(r.name)}')" 
+                     class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-[11px] font-medium flex items-center gap-1 transition">
+              <i class="fa-regular fa-image text-[10px]"></i> ใบเสร็จ
+            </button>`
+          : '';
+
+        return `
+          <div class="bg-slate-950/70 border border-slate-800/80 rounded-2xl p-4 transition hover:border-slate-700 space-y-3">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="font-bold text-white text-sm">${escapeHtml(r.name)}</span>
+                  <span class="font-mono text-[10px] text-slate-500">${escapeHtml(r.id)}</span>
+                </div>
+                <p class="text-xs text-slate-300 font-medium mt-0.5">${escapeHtml(r.title)}</p>
+                <p class="text-[10px] text-slate-500 mt-0.5 flex items-center gap-1.5">
+                  <i class="fa-regular fa-clock"></i> ยื่นเมื่อ ${escapeHtml(r.createdAt || '-')}
+                </p>
+              </div>
+
+              <div class="text-right">
+                <div class="text-base font-black text-emerald-400 font-mono">฿${formatMoney(r.amount)}</div>
+                <div class="mt-1">${statusBadge}</div>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-between gap-2 pt-2.5 border-t border-slate-800/80 text-xs text-slate-400">
+              <div class="flex items-center gap-1.5 truncate">
+                <i class="fa-solid fa-building-columns text-[10px] text-brand-400"></i>
+                <span class="truncate">${escapeHtml(r.bankName)}</span>
+                <span class="font-mono text-slate-500">(${maskAccountNumber(r.accountNumber)})</span>
+              </div>
+
+              <div class="flex items-center gap-2 ml-auto">
+                ${receiptButton}
+                ${slipButton}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // =========================================================================
+    // TREASURER WORKFLOW & BATCH SETTLEMENT
+    // =========================================================================
+    function setTreasurerFilter(filter) {
+      currentTreasurerFilter = filter;
+      ['all', 'pending', 'paid'].forEach(f => {
+        const btn = document.getElementById(`filter-btn-${f}`);
+        if (f === filter) {
+          btn.className = "px-2.5 py-1 rounded-lg text-xs font-semibold bg-brand-600 text-white shadow";
+        } else {
+          btn.className = "px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-400 hover:text-white";
+        }
+      });
+      renderTreasurerTable();
+    }
+
+    function renderTreasurerTable() {
+      const tbody = document.getElementById('treasurer-table-body');
+      const search = (document.getElementById('treasurer-search-input')?.value || '').toLowerCase().trim();
+
+      let filtered = requests.filter(r => {
+        const matchStatus = currentTreasurerFilter === 'all' || r.status === currentTreasurerFilter;
+        const matchSearch = !search || 
+          r.name.toLowerCase().includes(search) || 
+          r.title.toLowerCase().includes(search) || 
+          r.id.toLowerCase().includes(search);
+        return matchStatus && matchSearch;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="8" class="text-center py-10 text-slate-500 text-xs">
+              <i class="fa-solid fa-inbox text-2xl block mb-2 opacity-50"></i>
+              ไม่มีรายการที่ตรงกับเงื่อนไขในขณะนี้
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(r => {
+        const isPaid = r.status === 'paid';
+        const statusBadge = isPaid
+          ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/25">โอนแล้ว</span>`
+          : `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/25">รอตรวจ</span>`;
+
+        const actionBtn = isPaid
+          ? `<button onclick="openTreasurerModal('${r.id}')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-medium transition">
+              ดูรายละเอียด
+             </button>`
+          : `<button onclick="openTreasurerModal('${r.id}')" class="px-3 py-1 rounded-lg bg-brand-600 hover:bg-brand-500 text-white text-[11px] font-bold shadow transition">
+              ตรวจและโอน
+             </button>`;
+
+        return `
+          <tr class="hover:bg-slate-800/30 transition">
+            <td class="py-3 px-4 font-mono text-[11px]">
+              <span class="text-indigo-300 block font-bold">${escapeHtml(r.id)}</span>
+              <span class="text-slate-500 text-[10px]">${escapeHtml(r.createdAt || '-')}</span>
+            </td>
+            <td class="py-3 px-4 font-medium text-white">${escapeHtml(r.name)}</td>
+            <td class="py-3 px-4 text-slate-300 max-w-[200px] truncate" title="${escapeHtml(r.title)}">${escapeHtml(r.title)}</td>
+            <td class="py-3 px-4 text-right font-mono font-bold text-emerald-400">฿${formatMoney(r.amount)}</td>
+            <td class="py-3 px-4 text-slate-300">
+              <div class="text-[11px] font-medium">${escapeHtml(r.bankName)}</div>
+              <div class="text-[10px] font-mono text-slate-400">${escapeHtml(r.accountNumber)}</div>
+            </td>
+            <td class="py-3 px-4 text-center">
+              ${r.receiptImage 
+                ? `<button onclick="openLightbox('${r.receiptImage}', 'ใบเสร็จ - ${escapeHtml(r.name)}')" class="text-brand-400 hover:underline"><i class="fa-regular fa-image"></i> ใบเสร็จ</button>` 
+                : '-'}
+            </td>
+            <td class="py-3 px-4 text-center">${statusBadge}</td>
+            <td class="py-3 px-4 text-right whitespace-nowrap">${actionBtn}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function openTreasurerModal(id) {
+      currentOperatingReqId = id;
+      const req = requests.find(r => r.id === id);
+      if (!req) return;
+
+      document.getElementById('modal-req-id').textContent = req.id;
+      document.getElementById('modal-req-title').textContent = req.title;
+      document.getElementById('modal-req-name').textContent = req.name;
+      document.getElementById('modal-req-amount').textContent = `฿${formatMoney(req.amount)}`;
+      document.getElementById('modal-req-bank').textContent = req.bankName;
+      document.getElementById('modal-req-account-num').textContent = req.accountNumber;
+      document.getElementById('modal-req-account-name').textContent = `ชื่อ: ${req.accountName}`;
+
+      const viewBtn = document.getElementById('modal-btn-view-receipt');
+      if (req.receiptImage) {
+        viewBtn.classList.remove('hidden');
+        viewBtn.onclick = () => openLightbox(req.receiptImage, `หลักฐานใบเสร็จ - ${req.name}`);
+      } else {
+        viewBtn.classList.add('hidden');
+      }
+
+      tempTransferSlipDataUrl = req.transferSlipImage || null;
+      if (tempTransferSlipDataUrl) {
+        document.getElementById('transfer-slip-preview-img').src = tempTransferSlipDataUrl;
+        document.getElementById('transfer-slip-placeholder').classList.add('hidden');
+        document.getElementById('transfer-slip-preview-container').classList.remove('hidden');
+      } else {
+        document.getElementById('transfer-slip-input').value = '';
+        document.getElementById('transfer-slip-preview-img').src = '';
+        document.getElementById('transfer-slip-preview-container').classList.add('hidden');
+        document.getElementById('transfer-slip-placeholder').classList.remove('hidden');
+      }
+
+      document.getElementById('treasurer-modal').classList.remove('hidden');
+    }
+
+    function closeTreasurerModal() {
+      document.getElementById('treasurer-modal').classList.add('hidden');
+      currentOperatingReqId = null;
+    }
+
+    function copyModalAccount() {
+      const acc = document.getElementById('modal-req-account-num').textContent;
+      copyToClipboard(acc);
+      showToast('คัดลอกเลขบัญชีแล้ว', `คัดลอก ${acc} ไปยังคลิปบอร์ดแล้ว`);
+    }
+
+    async function confirmApproveAndPay() {
+      if (!currentOperatingReqId) return;
+
+      const req = requests.find(r => r.id === currentOperatingReqId);
+      if (!req) return;
+
+      req.status = 'paid';
+      req.transferSlipImage = tempTransferSlipDataUrl;
+      req.paidAt = new Date().toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' }) + ' ' + new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+
+      closeTreasurerModal();
+      updateGlobalStats();
+      renderTreasurerTable();
+      renderTransparentLedger();
+      showToast('บันทึกการโอนเงินสำเร็จ', `ปรับสถานะรายการ ${req.id} เรียบร้อย สามารถใช้ปุ่มสรุปยอดรวมตัดจ่ายได้`);
+
+      if (APPS_SCRIPT_URL) {
+        sendPostToScript("APPROVE_REIMBURSEMENT", {
+          id: req.id,
+          applicantName: req.name,
+          title: req.title,
+          amount: req.amount,
+          transferSlipBase64: tempTransferSlipDataUrl,
+          syncWithFinanceSheet: false
+        });
+      }
+    }
+
+    function promptRejectCurrentRequest() {
+      if (!currentOperatingReqId) return;
+      openCustomPrompt('ส่งกลับแก้ไข', 'ระบุเหตุผลในการส่งกลับคำขอนี้:', (reason) => {
+        if (!reason) return;
+        const req = requests.find(r => r.id === currentOperatingReqId);
+        if (req) {
+          req.status = 'rejected';
+          req.rejectionReason = reason;
+          closeTreasurerModal();
+          updateGlobalStats();
+          renderTreasurerTable();
+          renderTransparentLedger();
+          showToast('ส่งกลับคำขอแล้ว', `รายการ ${req.id} ถูกปรับสถานะเป็นส่งกลับแก้ไข`);
+        }
+      });
+    }
+
+    // =========================================================================
+    // BATCH SETTLEMENT (รวบยอดตัดจ่าย 1 แถว)
+    // =========================================================================
+    let selectedBatchIds = new Set();
+
+    function openBatchSettleModal() {
+      if (!isTreasurerAuthenticated) {
+        openPinModal();
+        return;
+      }
+
+      const paidReqs = requests.filter(r => r.status === 'paid');
+      const listEl = document.getElementById('batch-items-list');
+      selectedBatchIds.clear();
+
+      if (paidReqs.length === 0) {
+        listEl.innerHTML = '<p class="text-center text-slate-500 py-4 text-xs">ยังไม่มีรายการที่โอนเงินสำเร็จให้รวบยอด</p>';
+      } else {
+        listEl.innerHTML = paidReqs.map(r => {
+          selectedBatchIds.add(r.id);
+          return `
+            <label class="flex items-center justify-between p-2 rounded-lg bg-slate-900 hover:bg-slate-800 cursor-pointer border border-slate-800">
+              <div class="flex items-center gap-2">
+                <input type="checkbox" value="${r.id}" checked onchange="toggleBatchItem('${r.id}', this.checked)" class="accent-brand-500 rounded">
+                <span class="font-medium text-white">${escapeHtml(r.name)}:</span>
+                <span class="text-slate-400 truncate max-w-[180px]">${escapeHtml(r.title)}</span>
+              </div>
+              <span class="font-mono font-bold text-emerald-400 shrink-0">฿${formatMoney(r.amount)}</span>
+            </label>
+          `;
+        }).join('');
+      }
+
+      document.getElementById('batch-title-input').value = `สรุปเบิกจ่ายคืนโครงการ (รวม ${selectedBatchIds.size} รายการ)`;
+      const today = new Date();
+      const dd = String(today.getDate()).padStart(2, '0');
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const yy = String(today.getFullYear() + 543).slice(-2);
+      document.getElementById('batch-date-input').value = `${dd}/${mm}/${yy}`;
+
+      recalcBatchTotal();
+      document.getElementById('batch-settle-modal').classList.remove('hidden');
+    }
+
+    function toggleBatchItem(id, isChecked) {
+      if (isChecked) selectedBatchIds.add(id);
+      else selectedBatchIds.delete(id);
+      recalcBatchTotal();
+      document.getElementById('batch-title-input').value = `สรุปเบิกจ่ายคืนโครงการ (รวม ${selectedBatchIds.size} รายการ)`;
+    }
+
+    function recalcBatchTotal() {
+      let sum = 0;
+      requests.forEach(r => {
+        if (selectedBatchIds.has(r.id)) sum += (r.amount || 0);
+      });
+      document.getElementById('batch-selected-count').textContent = `${selectedBatchIds.size} รายการ`;
+      document.getElementById('batch-selected-total').textContent = `฿${formatMoney(sum)}`;
+    }
+
+    function closeBatchSettleModal() {
+      document.getElementById('batch-settle-modal').classList.add('hidden');
+    }
+
+    async function submitBatchSettlement() {
+      if (selectedBatchIds.size === 0) {
+        showToast('โปรดเลือกอย่างน้อย 1 รายการ', 'ไม่มีรายการเบิกจ่ายที่ถูกเลือก', false);
+        return;
+      }
+
+      let totalAmount = 0;
+      const namesList = [];
+      requests.forEach(r => {
+        if (selectedBatchIds.has(r.id)) {
+          totalAmount += (r.amount || 0);
+          if (!namesList.includes(r.name)) namesList.push(r.name);
+        }
+      });
+
+      const title = document.getElementById('batch-title-input').value.trim() || `สรุปเบิกจ่ายคืน (${namesList.join(', ')})`;
+      const dateStr = document.getElementById('batch-date-input').value.trim() || "วันนี้";
+      const noteStr = document.getElementById('batch-note-input').value.trim() || "สรุปเบิกจ่ายรวม";
+
+      const newTxId = `TX-${Date.now()}`;
+      transactions.unshift({
+        id: newTxId,
+        type: 'expense',
+        category: 'สรุปเบิกจ่ายคืนโครงการ',
+        title: title,
+        amount: totalAmount,
+        date: dateStr,
+        recordedBy: 'เหรัญญิก',
+        receiptUrl: null,
+        note: noteStr
+      });
+
+      closeBatchSettleModal();
+      updateGlobalStats();
+      renderTransactionsTable();
+      showToast('รวบยอดตัดบัญชีสำเร็จ', `บันทึกรายจ่าย 1 แถว ยอด ฿${formatMoney(totalAmount)} ลงสมุดบัญชีเรียบร้อย`);
+
+      if (APPS_SCRIPT_URL) {
+        sendPostToScript("ADD_TRANSACTION", {
+          date: dateStr,
+          title: title,
+          type: "expense",
+          amount: totalAmount,
+          note: noteStr
+        }).then(() => {
+          fetchDataFromGoogleSheet();
+        });
+      }
+    }
+
+    // =========================================================================
+    // ANNOUNCEMENTS
+    // =========================================================================
+    function renderAnnouncements() {
+      const container = document.getElementById('announcements-container');
+      if (announcements.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full text-center py-12 text-slate-500 text-xs">
+            <i class="fa-solid fa-bullhorn text-2xl mb-2 opacity-50"></i>
+            <p>ยังไม่มีประกาศข่าวสารในขณะนี้</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = announcements.map(ann => {
+        let badgeColor = 'bg-brand-500/10 text-brand-300 border-brand-500/30';
+        if (ann.badge === 'ด่วนที่สุด') badgeColor = 'bg-rose-500/10 text-rose-400 border-rose-500/30';
+        else if (ann.badge === 'แจ้งยอดชำระ') badgeColor = 'bg-amber-500/10 text-amber-300 border-amber-500/30';
+        else if (ann.badge === 'สรุปงบประมาณ') badgeColor = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
+
+        const deleteBtn = isTreasurerAuthenticated 
+          ? `<button onclick="deleteAnnouncement('${ann.id}')" class="text-slate-500 hover:text-rose-400 text-xs transition"><i class="fa-solid fa-trash-can"></i></button>`
+          : '';
+
+        return `
+          <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-3.5 flex flex-col justify-between">
+            <div class="space-y-2.5">
+              <div class="flex items-center justify-between gap-2">
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${badgeColor}">
+                  ${escapeHtml(ann.badge || 'ทั่วไป')}
+                </span>
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] text-slate-500 font-mono">${escapeHtml(ann.date)}</span>
+                  ${deleteBtn}
+                </div>
+              </div>
+              <h4 class="font-bold text-white text-base leading-snug">${escapeHtml(ann.title)}</h4>
+              <p class="text-xs text-slate-300 leading-relaxed whitespace-pre-line">${escapeHtml(ann.content)}</p>
+            </div>
+            <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400">
+              <span class="flex items-center gap-1.5"><i class="fa-solid fa-bullhorn text-brand-400"></i> ${escapeHtml(ann.author || 'เหรัญญิก')}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openPostAnnouncementModal() {
+      if (!isTreasurerAuthenticated) {
+        openPinModal();
+        return;
+      }
+      document.getElementById('ann-form').reset();
+      document.getElementById('announcement-modal').classList.remove('hidden');
+    }
+
+    function closePostAnnouncementModal() {
+      document.getElementById('announcement-modal').classList.add('hidden');
+    }
+
+    function handleAnnouncementSubmit(event) {
+      event.preventDefault();
+      const title = document.getElementById('ann-title').value.trim();
+      const badge = document.getElementById('ann-badge').value;
+      const content = document.getElementById('ann-content').value.trim();
+
+      const newAnn = {
+        id: `ANN-${Date.now()}`,
+        title: title,
+        badge: badge,
+        content: content,
+        date: new Date().toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' }),
+        author: "เหรัญญิกภาควิชา"
+      };
+
+      announcements.unshift(newAnn);
+      closePostAnnouncementModal();
+      renderAnnouncements();
+      showToast('เผยแพร่ประกาศแล้ว', 'ประกาศใหม่ปรากฏบนกระดานข่าวสารเรียบร้อย');
+
+      if (APPS_SCRIPT_URL) {
+        sendPostToScript("POST_ANNOUNCEMENT", newAnn);
+      }
+    }
+
+    function deleteAnnouncement(id) {
+      if (!isTreasurerAuthenticated) return;
+      announcements = announcements.filter(a => a.id !== id);
+      renderAnnouncements();
+      showToast('ลบประกาศแล้ว', 'ประกาศดังกล่าวถูกนำออกจากกระดานข่าว');
+    }
+
+    // =========================================================================
+    // EXPORT & HELPERS
+    // =========================================================================
+    function exportTransactionsCSV() {
+      if (transactions.length === 0) {
+        showToast('ไม่มีข้อมูล', 'ไม่มีรายการในสมุดบัญชีสำหรับส่งออก', false);
+        return;
+      }
+      let csv = "\uFEFFวันที่,รายการ,ประเภท,จำนวนเงิน,ยอดคงเหลือ,หมายเหตุ\n";
+      transactions.forEach(t => {
+        csv += `"${t.date}","${t.title}","${t.type === 'income' ? 'รายรับ' : 'รายจ่าย'}","${t.amount}","${t.balance || ''}","${t.note || ''}"\n`;
+      });
+      downloadFile(csv, `สมุดบัญชีภาควิชา_${new Date().toISOString().slice(0, 10)}.csv`, 'text/csv;charset=utf-8;');
+      showToast('ส่งออก CSV เรียบร้อย', 'ดาวน์โหลดไฟล์สมุดบัญชีสำเร็จ');
+    }
+
+    function downloadFile(content, fileName, mimeType) {
+      const blob = new Blob([content], { type: mimeType });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = fileName;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    function updateGlobalStats() {
+      let incomeSum = 0;
+      let expenseSum = 0;
+      let incCount = 0;
+      let expCount = 0;
+
+      transactions.forEach(t => {
+        if (t.type === 'income') {
+          incomeSum += Number(t.amount) || 0;
+          incCount++;
+        } else {
+          expenseSum += Number(t.amount) || 0;
+          expCount++;
+        }
+      });
+
+      const netFund = incomeSum - expenseSum;
+
+      let pendingSum = 0;
+      let pendingCount = 0;
+      let paidSum = 0;
+      let paidCount = 0;
+
+      requests.forEach(r => {
+        if (r.status === 'pending') {
+          pendingSum += Number(r.amount) || 0;
+          pendingCount++;
+        } else if (r.status === 'paid') {
+          paidSum += Number(r.amount) || 0;
+          paidCount++;
+        }
+      });
+
+      // Ticker
+      document.getElementById('ticker-net-fund').textContent = `฿${formatMoney(netFund)}`;
+      document.getElementById('ticker-income-sum').textContent = `฿${formatMoney(incomeSum)}`;
+      document.getElementById('ticker-expense-sum').textContent = `฿${formatMoney(expenseSum)}`;
+      document.getElementById('ticker-pending-reimburse').textContent = `฿${formatMoney(pendingSum)}`;
+
+      // Ledger Hero
+      document.getElementById('ledger-stat-income').textContent = `฿${formatMoney(incomeSum)}`;
+      document.getElementById('ledger-stat-income-count').textContent = `${incCount} รายการ`;
+      document.getElementById('ledger-stat-expense').textContent = `฿${formatMoney(expenseSum)}`;
+      document.getElementById('ledger-stat-expense-count').textContent = `${expCount} รายการ`;
+      document.getElementById('ledger-stat-balance').textContent = `฿${formatMoney(netFund)}`;
+
+      // Treasurer
+      document.getElementById('stat-pending-count').textContent = `${pendingCount} รายการ`;
+      document.getElementById('stat-pending-sum').textContent = `฿${formatMoney(pendingSum)}`;
+      document.getElementById('stat-paid-count').textContent = `${paidCount} รายการ`;
+      document.getElementById('stat-paid-sum').textContent = `฿${formatMoney(paidSum)}`;
+      document.getElementById('stat-treasurer-income').textContent = `฿${formatMoney(incomeSum)}`;
+      document.getElementById('stat-treasurer-income-count').textContent = `${incCount} รายการ`;
+      document.getElementById('stat-treasurer-expense').textContent = `฿${formatMoney(expenseSum)}`;
+      document.getElementById('stat-treasurer-expense-count').textContent = `${expCount} รายการ`;
+
+      // Badge
+      const pendingBadge = document.getElementById('nav-pending-badge');
+      if (pendingCount > 0) {
+        pendingBadge.textContent = pendingCount;
+        pendingBadge.classList.remove('hidden');
+      } else {
+        pendingBadge.classList.add('hidden');
+      }
+    }
+
+    // Image compression helper
+    function compressImage(file, maxWidth = 1000, quality = 0.75) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            let width = img.width;
+            let height = img.height;
+
+            if (width > maxWidth) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            resolve(canvas.toDataURL('image/jpeg', quality));
+          };
+          img.onerror = reject;
+          img.src = e.target.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function previewReceiptImage(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      try {
+        tempReceiptDataUrl = await compressImage(file, 900, 0.75);
+        document.getElementById('receipt-preview-img').src = tempReceiptDataUrl;
+        document.getElementById('receipt-preview-placeholder').classList.add('hidden');
+        document.getElementById('receipt-preview-container').classList.remove('hidden');
+      } catch (err) {
+        showToast('ข้อผิดพลาด', 'ไม่สามารถประมวลผลรูปภาพได้', false);
+      }
+    }
+
+    function removeReceiptImage() {
+      tempReceiptDataUrl = null;
+      document.getElementById('receipt-file-input').value = '';
+      document.getElementById('receipt-preview-img').src = '';
+      document.getElementById('receipt-preview-container').classList.add('hidden');
+      document.getElementById('receipt-preview-placeholder').classList.remove('hidden');
+    }
+
+    async function previewTransferSlip(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      try {
+        tempTransferSlipDataUrl = await compressImage(file, 900, 0.75);
+        document.getElementById('transfer-slip-preview-img').src = tempTransferSlipDataUrl;
+        document.getElementById('transfer-slip-placeholder').classList.add('hidden');
+        document.getElementById('transfer-slip-preview-container').classList.remove('hidden');
+      } catch (err) {
+        showToast('ข้อผิดพลาด', 'ไม่สามารถประมวลผลรูปสลิปได้', false);
+      }
+    }
+
+    async function previewTxProof(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      try {
+        tempTxProofDataUrl = await compressImage(file, 900, 0.75);
+        document.getElementById('tx-proof-img').src = tempTxProofDataUrl;
+        document.getElementById('tx-proof-placeholder').classList.add('hidden');
+        document.getElementById('tx-proof-preview-container').classList.remove('hidden');
+      } catch (err) {
+        showToast('ข้อผิดพลาด', 'ไม่สามารถประมวลผลรูปภาพได้', false);
+      }
+    }
+
+    function removeTxProof() {
+      tempTxProofDataUrl = null;
+      document.getElementById('tx-proof-input').value = '';
+      document.getElementById('tx-proof-img').src = '';
+      document.getElementById('tx-proof-preview-container').classList.add('hidden');
+      document.getElementById('tx-proof-placeholder').classList.remove('hidden');
+    }
+
+    function toggleAccountFields() {
+      const payoutType = document.querySelector('input[name="payout-type"]:checked').value;
+      const bankWrapper = document.getElementById('bank-select-wrapper');
+      const accountLabel = document.getElementById('account-number-label');
+      const accountInput = document.getElementById('payout-account-number');
+
+      if (payoutType === 'promptpay') {
+        bankWrapper.classList.add('hidden');
+        accountLabel.textContent = 'เบอร์โทรศัพท์ หรือ เลขบัตร ปชช. พร้อมเพย์';
+        accountInput.placeholder = 'เช่น 0812345678 หรือ 1100400XXXXXX';
+      } else {
+        bankWrapper.classList.remove('hidden');
+        accountLabel.textContent = 'เลขที่บัญชีธนาคาร';
+        accountInput.placeholder = 'เช่น 123-4-56789-0';
+      }
+    }
+
+    let customPromptCallback = null;
+    function openCustomPrompt(title, desc, callback) {
+      document.getElementById('custom-prompt-title').textContent = title;
+      document.getElementById('custom-prompt-desc').textContent = desc;
+      const input = document.getElementById('custom-prompt-input');
+      input.value = '';
+      customPromptCallback = callback;
+      document.getElementById('custom-prompt-modal').classList.remove('hidden');
+      setTimeout(() => input.focus(), 100);
+    }
+
+    function closeCustomPrompt(isOk) {
+      const modal = document.getElementById('custom-prompt-modal');
+      const val = document.getElementById('custom-prompt-input').value.trim();
+      modal.classList.add('hidden');
+      if (isOk && customPromptCallback) {
+        customPromptCallback(val);
+      }
+      customPromptCallback = null;
+    }
+
+    function copyToClipboard(text) {
+      const tempTextArea = document.createElement("textarea");
+      tempTextArea.value = text;
+      document.body.appendChild(tempTextArea);
+      tempTextArea.select();
+      try {
+        document.execCommand('copy');
+      } catch (err) {}
+      document.body.removeChild(tempTextArea);
+    }
+
+    function openLightbox(imgSrc, title) {
+      if (!imgSrc) return;
+      document.getElementById('lightbox-img').src = imgSrc;
+      document.getElementById('lightbox-title').innerHTML = `<i class="fa-solid fa-file-image text-brand-400"></i> ${escapeHtml(title)}`;
+      document.getElementById('lightbox-modal').classList.remove('hidden');
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox-modal').classList.add('hidden');
+      document.getElementById('lightbox-img').src = '';
+    }
+
+    function showToast(title, desc, isSuccess = true) {
+      const toast = document.getElementById('toast');
+      const titleEl = document.getElementById('toast-title');
+      const descEl = document.getElementById('toast-desc');
+      const icon = document.getElementById('toast-icon');
+      const iconWrapper = document.getElementById('toast-icon-wrapper');
+
+      titleEl.textContent = title;
+      descEl.textContent = desc;
+
+      if (isSuccess) {
+        iconWrapper.className = "w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 text-sm";
+        icon.className = "fa-solid fa-check";
+      } else {
+        iconWrapper.className = "w-8 h-8 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0 text-sm";
+        icon.className = "fa-solid fa-triangle-exclamation";
+      }
+
+      toast.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+      clearTimeout(window.toastTimer);
+      window.toastTimer = setTimeout(hideToast, 4000);
+    }
+
+    function hideToast() {
+      document.getElementById('toast').classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
+    }
+
+    function formatMoney(amount) {
+      return (Number(amount) || 0).toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function maskAccountNumber(number) {
+      if (!number) return '-';
+      const clean = number.replace(/-/g, '');
+      if (clean.length < 5) return '***';
+      return clean.slice(0, 3) + '-XXX-' + clean.slice(-3);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // Export functions to global scope
+    window.switchMainTab = switchMainTab;
+    window.requestTreasurerAccess = requestTreasurerAccess;
+    window.openPinModal = openPinModal;
+    window.closePinModal = closePinModal;
+    window.submitTreasurerPin = submitTreasurerPin;
+    window.lockTreasurerSession = lockTreasurerSession;
+    window.toggleAccountFields = toggleAccountFields;
+    window.previewReceiptImage = previewReceiptImage;
+    window.removeReceiptImage = removeReceiptImage;
+    window.previewTransferSlip = previewTransferSlip;
+    window.previewTxProof = previewTxProof;
+    window.removeTxProof = removeTxProof;
+    window.filterTransactions = filterTransactions;
+    window.renderTransactionsTable = renderTransactionsTable;
+    window.openAddTransactionModal = openAddTransactionModal;
+    window.closeAddTransactionModal = closeAddTransactionModal;
+    window.handleTransactionSubmit = handleTransactionSubmit;
+    window.deleteTransaction = deleteTransaction;
+    window.handleMemberSubmit = handleMemberSubmit;
+    window.renderTransparentLedger = renderTransparentLedger;
+    window.setLedgerFilter = setLedgerFilter;
+    window.renderTreasurerTable = renderTreasurerTable;
+    window.setTreasurerFilter = setTreasurerFilter;
+    window.openTreasurerModal = openTreasurerModal;
+    window.closeTreasurerModal = closeTreasurerModal;
+    window.copyModalAccount = copyModalAccount;
+    window.confirmApproveAndPay = confirmApproveAndPay;
+    window.promptRejectCurrentRequest = promptRejectCurrentRequest;
+    window.openBatchSettleModal = openBatchSettleModal;
+    window.closeBatchSettleModal = closeBatchSettleModal;
+    window.toggleBatchItem = toggleBatchItem;
+    window.submitBatchSettlement = submitBatchSettlement;
+    window.openSheetConfigModal = openSheetConfigModal;
+    window.closeSheetConfigModal = closeSheetConfigModal;
+    window.saveSheetConfig = saveSheetConfig;
+    window.fetchDataFromGoogleSheet = fetchDataFromGoogleSheet;
+    window.renderAnnouncements = renderAnnouncements;
+    window.openPostAnnouncementModal = openPostAnnouncementModal;
+    window.closePostAnnouncementModal = closePostAnnouncementModal;
+    window.handleAnnouncementSubmit = handleAnnouncementSubmit;
+    window.deleteAnnouncement = deleteAnnouncement;
+    window.exportTransactionsCSV = exportTransactionsCSV;
+    window.promptChangePin = promptChangePin;
+    window.openCustomPrompt = openCustomPrompt;
+    window.closeCustomPrompt = closeCustomPrompt;
+    window.openLightbox = openLightbox;
+    window.closeLightbox = closeLightbox;
+    window.hideToast = hideToast;
+
+    // Initialize
+    window.addEventListener('DOMContentLoaded', () => {
+      const dateInput = document.getElementById('expense-date');
+      if (dateInput) {
+        dateInput.value = new Date().toISOString().slice(0, 10);
+      }
+      renderTransactionsTable();
+      renderTransparentLedger();
+      renderAnnouncements();
+      updateGlobalStats();
+
+      if (APPS_SCRIPT_URL) {
+        fetchDataFromGoogleSheet();
+      }
+    });
+  </script>
+</body>
+</html>
