@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ระบบการเงินภาควิชา | Department Financial Hub</title>
+  <title>ระบบการเงินของภาควิชา | Department Financial Hub</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Prompt & Plus Jakarta Sans -->
@@ -93,7 +93,7 @@
           </div>
           <div>
             <div class="flex items-center gap-2">
-              <h1 class="font-extrabold text-white text-base sm:text-lg tracking-tight">ระบบการเงินและเบิกจ่ายภาควิชา</h1>
+              <h1 class="font-extrabold text-white text-base sm:text-lg tracking-tight">ระบบการเงินของภาควิชา</h1>
               <span class="px-2 py-0.5 text-[10px] font-bold rounded-md bg-emerald-500/15 text-emerald-400 border border-emerald-500/25 uppercase tracking-wider hidden sm:inline-block">
                 ระบบส่วนกลาง
               </span>
@@ -144,7 +144,7 @@
     <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs">
       <div class="flex items-center gap-2.5">
         <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span class="text-slate-400">สถานะการเงินสาขา:</span>
+        <span class="text-slate-400">สถานะกองทุนสาขา:</span>
         <span class="text-white font-semibold flex items-center gap-1.5">
           <span>ยอดคงเหลือสุทธิ</span>
           <span id="ticker-net-fund" class="text-emerald-400 font-mono font-extrabold text-sm ml-1">฿0.00</span>
@@ -182,7 +182,7 @@
         <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div class="space-y-2 max-w-2xl">
             <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-brand-500/10 text-indigo-400 border border-brand-500/20">
-              <i class="fa-solid fa-chart-pie text-[10px]"></i> บัญชีการเงินส่วนกลางสาขา
+              <i class="fa-solid fa-chart-pie text-[10px]"></i> บัญชีการเงินส่วนกลางภาควิชา
             </span>
             <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
               บัญชีรายรับ-รายจ่าย
@@ -215,7 +215,6 @@
                 <i class="fa-solid fa-vault"></i> ยอดคงเหลือสุทธิ
               </span>
               <span id="ledger-stat-balance" class="text-2xl font-black text-white font-mono mt-1">฿0.00</span>
-              <span class="text-[10px] text-emerald-400 font-medium mt-0.5">พร้อมจัดสรรกิจกรรม</span>
             </div>
           </div>
         </div>
@@ -306,7 +305,7 @@
                 <i class="fa-solid fa-pen-to-square text-brand-500"></i>
                 <span>แบบฟอร์มขอเบิกเงินสำรองจ่าย</span>
               </h3>
-              <p class="text-xs text-slate-400 mt-0.5">แนบหลักฐานการสำรองจ่ายเพื่อให้เหรัญญิกตรวจสอบและโอนคืน</p>
+              <p class="text-xs text-slate-400 mt-0.5">แนบหลักฐานการสำรองจ่ายเพื่อให้เหรัญญิกตรวจสอบและโอนเงินคืน</p>
             </div>
             <span class="w-9 h-9 rounded-xl bg-brand-500/10 text-brand-400 border border-brand-500/20 flex items-center justify-center text-sm font-bold">
               <i class="fa-solid fa-file-invoice"></i>
@@ -334,7 +333,7 @@
               </label>
               <div class="relative">
                 <span class="absolute left-3.5 top-3 text-slate-500 text-xs"><i class="fa-solid fa-tag"></i></span>
-                <input type="text" id="expense-title" required placeholder="เช่น ค่าอุปกรณ์จัดซุ้มงาน OPH, ค่าเช่าสนามคัดตัว" 
+                <input type="text" id="expense-title" required placeholder="เช่น ค่าอุปกรณ์จัดซุ้มงาน OPH, ค่าเดินทาง" 
                        class="w-full pl-9 pr-3.5 py-2.5 text-xs bg-slate-950/70 border border-slate-800 rounded-xl focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 text-white placeholder-slate-600 transition">
               </div>
             </div>
@@ -420,14 +419,14 @@
                 <label id="account-number-label" class="block text-[11px] font-medium text-slate-400 mb-1">
                   หมายเลขพร้อมเพย์ หรือ หมายเลขบัญชีธนาคาร
                 </label>
-                <input type="text" id="payout-account-number" required placeholder="เช่น 0812345678" 
+                <input type="text" id="payout-account-number" required placeholder="เช่น 063xxxxxxx" 
                        class="w-full px-3.5 py-2 text-xs font-mono bg-slate-900 border border-slate-700 rounded-xl focus:outline-none focus:border-brand-500 text-white placeholder-slate-600 transition">
               </div>
 
               <!-- Account Holder Name -->
               <div>
                 <label class="block text-[11px] font-medium text-slate-400 mb-1">
-                  ชื่อบัญชีผู้รับเงิน
+                  ชื่อบัญชีผู้รับเงิน (ตรงกับหน้าสมุดบัญชี)
                 </label>
                 <input type="text" id="payout-account-name" required placeholder="ชื่อ-นามสกุลเจ้าของบัญชี" 
                        class="w-full px-3.5 py-2 text-xs bg-slate-900 border border-slate-700 rounded-xl focus:outline-none focus:border-brand-500 text-white placeholder-slate-600 transition">
@@ -449,7 +448,7 @@
                     <i class="fa-solid fa-cloud-arrow-up"></i>
                   </div>
                   <p class="text-xs font-semibold text-slate-200">แตะเพื่อถ่ายรูป หรือ เลือกรูปหลักฐาน</p>
-                  <p class="text-[11px] text-slate-500">รองรับไฟล์ JPG, PNG (ย่อขนาดอัตโนมัติ)</p>
+                  <p class="text-[11px] text-slate-500">รองรับไฟล์ JPG, PNG</p>
                 </div>
 
                 <div id="receipt-preview-container" class="hidden relative inline-block">
@@ -465,7 +464,7 @@
             <!-- Additional Notes -->
             <div>
               <label class="block text-xs font-medium text-slate-400 mb-1">หมายเหตุเพิ่มเติม (ถ้ามี)</label>
-              <textarea id="expense-notes" rows="2" placeholder="เช่น สำรองจ่ายด้วยเงินสด" 
+              <textarea id="expense-notes" rows="2" placeholder="เช่น สำรองจ่ายด้วยเงินสด เรียกรถจากแอพ" 
                         class="w-full px-3 py-2 text-xs bg-slate-950/70 border border-slate-800 rounded-xl focus:outline-none focus:border-brand-500 text-slate-300 placeholder-slate-600 transition"></textarea>
             </div>
 
@@ -564,7 +563,7 @@
           </div>
           <div>
             <div class="flex items-center gap-2">
-              <h2 class="text-lg font-bold text-white">โต๊ะทำงานเหรัญญิกภาควิชา (Treasurer Workbench)</h2>
+              <h2 class="text-lg font-bold text-white">โต๊ะทำงานเหรัญญิก (Treasurer Workbench)</h2>
               <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
                 <i class="fa-solid fa-shield-check"></i> โหมดเหรัญญิก
               </span>
@@ -951,7 +950,7 @@
         <i class="fa-solid fa-key"></i>
       </div>
       <div>
-        <h3 class="font-bold text-white text-lg">เข้าสู่พื้นที่เหรัญญิก</h3>
+        <h3 class="font-bold text-white text-lg">เข้าสู่ระบบเหรัญญิก</h3>
         <p class="text-xs text-slate-400 mt-1">กรุณาระบุรหัสผ่านเพื่อเข้าจัดการบัญชี ตรวจสอบ และอนุมัติสลิป</p>
       </div>
 
@@ -1115,7 +1114,7 @@
     // =========================================================================
     // STATE MANAGEMENT: GENERAL LEDGER, REIMBURSEMENTS & ANNOUNCEMENTS
     // =========================================================================
-    const PASSWORD_SALT = "dept-treasury-unified-2026";
+    const PASSWORD_SALT = "dept-reimburse-secure-2026";
     // Default PIN: 2569
     let storedTreasurerHash = "e87b7a70a8d6f51cb3298ec48c5b05611f71f654b0ebf84d08e515d688fa53d5";
 
@@ -1133,45 +1132,8 @@
     let tempTransferSlipDataUrl = null;
     let tempTxProofDataUrl = null;
 
-    // 1. General Ledger Transactions
-    let transactions = [
-      {
-        id: "ROW-2",
-        type: "income",
-        category: "เงินประจำเดือน",
-        title: "เก็บเงินประจำเดือนตุลาคม",
-        amount: 1020.00,
-        balance: 1020.00,
-        date: "24/10/68",
-        recordedBy: "เหรัญญิก",
-        receiptUrl: null,
-        note: "ยังไม่จ่าย 5 คน"
-      },
-      {
-        id: "ROW-3",
-        type: "expense",
-        category: "กิจกรรมและสันทนาการ",
-        title: "ค่าเช่าสนามคัดตัวนักกีฬาMedSci",
-        amount: 260.00,
-        balance: 760.00,
-        date: "13/01/69",
-        recordedBy: "เหรัญญิก",
-        receiptUrl: null,
-        note: ""
-      },
-      {
-        id: "ROW-4",
-        type: "income",
-        category: "เงินสนับสนุน / สปอนเซอร์",
-        title: "MedSci Welfare",
-        amount: 1020.00,
-        balance: 1780.00,
-        date: "28/01/69",
-        recordedBy: "เหรัญญิก",
-        receiptUrl: null,
-        note: "ยังไม่จ่าย 5 คน"
-      }
-    ];
+    // 1. General Ledger Transactions (ลบข้อมูลตัวอย่างออกแล้ว พร้อมรองรับข้อมูลจริงจาก Google Sheets)
+    let transactions = [];
 
     // 2. Member Reimbursement Claims
     let requests = [];
@@ -1180,11 +1142,11 @@
     let announcements = [
       {
         id: "ANN-1",
-        title: "ยินดีต้อนรับสู่ระบบการเงินและเบิกจ่ายภาควิชา",
+        title: "ยินดีต้อนรับสู่ระบบการเงินของภาควิชา",
         badge: "ทั่วไป",
-        content: "สมาชิกสามารถยื่นคำขอเบิกเงินสำรองจ่ายพร้อมแนบรูปหลักฐาน และสามารถติดตามสถานะการโอนเงินคืนจากเหรัญญิกได้",
+        content: "สมาชิกสามารถยื่นคำขอเบิกเงินสำรองจ่ายพร้อมแนบรูปหลักฐาน และสามารถติดตามสถานะการจ่ายเงินเงินคืนจากเหรัญญิกได้",
         date: "21/10/69",
-        author: "เหรัญญิก"
+        author: "เหรัญญิกภาควิชา"
       }
     ];
 
@@ -1320,11 +1282,16 @@
     // PIN & AUTHENTICATION
     // =========================================================================
     async function hashString(str) {
-      const encoder = new TextEncoder();
-      const data = encoder.encode(str + PASSWORD_SALT);
-      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-      const hashArray = Array.from(new Uint8Array(hashBuffer));
-      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      try {
+        if (window.crypto && crypto.subtle) {
+          const encoder = new TextEncoder();
+          const data = encoder.encode(str + PASSWORD_SALT);
+          const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+          const hashArray = Array.from(new Uint8Array(hashBuffer));
+          return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+      } catch (e) {}
+      return str;
     }
 
     function openPinModal() {
@@ -1339,10 +1306,19 @@
     }
 
     async function submitTreasurerPin() {
-      const pinInput = document.getElementById('input-treasurer-pin').value;
-      const hashed = await hashString(pinInput);
+      const pinInput = document.getElementById('input-treasurer-pin').value.trim();
+      const customPin = localStorage.getItem("dept_treasurer_pin");
+      let isValid = false;
 
-      if (hashed === storedTreasurerHash) {
+      // ตรวจสอบทั้งรหัสผ่านที่เหรัญญิกเคยตั้งใหม่ หรือรหัสเริ่มต้น 2569
+      if (customPin) {
+        isValid = (pinInput === customPin);
+      } else {
+        const hashed = await hashString(pinInput);
+        isValid = (pinInput === "2569" || hashed === storedTreasurerHash);
+      }
+
+      if (isValid) {
         isTreasurerAuthenticated = true;
         closePinModal();
 
@@ -1372,7 +1348,7 @@
       document.getElementById('th-tx-action').classList.add('hidden');
 
       switchMainTab('ledger');
-      showToast('ล็อกหน้าจอแล้ว', 'พื้นที่เหรัญญิกถูกล็อกเพื่อความปลอดภัย');
+      showToast('ล็อกหน้าจอแล้ว', 'ระบบเหรัญญิกถูกล็อกเพื่อความปลอดภัย');
     }
 
     async function promptChangePin() {
@@ -1381,6 +1357,7 @@
           showToast('ไม่สำเร็จ', 'รหัสผ่านต้องมีความยาวอย่างน้อย 4 ตัวอักษร', false);
           return;
         }
+        localStorage.setItem("dept_treasurer_pin", newPin);
         storedTreasurerHash = await hashString(newPin);
         showToast('เปลี่ยนรหัสผ่านแล้ว', 'โปรดจำรหัสผ่านใหม่สำหรับการเข้าใช้งานครั้งถัดไป');
       });
@@ -1664,14 +1641,14 @@
           </span>`;
         } else {
           statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/25">
-            <i class="fa-solid fa-clock text-[9px]"></i> รอตรวจ/รอโอน
+            <i class="fa-solid fa-clock text-[9px]"></i> รอตรวจ
           </span>`;
         }
 
         const slipButton = isPaid && r.transferSlipImage
           ? `<button onclick="openLightbox('${r.transferSlipImage}', 'สลิปโอนเงินคืน - ${escapeHtml(r.name)}')" 
                      class="px-2.5 py-1 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 rounded-lg text-[11px] font-semibold flex items-center gap-1 transition">
-              <i class="fa-solid fa-receipt text-[10px]"></i> ดูสลิปโอนคืน
+              <i class="fa-solid fa-receipt text-[10px]"></i> ดูสลิปเงินคืน
             </button>`
           : '';
 
@@ -1924,7 +1901,7 @@
         }).join('');
       }
 
-      document.getElementById('batch-title-input').value = `สรุปเบิกจ่ายคืนโครงการ (รวม ${selectedBatchIds.size} รายการ)`;
+      document.getElementById('batch-title-input').value = `สรุปเบิกจ่ายคืน (รวม ${selectedBatchIds.size} รายการ)`;
       const today = new Date();
       const dd = String(today.getDate()).padStart(2, '0');
       const mm = String(today.getMonth() + 1).padStart(2, '0');
@@ -1939,7 +1916,7 @@
       if (isChecked) selectedBatchIds.add(id);
       else selectedBatchIds.delete(id);
       recalcBatchTotal();
-      document.getElementById('batch-title-input').value = `สรุปเบิกจ่ายคืนโครงการ (รวม ${selectedBatchIds.size} รายการ)`;
+      document.getElementById('batch-title-input').value = `สรุปเบิกจ่ายคืน (รวม ${selectedBatchIds.size} รายการ)`;
     }
 
     function recalcBatchTotal() {
@@ -1982,7 +1959,7 @@
         title: title,
         amount: totalAmount,
         date: dateStr,
-        recordedBy: 'เหรัญญิก',
+        recordedBy: 'เหรัญญิกสาขา',
         receiptUrl: null,
         note: noteStr
       });
