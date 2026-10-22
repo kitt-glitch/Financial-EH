@@ -1118,8 +1118,10 @@
     // Default PIN: 2569
     let storedTreasurerHash = "e87b7a70a8d6f51cb3298ec48c5b05611f71f654b0ebf84d08e515d688fa53d5";
 
-    // Service Endpoint URL (stored in localStorage)
-    let APPS_SCRIPT_URL = localStorage.getItem("dept_treasury_script_url") || "";
+    // ใส่ Web App URL ของคุณ (ที่ลงท้ายด้วย /exec) ไว้ในเครื่องหมายคำพูด:
+    const DEFAULT_SCRIPT_URL = "https://script.google.com/macros/s/YOUR_ACTUAL_SCRIPT_ID/exec";
+    let APPS_SCRIPT_URL = localStorage.getItem("dept_treasury_script_url") || DEFAULT_SCRIPT_URL;
+
 
     let isTreasurerAuthenticated = false;
     let currentMainTab = 'ledger';
