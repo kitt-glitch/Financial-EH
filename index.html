@@ -2482,8 +2482,17 @@
     }
 
     function openLightbox(imgSrc, title) {
-      if (!imgSrc) return;
-      document.getElementById('lightbox-img').src = imgSrc;
+    if (!imgSrc) return;
+    // แปลงลิงก์ Google Drive ธรรมดาให้กลายเป็นลิงก์รูปภาพโดยตรง
+    let directImgUrl = imgSrc;
+    if (imgSrc.includes('drive.google.com')) {
+    const match = imgSrc.match(/\/d\/([a-zA-Z0-9_-]+)/) || imgSrc.match(/id=([a-zA-Z0-9_-]+)/);
+    if (match && match[1]) {
+      directImgUrl = `https://lh3.googleusercontent.com/d/${match[1]}`;
+      }
+    }
+
+      document.getElementById('lightbox-img').src = directImgUrl;
       document.getElementById('lightbox-title').innerHTML = `<i class="fa-solid fa-file-image text-brand-400"></i> ${escapeHtml(title)}`;
       document.getElementById('lightbox-modal').classList.remove('hidden');
     }
