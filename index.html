@@ -68,6 +68,157 @@
     .custom-scrollbar::-webkit-scrollbar-thumb:hover {
       background: #475569;
     }
+
+    body.light-theme {
+      background-color: #f8fafc !important;
+      color: #0f172a !important;
+    }
+    body.light-theme .fixed.-z-10 div { 
+      opacity: 0.25 !important; 
+    }
+    body.light-theme .glass-dark {
+      background: rgba(255, 255, 255, 0.95) !important;
+      border-color: #e2e8f0 !important;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
+    }
+
+    /* Cards & Containers */
+    body.light-theme .bg-slate-950,
+    body.light-theme .bg-slate-900,
+    body.light-theme .bg-slate-900\/90,
+    body.light-theme .bg-slate-900\/60,
+    body.light-theme .bg-slate-950\/70,
+    body.light-theme .bg-slate-950\/80,
+    body.light-theme .bg-slate-950\/60,
+    body.light-theme .bg-slate-950\/50,
+    body.light-theme .bg-slate-800 {
+      background-color: #ffffff !important;
+      border-color: #e2e8f0 !important;
+    }
+
+    /* Specific element tweaks */
+    body.light-theme .bg-gradient-to-r.from-slate-900 {
+      background: linear-gradient(to right, #ffffff, #f8fafc, #ffffff) !important;
+    }
+    body.light-theme .bg-slate-900\/40 {
+      background-color: #f1f5f9 !important;
+    }
+
+    /* Form Inputs, Selects, Textareas */
+    body.light-theme input,
+    body.light-theme select,
+    body.light-theme textarea {
+      background-color: #f8fafc !important;
+      color: #0f172a !important;
+      border-color: #cbd5e1 !important;
+    }
+    body.light-theme input::placeholder,
+    body.light-theme textarea::placeholder {
+      color: #94a3b8 !important;
+    }
+    body.light-theme input:focus,
+    body.light-theme select:focus,
+    body.light-theme textarea:focus {
+      background-color: #ffffff !important;
+      border-color: #6366f1 !important;
+    }
+
+    /* Typography Overrides */
+    body.light-theme .text-white { color: #0f172a !important; }
+    body.light-theme .text-slate-300 { color: #334155 !important; }
+    body.light-theme .text-slate-400 { color: #475569 !important; }
+    body.light-theme .text-slate-200 { color: #1e293b !important; }
+    body.light-theme .text-slate-500 { color: #64748b !important; }
+
+    /* Borders & Dividers */
+    body.light-theme .border-slate-800,
+    body.light-theme .border-slate-800\/80,
+    body.light-theme .border-slate-800\/60,
+    body.light-theme .border-slate-800\/70,
+    body.light-theme .border-slate-700 {
+      border-color: #e2e8f0 !important;
+    }
+    body.light-theme .divide-slate-800\/60 > :not([hidden]) ~ :not([hidden]) {
+      border-color: #e2e8f0 !important;
+    }
+
+    /* Buttons Hover States */
+    body.light-theme .hover\:bg-slate-800\/30:hover { background-color: #f8fafc !important; }
+    body.light-theme .hover\:bg-slate-800:hover { background-color: #f1f5f9 !important; }
+    body.light-theme .hover\:border-brand-500:hover { border-color: #6366f1 !important; }
+    body.light-theme button.bg-slate-800 { background-color: #f1f5f9 !important; color: #334155 !important; border: 1px solid #e2e8f0; }
+    body.light-theme button.bg-slate-800:hover { background-color: #e2e8f0 !important; }
+
+    /* Modals & Toasts */
+    body.light-theme #pin-modal > div,
+    body.light-theme #custom-prompt-modal > div,
+    body.light-theme #treasurer-modal > div,
+    body.light-theme #transaction-modal > div,
+    body.light-theme #announcement-modal > div,
+    body.light-theme #batch-settle-modal > div,
+    body.light-theme #sheet-config-modal > div,
+    body.light-theme #lightbox-modal > div {
+      background-color: #ffffff !important;
+      border-color: #e2e8f0 !important;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+    }
+    body.light-theme #toast {
+      background-color: #ffffff !important;
+      border-color: #e2e8f0 !important;
+    }
+
+    /* Scrollbars for Light Theme */
+    body.light-theme .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; }
+    body.light-theme .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+    /* ================================================================= */
+    /* ปรับแต่งการแสดงผลส่วน "ยอดเงิน / กล่องตัวเลข" ในโหมดสว่างโดยเฉพาะ */
+    /* ================================================================= */
+
+    /* 1. แถบสรุปยอดเงินด้านบน (Financial Ticker) */
+    body.light-theme .bg-slate-900\/40 {
+      background-color: #f1f5f9 !important;
+      border-color: #e2e8f0 !important;
+    }
+
+    /* 2. กรอบแบนเนอร์หลักและกล่องยอดเงิน (Hero Balance Banner) */
+    body.light-theme #tab-ledger .bg-gradient-to-r.from-slate-900 {
+      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 55%, #eef2ff 100%) !important;
+      border: 1px solid #cbd5e1 !important;
+      box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.08) !important;
+    }
+
+    /* 3. กล่องการ์ดสรุปยอดเงิน (รายรับสะสม, รายจ่ายสะสม, ยอดคงเหลือ) */
+    body.light-theme #tab-ledger .grid.grid-cols-1.sm\:grid-cols-3 > div,
+    body.light-theme #tab-treasurer .grid.grid-cols-1.sm\:grid-cols-2.lg\:grid-cols-4 > div {
+      background: #ffffff !important;
+      border: 1px solid #e2e8f0 !important;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.04) !important;
+    }
+
+    /* กล่องยอดคงเหลือสุทธิ (เน้นขอบและพื้นหลังให้เด่นเป็นพิเศษ) */
+    body.light-theme #tab-ledger .grid.grid-cols-1.sm\:grid-cols-3 > div:last-child {
+      background: linear-gradient(135deg, #ffffff 0%, #eef2ff 100%) !important;
+      border: 1.5px solid #818cf8 !important;
+    }
+
+    /* 4. ปรับสีตัวเลขยอดเงินในโหมดสว่างให้อ่านชัดเจน (ไม่จางหรือแสบตา) */
+    body.light-theme .text-emerald-400 {
+      color: #059669 !important; /* สีเขียวเข้มคมชัดสำหรับรายรับและยอดเงินคงเหลือ */
+    }
+    body.light-theme .text-rose-400 {
+      color: #e11d48 !important; /* สีแดงเข้มคมชัดสำหรับรายจ่าย */
+    }
+    body.light-theme .text-amber-400 {
+      color: #d97706 !important; /* สีส้มทองคมชัดสำหรับยอดรอโอน */
+    }
+    body.light-theme .text-indigo-300,
+    body.light-theme .text-indigo-400 {
+      color: #4338ca !important; /* สีน้ำเงินอินดิโกสำหรับหัวข้อยอดคงเหลือ */
+    }
+    body.light-theme #ledger-stat-balance {
+      color: #0f172a !important; /* ตัวเลขยอดคงเหลือสุทธิสีเข้มคมชัด */
+    }
   </style>
 </head>
 <body class="bg-slate-950 min-h-screen flex flex-col antialiased selection:bg-brand-500 selection:text-white relative overflow-x-hidden text-slate-100">
@@ -109,33 +260,41 @@
         </button>
       </div>
 
-      <!-- Navigation Tabs (Cleaned: Technical connection text removed) -->
-      <nav class="flex items-center gap-1.5 bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800 w-full md:w-auto overflow-x-auto custom-scrollbar">
-        <button id="nav-btn-ledger" onclick="switchMainTab('ledger')" 
-                class="flex-1 md:flex-none px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-300 flex items-center justify-center gap-2 bg-gradient-to-r from-brand-600 to-indigo-600 text-white shadow-md shadow-brand-500/20 whitespace-nowrap">
-          <i class="fa-solid fa-book-journal-whills text-xs"></i>
-          <span>สมุดบัญชีสาขา</span>
-        </button>
+      <!-- Navigation Tabs & Theme Toggle -->
+      <div class="flex items-center gap-2 w-full md:w-auto">
+        <nav class="flex items-center gap-1.5 bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800 w-full md:w-auto overflow-x-auto custom-scrollbar">
+          <button id="nav-btn-ledger" onclick="switchMainTab('ledger')" 
+                  class="flex-1 md:flex-none px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-300 flex items-center justify-center gap-2 bg-gradient-to-r from-brand-600 to-indigo-600 text-white shadow-md shadow-brand-500/20 whitespace-nowrap">
+            <i class="fa-solid fa-book-journal-whills text-xs"></i>
+            <span>สมุดบัญชีสาขา</span>
+          </button>
 
-        <button id="nav-btn-reimburse" onclick="switchMainTab('reimburse')" 
-                class="flex-1 md:flex-none px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-300 flex items-center justify-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800/60 whitespace-nowrap">
-          <i class="fa-solid fa-receipt text-xs"></i>
-          <span>ยื่นขอเบิกเงิน</span>
-          <span id="nav-pending-badge" class="bg-amber-500 text-slate-950 text-[10px] font-bold px-1.5 py-0.2 rounded-full hidden">0</span>
-        </button>
+          <button id="nav-btn-reimburse" onclick="switchMainTab('reimburse')" 
+                  class="flex-1 md:flex-none px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-300 flex items-center justify-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800/60 whitespace-nowrap">
+            <i class="fa-solid fa-receipt text-xs"></i>
+            <span>ยื่นขอเบิกเงิน</span>
+            <span id="nav-pending-badge" class="bg-amber-500 text-slate-950 text-[10px] font-bold px-1.5 py-0.2 rounded-full hidden">0</span>
+          </button>
 
-        <button id="nav-btn-announcements" onclick="switchMainTab('announcements')" 
-                class="flex-1 md:flex-none px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-300 flex items-center justify-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800/60 whitespace-nowrap">
-          <i class="fa-solid fa-bullhorn text-xs"></i>
-          <span>ข่าวสารการเงิน</span>
-        </button>
+          <button id="nav-btn-announcements" onclick="switchMainTab('announcements')" 
+                  class="flex-1 md:flex-none px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-300 flex items-center justify-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800/60 whitespace-nowrap">
+            <i class="fa-solid fa-bullhorn text-xs"></i>
+            <span>ข่าวสารการเงิน</span>
+          </button>
 
-        <button id="nav-btn-treasurer" onclick="requestTreasurerAccess()" 
-                class="hidden md:flex flex-1 md:flex-none px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-300 items-center justify-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800/60 whitespace-nowrap">
-          <i id="nav-treasurer-lock-icon" class="fa-solid fa-lock text-amber-400 text-xs"></i>
-          <span>แผงควบคุมเหรัญญิก</span>
+          <button id="nav-btn-treasurer" onclick="requestTreasurerAccess()" 
+                  class="hidden md:flex flex-1 md:flex-none px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-300 items-center justify-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800/60 whitespace-nowrap">
+            <i id="nav-treasurer-lock-icon" class="fa-solid fa-lock text-amber-400 text-xs"></i>
+            <span>แผงควบคุมเหรัญญิก</span>
+          </button>
+        </nav>
+
+        <!-- Theme Toggle Button (Light / Dark) -->
+        <button id="theme-toggle-btn" onclick="toggleTheme()" title="สลับธีมสว่าง / มืด"
+                class="px-3 py-2.5 rounded-2xl bg-slate-900 border border-slate-800 text-amber-400 hover:text-amber-300 hover:bg-slate-800 transition flex items-center justify-center shrink-0 shadow-md">
+          <i id="theme-toggle-icon" class="fa-solid fa-sun text-sm"></i>
         </button>
-      </nav>
+      </div>
     </div>
   </header>
 
@@ -1134,7 +1293,7 @@
     let tempTransferSlipDataUrl = null;
     let tempTxProofDataUrl = null;
 
-    // 1. General Ledger Transactions (ลบข้อมูลตัวอย่างออกแล้ว พร้อมรองรับข้อมูลจริงจาก Google Sheets)
+    // 1. General Ledger Transactions
     let transactions = [];
 
     // 2. Member Reimbursement Claims
@@ -1312,7 +1471,6 @@
       const customPin = localStorage.getItem("dept_treasurer_pin");
       let isValid = false;
 
-      // ตรวจสอบทั้งรหัสผ่านที่เหรัญญิกเคยตั้งใหม่ หรือรหัสเริ่มต้น 2569
       if (customPin) {
         isValid = (pinInput === customPin);
       } else {
@@ -1324,7 +1482,6 @@
         isTreasurerAuthenticated = true;
         closePinModal();
 
-        // Update indicators
         const navLock = document.getElementById('nav-treasurer-lock-icon');
         const mobileLock = document.getElementById('mobile-treasurer-lock-icon');
         if (navLock) navLock.className = "fa-solid fa-lock-open text-emerald-400 text-xs";
@@ -1631,6 +1788,7 @@
       container.innerHTML = filtered.map(r => {
         const isPaid = r.status === 'paid';
         const isRejected = r.status === 'rejected';
+        const isCancelled = r.status === 'cancelled';
 
         let statusBadge = '';
         if (isPaid) {
@@ -1641,11 +1799,22 @@
           statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/10 text-rose-400 border border-rose-500/25">
             <i class="fa-solid fa-ban text-[9px]"></i> ส่งกลับแก้ไข
           </span>`;
+        } else if (isCancelled) {
+          statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-800 text-slate-400 border border-slate-700">
+            <i class="fa-solid fa-ban text-[9px]"></i> ยกเลิกแล้ว
+          </span>`;
         } else {
           statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/25">
             <i class="fa-solid fa-clock text-[9px]"></i> รอตรวจ
           </span>`;
         }
+
+        const cancelButton = (!isPaid && !isRejected && !isCancelled)
+          ? `<button onclick="cancelReimbursementRequest('${r.id}')" 
+                     class="px-2.5 py-1 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-lg text-[11px] font-medium flex items-center gap-1 transition">
+              <i class="fa-solid fa-xmark text-[10px]"></i> ยกเลิกคำขอ
+            </button>`
+          : '';
 
         const slipButton = isPaid && r.transferSlipImage
           ? `<button onclick="openLightbox('${r.transferSlipImage}', 'สลิปโอนเงินคืน - ${escapeHtml(r.name)}')" 
@@ -1689,6 +1858,7 @@
               </div>
 
               <div class="flex items-center gap-2 ml-auto">
+                ${cancelButton}
                 ${receiptButton}
                 ${slipButton}
               </div>
@@ -1871,7 +2041,7 @@
     }
 
     // =========================================================================
-    // BATCH SETTLEMENT (รวบยอดตัดจ่าย 1 แถว)
+    // BATCH SETTLEMENT
     // =========================================================================
     let selectedBatchIds = new Set();
 
@@ -2118,7 +2288,10 @@
         }
       });
 
-      const netFund = incomeSum - expenseSum;
+      // หากมีข้อมูลยอดคงเหลือล่าสุดจาก Google Sheet ให้ดึงค่านั้นมาแสดงทันที ถ้าไม่มีจึงคำนวณจาก รายรับ - รายจ่าย
+      const netFund = (transactions.length > 0 && transactions[0].balance !== undefined && !isNaN(Number(transactions[0].balance)))
+        ? Number(transactions[0].balance)
+        : (incomeSum - expenseSum);
 
       let pendingSum = 0;
       let pendingCount = 0;
@@ -2148,7 +2321,6 @@
       document.getElementById('ledger-stat-expense-count').textContent = `${expCount} รายการ`;
       document.getElementById('ledger-stat-balance').textContent = `฿${formatMoney(netFund)}`;
 
-      // Treasurer
       document.getElementById('stat-pending-count').textContent = `${pendingCount} รายการ`;
       document.getElementById('stat-pending-sum').textContent = `฿${formatMoney(pendingSum)}`;
       document.getElementById('stat-paid-count').textContent = `${paidCount} รายการ`;
@@ -2158,7 +2330,6 @@
       document.getElementById('stat-treasurer-expense').textContent = `฿${formatMoney(expenseSum)}`;
       document.getElementById('stat-treasurer-expense-count').textContent = `${expCount} รายการ`;
 
-      // Badge
       const pendingBadge = document.getElementById('nav-pending-badge');
       if (pendingCount > 0) {
         pendingBadge.textContent = pendingCount;
@@ -2168,7 +2339,6 @@
       }
     }
 
-    // Image compression helper
     function compressImage(file, maxWidth = 1000, quality = 0.75) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -2261,11 +2431,11 @@
 
       if (payoutType === 'promptpay') {
         bankWrapper.classList.add('hidden');
-        accountLabel.textContent = 'เบอร์โทรศัพท์ หรือ เลขบัตร ปชช. พร้อมเพย์';
-        accountInput.placeholder = 'เช่น 0812345678 หรือ 1100400XXXXXX';
+        accountLabel.textContent = 'หมายเลขพร้อมเพย์ หรือ หมายเลขบัญชีธนาคาร';
+        accountInput.placeholder = 'เช่น 063xxxxxxx';
       } else {
         bankWrapper.classList.remove('hidden');
-        accountLabel.textContent = 'เลขที่บัญชีธนาคาร';
+        accountLabel.textContent = 'หมายเลขพร้อมเพย์ หรือ หมายเลขบัญชีธนาคาร';
         accountInput.placeholder = 'เช่น 123-4-56789-0';
       }
     }
@@ -2352,6 +2522,37 @@
       return clean.slice(0, 3) + '-XXX-' + clean.slice(-3);
     }
 
+    function toggleTheme() {
+      const isLight = document.body.classList.toggle('light-theme');
+      const icon = document.getElementById('theme-toggle-icon');
+      if (isLight) {
+        localStorage.setItem('dept_treasury_theme', 'light');
+        if (icon) icon.className = 'fa-solid fa-moon text-indigo-400 text-sm';
+      } else {
+        localStorage.setItem('dept_treasury_theme', 'dark');
+        if (icon) icon.className = 'fa-solid fa-sun text-amber-400 text-sm';
+      }
+    }
+
+    function cancelReimbursementRequest(reqId) {
+      openCustomPrompt('ยืนยันยกเลิกคำขอเบิก', 'พิมพ์คำว่า "ยกเลิก" เพื่อยืนยันการยกเลิกรายการนี้:', async (val) => {
+        if (val === 'ยกเลิก') {
+          const target = requests.find(r => r.id === reqId);
+          if (target) {
+            target.status = 'cancelled';
+            renderTransparentLedger();
+            renderTreasurerTable();
+            updateGlobalStats();
+            showToast('ยกเลิกคำขอสำเร็จ', `คำขอรหัส ${reqId} ถูกยกเลิกแล้ว`);
+
+            if (APPS_SCRIPT_URL) {
+              sendPostToScript("CANCEL_REIMBURSEMENT", { id: reqId });
+            }
+          }
+        }
+      });
+    }
+
     function escapeHtml(str) {
       if (!str) return '';
       return String(str)
@@ -2411,9 +2612,19 @@
     window.openLightbox = openLightbox;
     window.closeLightbox = closeLightbox;
     window.hideToast = hideToast;
+    window.toggleTheme = toggleTheme;
+    window.cancelReimbursementRequest = cancelReimbursementRequest;
 
     // Initialize
     window.addEventListener('DOMContentLoaded', () => {
+      // Check stored theme
+      const savedTheme = localStorage.getItem('dept_treasury_theme');
+      if (savedTheme === 'light') {
+        document.body.classList.add('light-theme');
+        const icon = document.getElementById('theme-toggle-icon');
+        if (icon) icon.className = 'fa-solid fa-moon text-indigo-400 text-sm';
+      }
+
       const dateInput = document.getElementById('expense-date');
       if (dateInput) {
         dateInput.value = new Date().toISOString().slice(0, 10);
