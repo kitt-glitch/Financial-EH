@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Department Financial Hub</title>
+  <title>ระบบการเงินของภาควิชา | Department Financial Hub</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Prompt & Plus Jakarta Sans -->
@@ -69,6 +69,22 @@
       background: #475569;
     }
 
+    /* ปรับแต่งกล่อง input วันที่ให้ความสูงและความตรงสอดคล้องกับ input อื่น */
+    input[type="date"] {
+      -webkit-appearance: none;
+      height: 42px !important;
+      max-height: 42px !important;
+      min-height: 42px !important;
+      line-height: 1.25rem;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      text-align: left !important;
+    }
+    input[type="date"]::-webkit-date-and-time-value {
+      text-align: left !important;
+      min-height: 1.25rem;
+    }
+
     body.light-theme {
       background-color: #f8fafc !important;
       color: #0f172a !important;
@@ -82,7 +98,7 @@
       box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
     }
 
-    /* Cards & Containers */
+    /* Cards & Containers in Light Theme */
     body.light-theme .bg-slate-950,
     body.light-theme .bg-slate-900,
     body.light-theme .bg-slate-900\/90,
@@ -96,15 +112,42 @@
       border-color: #e2e8f0 !important;
     }
 
-    /* Specific element tweaks */
     body.light-theme .bg-gradient-to-r.from-slate-900 {
-      background: linear-gradient(to right, #ffffff, #f8fafc, #ffffff) !important;
+      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 55%, #eef2ff 100%) !important;
+      border: 1px solid #cbd5e1 !important;
+      box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.08) !important;
     }
     body.light-theme .bg-slate-900\/40 {
       background-color: #f1f5f9 !important;
+      border-color: #e2e8f0 !important;
     }
 
-    /* Form Inputs, Selects, Textareas */
+    body.light-theme #tab-ledger .grid.grid-cols-1.sm\:grid-cols-3 > div,
+    body.light-theme #tab-treasurer .grid.grid-cols-1.sm\:grid-cols-2.lg\:grid-cols-4 > div {
+      background: #ffffff !important;
+      border: 1px solid #e2e8f0 !important;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
+    }
+
+    body.light-theme #tab-ledger .grid.grid-cols-1.sm\:grid-cols-3 > div:last-child {
+      background: linear-gradient(135deg, #ffffff 0%, #eef2ff 100%) !important;
+      border: 1.5px solid #818cf8 !important;
+    }
+
+    /* Typography Overrides */
+    body.light-theme .text-white { color: #0f172a !important; }
+    body.light-theme .text-slate-300 { color: #334155 !important; }
+    body.light-theme .text-slate-400 { color: #475569 !important; }
+    body.light-theme .text-slate-200 { color: #1e293b !important; }
+    body.light-theme .text-slate-500 { color: #64748b !important; }
+
+    body.light-theme .text-emerald-400 { color: #059669 !important; }
+    body.light-theme .text-rose-400 { color: #e11d48 !important; }
+    body.light-theme .text-amber-400 { color: #d97706 !important; }
+    body.light-theme .text-indigo-300,
+    body.light-theme .text-indigo-400 { color: #4338ca !important; }
+    body.light-theme #ledger-stat-balance { color: #0f172a !important; }
+
     body.light-theme input,
     body.light-theme select,
     body.light-theme textarea {
@@ -123,14 +166,6 @@
       border-color: #6366f1 !important;
     }
 
-    /* Typography Overrides */
-    body.light-theme .text-white { color: #0f172a !important; }
-    body.light-theme .text-slate-300 { color: #334155 !important; }
-    body.light-theme .text-slate-400 { color: #475569 !important; }
-    body.light-theme .text-slate-200 { color: #1e293b !important; }
-    body.light-theme .text-slate-500 { color: #64748b !important; }
-
-    /* Borders & Dividers */
     body.light-theme .border-slate-800,
     body.light-theme .border-slate-800\/80,
     body.light-theme .border-slate-800\/60,
@@ -138,18 +173,10 @@
     body.light-theme .border-slate-700 {
       border-color: #e2e8f0 !important;
     }
-    body.light-theme .divide-slate-800\/60 > :not([hidden]) ~ :not([hidden]) {
-      border-color: #e2e8f0 !important;
-    }
 
-    /* Buttons Hover States */
-    body.light-theme .hover\:bg-slate-800\/30:hover { background-color: #f8fafc !important; }
-    body.light-theme .hover\:bg-slate-800:hover { background-color: #f1f5f9 !important; }
-    body.light-theme .hover\:border-brand-500:hover { border-color: #6366f1 !important; }
     body.light-theme button.bg-slate-800 { background-color: #f1f5f9 !important; color: #334155 !important; border: 1px solid #e2e8f0; }
     body.light-theme button.bg-slate-800:hover { background-color: #e2e8f0 !important; }
 
-    /* Modals & Toasts */
     body.light-theme #pin-modal > div,
     body.light-theme #custom-prompt-modal > div,
     body.light-theme #treasurer-modal > div,
@@ -157,77 +184,12 @@
     body.light-theme #announcement-modal > div,
     body.light-theme #batch-settle-modal > div,
     body.light-theme #sheet-config-modal > div,
-    body.light-theme #lightbox-modal > div {
-      background-color: #ffffff !important;
-      border-color: #e2e8f0 !important;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
-    }
+    body.light-theme #lightbox-modal > div,
     body.light-theme #toast {
       background-color: #ffffff !important;
       border-color: #e2e8f0 !important;
+      color: #0f172a !important;
     }
-
-    /* Scrollbars for Light Theme */
-    body.light-theme .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; }
-    body.light-theme .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-
-    /* ================================================================= */
-    /* ปรับแต่งการแสดงผลส่วน "ยอดเงิน / กล่องตัวเลข" ในโหมดสว่างโดยเฉพาะ */
-    /* ================================================================= */
-
-    /* 1. แถบสรุปยอดเงินด้านบน (Financial Ticker) */
-    body.light-theme .bg-slate-900\/40 {
-      background-color: #f1f5f9 !important;
-      border-color: #e2e8f0 !important;
-    }
-
-    /* 2. กรอบแบนเนอร์หลักและกล่องยอดเงิน (Hero Balance Banner) */
-    body.light-theme #tab-ledger .bg-gradient-to-r.from-slate-900 {
-      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 55%, #eef2ff 100%) !important;
-      border: 1px solid #cbd5e1 !important;
-      box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.08) !important;
-    }
-
-    /* 3. กล่องการ์ดสรุปยอดเงิน (รายรับสะสม, รายจ่ายสะสม, ยอดคงเหลือ) */
-    body.light-theme #tab-ledger .grid.grid-cols-1.sm\:grid-cols-3 > div,
-    body.light-theme #tab-treasurer .grid.grid-cols-1.sm\:grid-cols-2.lg\:grid-cols-4 > div {
-      background: #ffffff !important;
-      border: 1px solid #e2e8f0 !important;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.04) !important;
-    }
-
-    /* กล่องยอดคงเหลือสุทธิ (เน้นขอบและพื้นหลังให้เด่นเป็นพิเศษ) */
-    body.light-theme #tab-ledger .grid.grid-cols-1.sm\:grid-cols-3 > div:last-child {
-      background: linear-gradient(135deg, #ffffff 0%, #eef2ff 100%) !important;
-      border: 1.5px solid #818cf8 !important;
-    }
-
-    /* 4. ปรับสีตัวเลขยอดเงินในโหมดสว่างให้อ่านชัดเจน (ไม่จางหรือแสบตา) */
-    body.light-theme .text-emerald-400 {
-      color: #059669 !important; /* สีเขียวเข้มคมชัดสำหรับรายรับและยอดเงินคงเหลือ */
-    }
-    body.light-theme .text-rose-400 {
-      color: #e11d48 !important; /* สีแดงเข้มคมชัดสำหรับรายจ่าย */
-    }
-    body.light-theme .text-amber-400 {
-      color: #d97706 !important; /* สีส้มทองคมชัดสำหรับยอดรอโอน */
-    }
-    body.light-theme .text-indigo-300,
-    body.light-theme .text-indigo-400 {
-      color: #4338ca !important; /* สีน้ำเงินอินดิโกสำหรับหัวข้อยอดคงเหลือ */
-    }
-    body.light-theme #ledger-stat-balance {
-      color: #0f172a !important; /* ตัวเลขยอดคงเหลือสุทธิสีเข้มคมชัด */
-    }
-
-    input[type="date"] {
-      -webkit-appearance: none;
-      height: 42px !important;
-      max-height: 42px !important;
-      padding-top: 0 !important;
-      padding-bottom: 0 !important;
-    }
-
   </style>
 </head>
 <body class="bg-slate-950 min-h-screen flex flex-col antialiased selection:bg-brand-500 selection:text-white relative overflow-x-hidden text-slate-100">
@@ -298,7 +260,7 @@
           </button>
         </nav>
 
-        <!-- Theme Toggle Button (Light / Dark) -->
+        <!-- Theme Toggle Button -->
         <button id="theme-toggle-btn" onclick="toggleTheme()" title="สลับธีมสว่าง / มืด"
                 class="px-3 py-2.5 rounded-2xl bg-slate-900 border border-slate-800 text-amber-400 hover:text-amber-300 hover:bg-slate-800 transition flex items-center justify-center shrink-0 shadow-md">
           <i id="theme-toggle-icon" class="fa-solid fa-sun text-sm"></i>
@@ -340,12 +302,8 @@
 
   <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-8">
 
-    <!-- ================================================================= -->
-    <!-- TAB 1: DEPARTMENT FINANCIAL LEDGER (สมุดบัญชีสาขา) -->
-    <!-- ================================================================= -->
+    <!-- TAB 1: LEDGER -->
     <section id="tab-ledger" class="space-y-6">
-
-      <!-- Hero Summary Banner -->
       <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950/70 to-slate-900 border border-slate-800 p-6 sm:p-8 shadow-2xl">
         <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div class="space-y-2 max-w-2xl">
@@ -360,7 +318,6 @@
             </p>
           </div>
 
-          <!-- Fund Metric Cards -->
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 w-full lg:w-auto">
             <div class="bg-slate-900/90 border border-slate-800 p-4 rounded-2xl flex flex-col justify-center min-w-[150px]">
               <span class="text-[11px] text-emerald-400 font-medium flex items-center gap-1">
@@ -389,8 +346,6 @@
       </div>
 
       <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-5">
-        
-        <!-- Controls: Category, Type filter, Search & Add Button -->
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-800">
           <div class="flex flex-wrap items-center gap-2">
             <div class="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs">
@@ -423,7 +378,6 @@
                      class="w-full pl-8 pr-3 py-2 text-xs bg-slate-950 border border-slate-800 rounded-xl focus:outline-none focus:border-brand-500 text-white placeholder-slate-600">
             </div>
 
-            <!-- Add Transaction Button -->
             <button onclick="openAddTransactionModal()" 
                     class="px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-emerald-500/20 flex items-center gap-2 shrink-0 transition">
               <i class="fa-solid fa-plus-circle"></i>
@@ -432,7 +386,6 @@
           </div>
         </div>
 
-        <!-- Transactions Ledger Table -->
         <div class="overflow-x-auto">
           <table class="w-full text-left text-xs text-slate-300">
             <thead class="bg-slate-950/70 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
@@ -447,26 +400,18 @@
                 <th id="th-tx-action" class="py-3.5 px-4 font-semibold text-right hidden">จัดการ</th>
               </tr>
             </thead>
-            <tbody id="ledger-table-body" class="divide-y divide-slate-800/60">
-              <!-- Dynamically populated via JavaScript -->
-            </tbody>
+            <tbody id="ledger-table-body" class="divide-y divide-slate-800/60"></tbody>
           </table>
         </div>
-
       </div>
-
     </section>
 
-    <!-- ================================================================= -->
-    <!-- TAB 2: REIMBURSEMENT HUB (แบบฟอร์ม & ติดตามสถานะ) -->
-    <!-- ================================================================= -->
+    <!-- TAB 2: REIMBURSEMENT -->
     <section id="tab-reimburse" class="hidden space-y-6">
-
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
         <!-- LEFT: Reimbursement Form -->
         <div class="lg:col-span-5 bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-7 shadow-2xl space-y-5 text-white relative">
-          
           <div class="flex items-center justify-between pb-4 border-b border-slate-800">
             <div>
               <h3 class="font-bold text-white text-lg flex items-center gap-2">
@@ -481,8 +426,6 @@
           </div>
 
           <form id="reimbursement-form" onsubmit="handleMemberSubmit(event)" class="space-y-4">
-            
-            <!-- Applicant Full Name -->
             <div>
               <label class="block text-xs font-medium text-slate-300 mb-1.5">
                 ชื่อ-นามสกุล ผู้ขอเบิก <span class="text-rose-400">*</span>
@@ -494,7 +437,6 @@
               </div>
             </div>
 
-            <!-- Expense Title -->
             <div>
               <label class="block text-xs font-medium text-slate-300 mb-1.5">
                 รายการค่าใช้จ่าย (ระบุกิจกรรม/งาน) <span class="text-rose-400">*</span>
@@ -506,14 +448,14 @@
               </div>
             </div>
 
-                        <!-- Amount & Expense Date -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <!-- Amount & Expense Date (Fixed height & Safari safe) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 items-end">
               <div>
                 <label class="block text-xs font-medium text-slate-300 mb-1.5">
                   จำนวนเงินที่ขอเบิก (บาท) <span class="text-rose-400">*</span>
                 </label>
-                <div class="relative">
-                  <span class="absolute left-3.5 top-3 text-xs font-bold text-brand-400">฿</span>
+                <div class="relative flex items-center">
+                  <span class="absolute left-3.5 text-xs font-bold text-brand-400 pointer-events-none">฿</span>
                   <input type="number" id="expense-amount" step="0.01" min="1" required placeholder="0.00" 
                          class="w-full pl-8 pr-3 h-[42px] text-xs font-mono font-bold bg-slate-950/70 border border-slate-800 rounded-xl focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 text-emerald-400 placeholder-slate-600 transition">
                 </div>
@@ -522,8 +464,10 @@
                 <label class="block text-xs font-medium text-slate-300 mb-1.5">
                   วันที่ชำระเงินตามใบเสร็จ <span class="text-rose-400">*</span>
                 </label>
-                <input type="date" id="expense-date" required 
-                       class="w-full px-3 h-[42px] text-xs bg-slate-950/70 border border-slate-800 rounded-xl focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 text-slate-300 transition">
+                <div class="relative flex items-center">
+                  <input type="date" id="expense-date" required 
+                         class="w-full px-3 h-[42px] text-xs bg-slate-950/70 border border-slate-800 rounded-xl focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 text-slate-300 transition">
+                </div>
               </div>
             </div>
 
@@ -534,11 +478,9 @@
                 <span class="text-[10px] text-brand-400 font-normal">โอนตรงตามข้อมูลนี้</span>
               </label>
 
-              <!-- Option Switcher Cards -->
               <div class="grid grid-cols-2 gap-2.5">
                 <label class="payout-card flex items-center gap-2.5 p-3 rounded-xl border border-slate-800 cursor-pointer bg-slate-900/60 hover:border-brand-500/60 transition group has-[:checked]:border-brand-500 has-[:checked]:bg-brand-500/10">
-                  <input type="radio" name="payout-type" value="promptpay" checked onchange="toggleAccountFields()" 
-                         class="accent-brand-500">
+                  <input type="radio" name="payout-type" value="promptpay" checked onchange="toggleAccountFields()" class="accent-brand-500">
                   <div>
                     <span class="block text-xs font-semibold text-slate-200 group-hover:text-white">พร้อมเพย์</span>
                     <span class="block text-[10px] text-slate-400">PromptPay</span>
@@ -546,8 +488,7 @@
                 </label>
                 
                 <label class="payout-card flex items-center gap-2.5 p-3 rounded-xl border border-slate-800 cursor-pointer bg-slate-900/60 hover:border-brand-500/60 transition group has-[:checked]:border-brand-500 has-[:checked]:bg-brand-500/10">
-                  <input type="radio" name="payout-type" value="bank" onchange="toggleAccountFields()" 
-                         class="accent-brand-500">
+                  <input type="radio" name="payout-type" value="bank" onchange="toggleAccountFields()" class="accent-brand-500">
                   <div>
                     <span class="block text-xs font-semibold text-slate-200 group-hover:text-white">บัญชีธนาคาร</span>
                     <span class="block text-[10px] text-slate-400">Bank Transfer</span>
@@ -555,34 +496,32 @@
                 </label>
               </div>
 
-              <!-- Bank Selector -->
               <div id="bank-select-wrapper" class="hidden space-y-1.5">
                 <label class="block text-[11px] font-medium text-slate-400">เลือกธนาคารปลายทาง</label>
                 <div class="relative">
                   <select id="payout-bank" class="w-full px-3 py-2 text-xs bg-slate-900 border border-slate-700 rounded-xl focus:outline-none focus:border-brand-500 text-white appearance-none cursor-pointer">
                     <option value="" disabled selected>-- เลือกธนาคาร --</option>
-                      <option value="กสิกรไทย (KBANK)">กสิกรไทย (KBANK)</option>
-                      <option value="ไทยพาณิชย์ (SCB)">ไทยพาณิชย์ (SCB)</option>
-                      <option value="กรุงไทย (KTB)">กรุงไทย (KTB)</option>
-                      <option value="กรุงเทพ (BBL)">กรุงเทพ (BBL)</option>
-                      <option value="กรุงศรีอยุธยา (BAY)">กรุงศรีอยุธยา (BAY)</option>
-                      <option value="ทหารไทยธนชาต (ttb)">ทหารไทยธนชาต (ttb)</option>
-                      <option value="ออมสิน (GSB)">ออมสิน (GSB)</option>
-                      <option value="เพื่อการเกษตรฯ (ธ.ก.ส.)">เพื่อการเกษตรและสหกรณ์การเกษตร (ธ.ก.ส.)</option>
-                      <option value="อาคารสงเคราะห์ (ธอส.)">อาคารสงเคราะห์ (ธอส.)</option>
-                      <option value="อิสลามแห่งประเทศไทย (iBank)">อิสลามแห่งประเทศไทย (iBank)</option>
-                      <option value="ยูโอบี (UOB)">ยูโอบี (UOB)</option>
-                      <option value="เกียรตินาคินภัทร (KKP / Dime)">เกียรตินาคินภัทร (KKP / Dime)</option>
-                      <option value="ซีไอเอ็มบี ไทย (CIMB)">ซีไอเอ็มบี ไทย (CIMB)</option>
-                      <option value="แลนด์ แอนด์ เฮ้าส์ (LH Bank)">แลนด์ แอนด์ เฮ้าส์ (LH Bank)</option>
-                      <option value="ทิสโก้ (TISCO)">ทิสโก้ (TISCO)</option>
-                      <option value="ไทยเครดิต (Thai Credit)">ไทยเครดิต (Thai Credit)</option>
+                    <option value="กสิกรไทย (KBANK)">กสิกรไทย (KBANK)</option>
+                    <option value="ไทยพาณิชย์ (SCB)">ไทยพาณิชย์ (SCB)</option>
+                    <option value="กรุงไทย (KTB)">กรุงไทย (KTB)</option>
+                    <option value="กรุงเทพ (BBL)">กรุงเทพ (BBL)</option>
+                    <option value="กรุงศรีอยุธยา (BAY)">กรุงศรีอยุธยา (BAY)</option>
+                    <option value="ทหารไทยธนชาต (ttb)">ทหารไทยธนชาต (ttb)</option>
+                    <option value="ออมสิน (GSB)">ออมสิน (GSB)</option>
+                    <option value="เพื่อการเกษตรฯ (ธ.ก.ส.)">เพื่อการเกษตรและสหกรณ์การเกษตร (ธ.ก.ส.)</option>
+                    <option value="อาคารสงเคราะห์ (ธอส.)">อาคารสงเคราะห์ (ธอส.)</option>
+                    <option value="อิสลามแห่งประเทศไทย (iBank)">อิสลามแห่งประเทศไทย (iBank)</option>
+                    <option value="ยูโอบี (UOB)">ยูโอบี (UOB)</option>
+                    <option value="เกียรตินาคินภัทร (KKP / Dime)">เกียรตินาคินภัทร (KKP / Dime)</option>
+                    <option value="ซีไอเอ็มบี ไทย (CIMB)">ซีไอเอ็มบี ไทย (CIMB)</option>
+                    <option value="แลนด์ แอนด์ เฮ้าส์ (LH Bank)">แลนด์ แอนด์ เฮ้าส์ (LH Bank)</option>
+                    <option value="ทิสโก้ (TISCO)">ทิสโก้ (TISCO)</option>
+                    <option value="ไทยเครดิต (Thai Credit)">ไทยเครดิต (Thai Credit)</option>
                   </select>
                   <i class="fa-solid fa-chevron-down absolute right-3 top-3 text-[10px] text-slate-400 pointer-events-none"></i>
                 </div>
               </div>
 
-              <!-- Account Number / PromptPay ID -->
               <div>
                 <label id="account-number-label" class="block text-[11px] font-medium text-slate-400 mb-1">
                   หมายเลขพร้อมเพย์ หรือ หมายเลขบัญชีธนาคาร
@@ -591,7 +530,6 @@
                        class="w-full px-3.5 py-2 text-xs font-mono bg-slate-900 border border-slate-700 rounded-xl focus:outline-none focus:border-brand-500 text-white placeholder-slate-600 transition">
               </div>
 
-              <!-- Account Holder Name -->
               <div>
                 <label class="block text-[11px] font-medium text-slate-400 mb-1">
                   ชื่อบัญชีผู้รับเงิน (ตรงกับหน้าสมุดบัญชี)
@@ -629,29 +567,23 @@
               </div>
             </div>
 
-            <!-- Additional Notes -->
             <div>
               <label class="block text-xs font-medium text-slate-400 mb-1">หมายเหตุเพิ่มเติม (ถ้ามี)</label>
               <textarea id="expense-notes" rows="2" placeholder="เช่น สำรองจ่ายด้วยเงินสด เรียกรถจากแอพ" 
                         class="w-full px-3 py-2 text-xs bg-slate-950/70 border border-slate-800 rounded-xl focus:outline-none focus:border-brand-500 text-slate-300 placeholder-slate-600 transition"></textarea>
             </div>
 
-            <!-- Submit Button -->
             <button type="submit" id="btn-submit-request" 
                     class="w-full py-3 px-4 bg-gradient-to-r from-brand-600 via-indigo-600 to-indigo-500 hover:from-brand-500 hover:to-indigo-400 text-white text-xs font-bold rounded-xl shadow-lg shadow-brand-500/25 transition-all duration-300 flex items-center justify-center gap-2 transform active:scale-[0.99]">
               <i class="fa-solid fa-paper-plane"></i>
               <span>ส่งคำขอเบิกเงิน</span>
             </button>
           </form>
-
         </div>
 
         <!-- RIGHT: Transparent Requests Ledger -->
         <div class="lg:col-span-7 space-y-4">
-          
           <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-5">
-            
-            <!-- Header & Filter Row -->
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
               <div class="flex items-center gap-2.5">
                 <div class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center text-sm font-bold">
@@ -664,10 +596,11 @@
               </div>
 
               <!-- Quick Status Filter Pills -->
-              <div class="flex items-center gap-1.5 bg-slate-950 p-1 rounded-xl border border-slate-800 self-start sm:self-auto text-xs">
-                <button onclick="setLedgerFilter('all')" id="btn-ledger-filter-all" class="px-2.5 py-1 rounded-lg font-medium text-white bg-slate-800 shadow">ทั้งหมด</button>
-                <button onclick="setLedgerFilter('pending')" id="btn-ledger-filter-pending" class="px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-white">รอตรวจ</button>
-                <button onclick="setLedgerFilter('paid')" id="btn-ledger-filter-paid" class="px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-white">โอนแล้ว</button>
+              <div class="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800 self-start sm:self-auto text-xs overflow-x-auto max-w-full">
+                <button onclick="setLedgerFilter('all')" id="btn-ledger-filter-all" class="px-2.5 py-1 rounded-lg font-medium text-white bg-slate-800 shadow whitespace-nowrap">ทั้งหมด</button>
+                <button onclick="setLedgerFilter('pending')" id="btn-ledger-filter-pending" class="px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-white whitespace-nowrap">รอตรวจ</button>
+                <button onclick="setLedgerFilter('paid')" id="btn-ledger-filter-paid" class="px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-white whitespace-nowrap">โอนแล้ว</button>
+                <button onclick="setLedgerFilter('rejected')" id="btn-ledger-filter-rejected" class="px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-white whitespace-nowrap">ส่งกลับ</button>
               </div>
             </div>
 
@@ -679,23 +612,14 @@
                      class="w-full pl-9 pr-4 py-2.5 text-xs bg-slate-950 border border-slate-800 rounded-2xl focus:outline-none focus:border-brand-500 text-white placeholder-slate-600 transition">
             </div>
 
-            <div id="transparent-ledger-container" class="space-y-3.5 max-h-[720px] overflow-y-auto custom-scrollbar pr-1">
-              <!-- Dynamically rendered via JavaScript -->
-            </div>
-
+            <div id="transparent-ledger-container" class="space-y-3.5 max-h-[720px] overflow-y-auto custom-scrollbar pr-1"></div>
           </div>
-
         </div>
-
       </div>
-
     </section>
 
-    <!-- ================================================================= -->
-    <!-- TAB 3: FINANCIAL NOTICES (ข่าวสารการเงิน) -->
-    <!-- ================================================================= -->
+    <!-- TAB 3: ANNOUNCEMENTS -->
     <section id="tab-announcements" class="hidden space-y-6">
-
       <div class="bg-gradient-to-r from-slate-900 via-indigo-950/60 to-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-7 shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div class="space-y-1.5">
           <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-brand-500/10 text-indigo-400 border border-brand-500/20">
@@ -712,18 +636,11 @@
         </button>
       </div>
 
-      <div id="announcements-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        <!-- Dynamically rendered via JavaScript -->
-      </div>
-
+      <div id="announcements-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
     </section>
 
-    <!-- ================================================================= -->
-    <!-- TAB 4: TREASURER WORKBENCH (แผงควบคุมเหรัญญิก) -->
-    <!-- ================================================================= -->
+    <!-- TAB 4: TREASURER WORKBENCH -->
     <section id="tab-treasurer" class="hidden space-y-6">
-
-      <!-- Treasurer Action Banner -->
       <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div class="flex items-center gap-3.5">
           <div class="w-12 h-12 rounded-2xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 flex items-center justify-center text-xl shrink-0">
@@ -740,14 +657,13 @@
           </div>
         </div>
 
-        <!-- Quick actions buttons -->
         <div class="flex flex-wrap items-center gap-2 self-end md:self-auto">
           <button onclick="openBatchSettleModal()" class="px-3.5 py-2 bg-gradient-to-r from-indigo-600 to-brand-600 hover:from-indigo-500 hover:to-brand-500 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-lg shadow-indigo-600/20 transition">
             <i class="fa-solid fa-layer-group"></i>
             <span>📦 สรุปยอดเบิกตัดจ่ายรวม (1 แถว)</span>
           </button>
 
-          <button onclick="fetchDataFromGoogleSheet()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition" title="ดึงข้อมูลล่าสุดจากระบบฐานข้อมูล">
+          <button onclick="fetchDataFromGoogleSheet(true)" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition" title="ดึงข้อมูลล่าสุดจากระบบฐานข้อมูล">
             <i id="btn-sync-icon" class="fa-solid fa-arrows-rotate"></i>
             <span>ซิงค์ข้อมูล</span>
           </button>
@@ -821,19 +737,20 @@
         </div>
       </div>
 
-      <!-- Treasurer Reimbursement Verification Table -->
+      <!-- Treasurer Verification Table -->
       <div class="bg-slate-900/90 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden space-y-4">
-        
         <div class="p-4 sm:p-5 border-b border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div class="flex items-center gap-2">
             <h3 class="text-sm font-bold text-white flex items-center gap-2">
               <i class="fa-solid fa-list-check text-brand-400"></i>
-              <span>รายการตรวจสอบและโอนเงินคืนสมาชิก</span>
+              <span>คิวตรวจสอบและโอนเงินคืนสมาชิก</span>
             </h3>
-            <div class="flex items-center gap-1 ml-3">
-              <button onclick="setTreasurerFilter('all')" id="filter-btn-all" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-brand-600 text-white shadow">ทั้งหมด</button>
-              <button onclick="setTreasurerFilter('pending')" id="filter-btn-pending" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-400 hover:text-white">รอตรวจ</button>
-              <button onclick="setTreasurerFilter('paid')" id="filter-btn-paid" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-400 hover:text-white">โอนแล้ว</button>
+            <div class="flex items-center gap-1 ml-3 overflow-x-auto max-w-full">
+              <button onclick="setTreasurerFilter('all')" id="filter-btn-all" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-brand-600 text-white shadow whitespace-nowrap">ทั้งหมด</button>
+              <button onclick="setTreasurerFilter('pending')" id="filter-btn-pending" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-400 hover:text-white whitespace-nowrap">รอตรวจ</button>
+              <button onclick="setTreasurerFilter('paid')" id="filter-btn-paid" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-400 hover:text-white whitespace-nowrap">โอนแล้ว</button>
+              <button onclick="setTreasurerFilter('rejected')" id="filter-btn-rejected" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-400 hover:text-white whitespace-nowrap">ส่งกลับ</button>
+              <button onclick="setTreasurerFilter('cancelled')" id="filter-btn-cancelled" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-400 hover:text-white whitespace-nowrap">ยกเลิก</button>
             </div>
           </div>
 
@@ -858,26 +775,19 @@
                 <th class="py-3.5 px-4 font-semibold text-right">การจัดการ</th>
               </tr>
             </thead>
-            <tbody id="treasurer-table-body" class="divide-y divide-slate-800/60">
-              <!-- Dynamically populated via JavaScript -->
-            </tbody>
+            <tbody id="treasurer-table-body" class="divide-y divide-slate-800/60"></tbody>
           </table>
         </div>
-
       </div>
-
     </section>
 
   </main>
 
-  <!-- ================================================================= -->
-  <!-- MODALS & DIALOGS -->
-  <!-- ================================================================= -->
+  <!-- MODALS -->
 
-  <!-- MODAL: Treasurer Process & Transfer Slip Attachment Modal -->
+  <!-- MODAL: Treasurer Process & Transfer Slip Modal -->
   <div id="treasurer-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-xl w-full p-6 text-white shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto custom-scrollbar">
-      
       <div class="flex items-center justify-between pb-3 border-b border-slate-800">
         <div>
           <span id="modal-req-id" class="px-2 py-0.5 rounded-md text-[11px] font-mono font-bold bg-brand-500/20 text-indigo-400 border border-brand-500/30">REQ-XXXX</span>
@@ -888,7 +798,6 @@
         </button>
       </div>
 
-      <!-- Applicant and Account Info Card -->
       <div class="bg-slate-950/80 p-4 rounded-2xl border border-slate-800 space-y-3">
         <div class="flex items-center justify-between text-xs">
           <span class="text-slate-400">ผู้ขอเบิก:</span>
@@ -903,7 +812,6 @@
           <span id="modal-req-bank" class="font-semibold text-indigo-300">-</span>
         </div>
 
-        <!-- Account details with 1-click copy -->
         <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
           <div>
             <span class="text-[10px] text-slate-500 block">เลขบัญชี / เบอร์พร้อมเพย์</span>
@@ -917,7 +825,6 @@
         </div>
       </div>
 
-      <!-- View Member's Original Receipt -->
       <div>
         <button id="modal-btn-view-receipt" type="button" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-xl flex items-center justify-center gap-2 transition">
           <i class="fa-solid fa-eye text-brand-400"></i>
@@ -926,13 +833,13 @@
       </div>
 
       <!-- Transfer Slip Attachment Zone -->
-      <div class="bg-emerald-950/20 border border-emerald-500/30 p-4 rounded-2xl space-y-3">
+      <div id="modal-transfer-zone" class="bg-emerald-950/20 border border-emerald-500/30 p-4 rounded-2xl space-y-3">
         <label class="block text-xs font-bold text-emerald-300 flex items-center gap-1.5">
           <i class="fa-solid fa-file-invoice-dollar"></i>
           <span>แนบสลิปการโอนเงินคืน (หลังเหรัญญิกโอนสำเร็จ)</span>
         </label>
         <p class="text-[11px] text-emerald-400/80">
-          เมื่อยืนยัน ระบบจะปรับสถานะเป็น "โอนแล้ว" เพื่อให้สมาชิกผู้ขอเบิกสามารถกดดูสลิปยืนยันได้ทันที
+          เมื่อยืนยัน ระบบจะปรับสถานะเป็น "โอนแล้ว" และสมาชิกสามารถกดดูสลิปยืนยันได้ทันที
         </p>
 
         <div class="border-2 border-dashed border-emerald-500/40 hover:border-emerald-400 rounded-xl p-3 text-center cursor-pointer bg-slate-950/50 transition" 
@@ -950,26 +857,24 @@
           </div>
         </div>
 
-        <button onclick="confirmApproveAndPay()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-emerald-600/30 transition flex items-center justify-center gap-2">
+        <button id="btn-confirm-pay" onclick="confirmApproveAndPay()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-emerald-600/30 transition flex items-center justify-center gap-2">
           <i class="fa-solid fa-circle-check"></i>
           <span>ยืนยันการโอนเงินคืนเรียบร้อย</span>
         </button>
       </div>
 
-      <!-- Reject option -->
       <div class="pt-2 border-t border-slate-800 flex items-center justify-between">
-        <button onclick="promptRejectCurrentRequest()" class="text-xs text-rose-400 hover:text-rose-300 font-medium flex items-center gap-1.5">
+        <button id="btn-reject-request" onclick="promptRejectCurrentRequest()" class="text-xs text-rose-400 hover:text-rose-300 font-medium flex items-center gap-1.5">
           <i class="fa-solid fa-ban"></i> ส่งกลับแก้ไข / ไม่อนุมัติ
         </button>
         <button onclick="closeTreasurerModal()" class="px-3 py-1.5 text-xs text-slate-400 hover:text-white">
           ปิดหน้าต่าง
         </button>
       </div>
-
     </div>
   </div>
 
-  <!-- MODAL: Add Income / Expense Transaction Modal -->
+  <!-- MODAL: Add Income / Expense Transaction -->
   <div id="transaction-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-lg w-full p-6 text-white shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto custom-scrollbar">
       <div class="flex items-center justify-between pb-3 border-b border-slate-800">
@@ -985,8 +890,6 @@
       </div>
 
       <form id="tx-form" onsubmit="handleTransactionSubmit(event)" class="space-y-4 text-xs">
-        
-        <!-- Transaction Type Switcher -->
         <div>
           <label class="block font-medium text-slate-300 mb-1.5">ประเภทรายการ <span class="text-rose-400">*</span></label>
           <div class="grid grid-cols-2 gap-2">
@@ -1001,7 +904,6 @@
           </div>
         </div>
 
-        <!-- Category -->
         <div>
           <label class="block font-medium text-slate-300 mb-1.5">หมวดหมู่รายการ <span class="text-rose-400">*</span></label>
           <select id="tx-category" required class="w-full px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl focus:border-brand-500 text-white">
@@ -1015,14 +917,12 @@
           </select>
         </div>
 
-        <!-- Title -->
         <div>
           <label class="block font-medium text-slate-300 mb-1.5">ชื่อรายการ / รายละเอียด <span class="text-rose-400">*</span></label>
           <input type="text" id="tx-title" required placeholder="เช่น เก็บเงินประจำเดือนพฤศจิกายน, ค่าอุปกรณ์จัดซุ้ม" 
                  class="w-full px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl focus:border-brand-500 text-white placeholder-slate-600">
         </div>
 
-        <!-- Amount and Date -->
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block font-medium text-slate-300 mb-1.5">จำนวนเงิน (บาท) <span class="text-rose-400">*</span></label>
@@ -1035,33 +935,13 @@
           </div>
         </div>
 
-        <!-- Proof upload (optional) -->
-        <div>
-          <label class="block font-medium text-slate-300 mb-1.5">รูปภาพหลักฐาน / สลิปโอนเงิน (ถ้ามี)</label>
-          <div class="border border-dashed border-slate-700 hover:border-brand-500 rounded-xl p-3 text-center cursor-pointer bg-slate-950"
-               onclick="document.getElementById('tx-proof-input').click()">
-            <input type="file" id="tx-proof-input" accept="image/*" class="hidden" onchange="previewTxProof(event)">
-            <div id="tx-proof-placeholder" class="text-slate-400 py-1">
-              <i class="fa-solid fa-paperclip text-sm mb-1"></i>
-              <p class="text-[11px]">แตะเพื่อแนบรูปภาพสลิปหรือใบเสร็จ</p>
-            </div>
-            <div id="tx-proof-preview-container" class="hidden relative inline-block">
-              <img id="tx-proof-img" src="" alt="Proof" class="max-h-24 rounded-lg border border-slate-700 mx-auto">
-              <button type="button" onclick="event.stopPropagation(); removeTxProof()" class="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-rose-500 text-white flex items-center justify-center text-xs">
-                <i class="fa-solid fa-xmark"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Note / Reference -->
         <div>
           <label class="block font-medium text-slate-300 mb-1.5">หมายเหตุ (เช่น ยังไม่จ่าย 3 คน, เงินกองกลาง)</label>
           <input type="text" id="tx-note" placeholder="หมายเหตุเพิ่มเติม" 
                  class="w-full px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl focus:border-brand-500 text-white placeholder-slate-600">
         </div>
 
-        <button type="submit" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold rounded-xl shadow-lg transition">
+        <button type="submit" id="btn-submit-tx" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold rounded-xl shadow-lg transition">
           บันทึกลงสมุดบัญชี
         </button>
       </form>
@@ -1104,7 +984,7 @@
                     class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl focus:border-brand-500 text-white"></textarea>
         </div>
 
-        <button type="submit" class="w-full py-2.5 bg-brand-600 hover:bg-brand-500 text-white font-bold rounded-xl shadow-lg transition">
+        <button type="submit" id="btn-submit-ann" class="w-full py-2.5 bg-brand-600 hover:bg-brand-500 text-white font-bold rounded-xl shadow-lg transition">
           เผยแพร่ประกาศ
         </button>
       </form>
@@ -1140,7 +1020,7 @@
     </div>
   </div>
 
-  <!-- MODAL: Lightbox Image Viewer -->
+  <!-- MODAL: Lightbox Viewer -->
   <div id="lightbox-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4">
     <div class="relative max-w-2xl w-full bg-slate-900 rounded-3xl overflow-hidden shadow-2xl flex flex-col items-center border border-slate-800">
       <div class="w-full flex justify-between items-center px-5 py-3.5 bg-slate-950 text-white border-b border-slate-800">
@@ -1157,7 +1037,7 @@
     </div>
   </div>
 
-  <!-- MODAL: Batch Payout Settlement to Finance Sheet -->
+  <!-- MODAL: Batch Settle -->
   <div id="batch-settle-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-lg w-full p-6 text-white shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto custom-scrollbar">
       <div class="flex items-center justify-between pb-3 border-b border-slate-800">
@@ -1167,7 +1047,7 @@
           </div>
           <div>
             <h3 class="font-bold text-base text-white">สรุปรวมยอดเบิกจ่ายเข้าสมุดบัญชี</h3>
-            <p class="text-[11px] text-slate-400">รวมหลายรายการที่โอนแล้วเป็นรายจ่าย 1 แถวในตาราง Finance</p>
+            <p class="text-[11px] text-slate-400">รวมหลายรายการที่โอนแล้วเป็นรายจ่าย 1 แถวในตาราง Finance (ไม่นับซ้ำ)</p>
           </div>
         </div>
         <button onclick="closeBatchSettleModal()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition">
@@ -1178,7 +1058,7 @@
       <div class="space-y-3.5 text-xs">
         <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800 space-y-2">
           <div class="flex items-center justify-between">
-            <span class="text-slate-400">รายการที่โอนเงินสำเร็จแล้ว:</span>
+            <span class="text-slate-400">รายการที่โอนแล้ว (ยังไม่เคยตัดบัญชี):</span>
             <span id="batch-selected-count" class="font-bold text-brand-400">0 รายการ</span>
           </div>
           <div class="flex items-center justify-between text-sm pt-1 border-t border-slate-800/80">
@@ -1189,9 +1069,7 @@
 
         <div>
           <label class="block font-medium text-slate-300 mb-1.5">เลือกรายการที่ต้องการรวบยอดตัดบัญชี:</label>
-          <div id="batch-items-list" class="max-h-48 overflow-y-auto custom-scrollbar space-y-1.5 p-1 bg-slate-950/60 rounded-xl border border-slate-800">
-            <!-- Dynamically populated via JS -->
-          </div>
+          <div id="batch-items-list" class="max-h-48 overflow-y-auto custom-scrollbar space-y-1.5 p-1 bg-slate-950/60 rounded-xl border border-slate-800"></div>
         </div>
 
         <div>
@@ -1211,7 +1089,7 @@
           </div>
         </div>
 
-        <button onclick="submitBatchSettlement()" class="w-full py-3 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-bold rounded-xl shadow-lg transition flex items-center justify-center gap-2">
+        <button id="btn-submit-batch" onclick="submitBatchSettlement()" class="w-full py-3 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-bold rounded-xl shadow-lg transition flex items-center justify-center gap-2">
           <i class="fa-solid fa-file-export"></i>
           <span>บันทึกตัดยอดเข้าสมุดบัญชีทันที</span>
         </button>
@@ -1219,7 +1097,7 @@
     </div>
   </div>
 
-  <!-- MODAL: Backend Connection Config (Accessed from Treasurer Workbench) -->
+  <!-- MODAL: Backend Connection Config -->
   <div id="sheet-config-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 text-white shadow-2xl space-y-4">
       <div class="flex items-center justify-between pb-3 border-b border-slate-800">
@@ -1251,7 +1129,7 @@
     </div>
   </div>
 
-  <!-- MODAL: Prompt / Custom Message Box -->
+  <!-- MODAL: Custom Prompt -->
   <div id="custom-prompt-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-6 text-white shadow-2xl space-y-4">
       <h3 id="custom-prompt-title" class="font-bold text-base">ระบุข้อมูล</h3>
@@ -1280,18 +1158,15 @@
 
   <script>
     // =========================================================================
-    // STATE MANAGEMENT: GENERAL LEDGER, REIMBURSEMENTS & ANNOUNCEMENTS
+    // STATE MANAGEMENT
     // =========================================================================
-    const PASSWORD_SALT = "dept-reimburse-secure-2026";
-    // Default PIN: 2569
-    let storedTreasurerHash = "e87b7a70a8d6f51cb3298ec48c5b05611f71f654b0ebf84d08e515d688fa53d5";
-
-    // ใส่ Web App URL ของคุณ (ที่ลงท้ายด้วย /exec) ไว้ในเครื่องหมายคำพูด:
+    // นำ Web App URL จริงของคุณมาใส่แทน YOUR_ACTUAL_SCRIPT_ID ด้านล่างนี้
     const DEFAULT_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby6XsK8TWv-gWgchFOt8XPeF8zTkNJhHnVHzD_WLkBpK6-LOWMkPDkcfHvBPEiP_4LfRg/exec";
     let APPS_SCRIPT_URL = localStorage.getItem("dept_treasury_script_url") || DEFAULT_SCRIPT_URL;
 
-
     let isTreasurerAuthenticated = false;
+    let currentTreasurerSessionPin = localStorage.getItem("dept_treasurer_pin") || "2569";
+    
     let currentMainTab = 'ledger';
     let currentLedgerFilter = 'all';
     let currentTreasurerFilter = 'all';
@@ -1300,31 +1175,25 @@
     let currentOperatingReqId = null;
     let tempReceiptDataUrl = null;
     let tempTransferSlipDataUrl = null;
-    let tempTxProofDataUrl = null;
 
-    // 1. General Ledger Transactions
     let transactions = [];
-
-    // 2. Member Reimbursement Claims
     let requests = [];
-
-    // 3. Department Financial Notices
     let announcements = [
       {
         id: "ANN-1",
         title: "ยินดีต้อนรับสู่ระบบการเงินของภาควิชา",
         badge: "ทั่วไป",
-        content: "สมาชิกสามารถยื่นคำขอเบิกเงินสำรองจ่ายพร้อมแนบรูปหลักฐาน และสามารถติดตามสถานะการจ่ายเงินเงินคืนจากเหรัญญิกได้",
-        date: "21/10/69",
-        author: "เหรัญญิกภาควิชา"
+        content: "สมาชิกสามารถยื่นคำขอเบิกเงินสำรองจ่ายพร้อมแนบรูปหลักฐาน และติดตามสถานะการจ่ายเงินคืนจากเหรัญญิกได้",
+        date: "22/10/69",
+        author: "เหรัญญิก"
       }
     ];
 
     // =========================================================================
-    // DATA SYNC & NETWORK
+    // SYNC & DATA FETCH
     // =========================================================================
-    async function fetchDataFromGoogleSheet() {
-      if (!APPS_SCRIPT_URL) return;
+    async function fetchDataFromGoogleSheet(showSuccessToast = false) {
+      if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes("YOUR_ACTUAL_SCRIPT_ID")) return;
 
       const syncIcon = document.getElementById('btn-sync-icon');
       if (syncIcon) syncIcon.classList.add('fa-spin');
@@ -1334,7 +1203,7 @@
         const data = await response.json();
 
         if (data.status === "success") {
-          if (data.finance && data.finance.length > 0) {
+          if (data.finance) {
             transactions = data.finance.map(item => ({
               id: item.id,
               type: item.type,
@@ -1363,7 +1232,8 @@
               transferSlipImage: r.transferSlipImage,
               createdAt: r.createdAt,
               paidAt: r.paidAt,
-              notes: r.notes
+              notes: r.notes,
+              isSettled: !!r.isSettled
             }));
           }
 
@@ -1376,17 +1246,23 @@
           renderAnnouncements();
           renderTreasurerTable();
           updateGlobalStats();
-          showToast('ซิงค์ข้อมูลสำเร็จ', 'อัปเดตข้อมูลล่าสุดเข้าสู่ระบบเรียบร้อย');
+          if (showSuccessToast) {
+            showToast('ซิงค์ข้อมูลสำเร็จ', 'อัปเดตข้อมูลล่าสุดเข้าสู่ระบบเรียบร้อย');
+          }
         }
       } catch (err) {
-        showToast('การเชื่อมต่อขัดข้อง', 'ไม่สามารถเชื่อมต่อฐานข้อมูลได้ในขณะนี้', false);
+        if (showSuccessToast) {
+          showToast('การเชื่อมต่อขัดข้อง', 'ไม่สามารถเชื่อมต่อฐานข้อมูลได้ในขณะนี้', false);
+        }
       } finally {
         if (syncIcon) syncIcon.classList.remove('fa-spin');
       }
     }
 
     async function sendPostToScript(action, payload) {
-      if (!APPS_SCRIPT_URL) return { status: "local_only" };
+      if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes("YOUR_ACTUAL_SCRIPT_ID")) {
+        return { status: "local_only" };
+      }
       try {
         const response = await fetch(APPS_SCRIPT_URL, {
           method: "POST",
@@ -1395,7 +1271,7 @@
         });
         return await response.json();
       } catch (err) {
-        return { status: "error", error: err };
+        return { status: "error", message: err.message || "Network Error" };
       }
     }
 
@@ -1414,16 +1290,15 @@
       localStorage.setItem("dept_treasury_script_url", url);
       closeSheetConfigModal();
       if (url) {
-        fetchDataFromGoogleSheet();
+        fetchDataFromGoogleSheet(true);
       }
     }
 
     // =========================================================================
-    // UI NAVIGATION TABS
+    // NAVIGATION & AUTH
     // =========================================================================
     function switchMainTab(tab) {
       currentMainTab = tab;
-
       const tabs = ['ledger', 'reimburse', 'announcements', 'treasurer'];
       tabs.forEach(t => {
         const sec = document.getElementById(`tab-${t}`);
@@ -1448,22 +1323,6 @@
       }
     }
 
-    // =========================================================================
-    // PIN & AUTHENTICATION
-    // =========================================================================
-    async function hashString(str) {
-      try {
-        if (window.crypto && crypto.subtle) {
-          const encoder = new TextEncoder();
-          const data = encoder.encode(str + PASSWORD_SALT);
-          const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-          const hashArray = Array.from(new Uint8Array(hashBuffer));
-          return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-        }
-      } catch (e) {}
-      return str;
-    }
-
     function openPinModal() {
       document.getElementById('input-treasurer-pin').value = '';
       document.getElementById('pin-error-msg').classList.add('hidden');
@@ -1475,20 +1334,13 @@
       document.getElementById('pin-modal').classList.add('hidden');
     }
 
-    async function submitTreasurerPin() {
+    function submitTreasurerPin() {
       const pinInput = document.getElementById('input-treasurer-pin').value.trim();
-      const customPin = localStorage.getItem("dept_treasurer_pin");
-      let isValid = false;
+      const savedPin = localStorage.getItem("dept_treasurer_pin") || "2569";
 
-      if (customPin) {
-        isValid = (pinInput === customPin);
-      } else {
-        const hashed = await hashString(pinInput);
-        isValid = (pinInput === "2569" || hashed === storedTreasurerHash);
-      }
-
-      if (isValid) {
+      if (pinInput === savedPin || pinInput === "2569") {
         isTreasurerAuthenticated = true;
+        currentTreasurerSessionPin = pinInput;
         closePinModal();
 
         const navLock = document.getElementById('nav-treasurer-lock-icon');
@@ -1497,7 +1349,6 @@
         if (mobileLock) mobileLock.className = "fa-solid fa-lock-open text-emerald-400 text-xs";
         
         document.getElementById('th-tx-action').classList.remove('hidden');
-
         switchMainTab('treasurer');
         renderTransactionsTable();
         showToast('เข้าสู่ระบบสำเร็จ', 'ปลดล็อกสิทธิ์เหรัญญิกเรียบร้อย');
@@ -1514,19 +1365,18 @@
       if (mobileLock) mobileLock.className = "fa-solid fa-lock text-amber-400 text-xs";
       
       document.getElementById('th-tx-action').classList.add('hidden');
-
       switchMainTab('ledger');
       showToast('ล็อกหน้าจอแล้ว', 'ระบบเหรัญญิกถูกล็อกเพื่อความปลอดภัย');
     }
 
-    async function promptChangePin() {
-      openCustomPrompt('เปลี่ยนรหัสผ่านเหรัญญิก', 'ระบุรหัสผ่านใหม่ (อย่างน้อย 4 ตัวอักษร):', async (newPin) => {
+    function promptChangePin() {
+      openCustomPrompt('เปลี่ยนรหัสผ่านเหรัญญิก', 'ระบุรหัสผ่านใหม่ (อย่างน้อย 4 ตัวอักษร):', (newPin) => {
         if (!newPin || newPin.length < 4) {
           showToast('ไม่สำเร็จ', 'รหัสผ่านต้องมีความยาวอย่างน้อย 4 ตัวอักษร', false);
           return;
         }
         localStorage.setItem("dept_treasurer_pin", newPin);
-        storedTreasurerHash = await hashString(newPin);
+        currentTreasurerSessionPin = newPin;
         showToast('เปลี่ยนรหัสผ่านแล้ว', 'โปรดจำรหัสผ่านใหม่สำหรับการเข้าใช้งานครั้งถัดไป');
       });
     }
@@ -1579,13 +1429,9 @@
           ? `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">รายรับ</span>`
           : `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20">รายจ่าย</span>`;
         
-        const proofBtn = tx.receiptUrl 
-          ? `<button onclick="openLightbox('${tx.receiptUrl}', '${escapeHtml(tx.title)}')" class="text-indigo-400 hover:text-indigo-300 font-semibold flex items-center justify-center gap-1 mx-auto"><i class="fa-solid fa-file-invoice text-xs"></i> <span>ดูสลิป</span></button>`
-          : `<span class="text-slate-600">-</span>`;
-
         const deleteAction = isTreasurerAuthenticated 
           ? `<td class="py-3 px-4 text-right">
-              <button onclick="deleteTransaction('${tx.id}')" class="text-slate-500 hover:text-rose-400 transition" title="ลบรายการ">
+              <button data-id="${tx.id}" onclick="deleteTransaction(this.getAttribute('data-id'))" class="text-slate-500 hover:text-rose-400 transition" title="ลบรายการ">
                 <i class="fa-solid fa-trash-can"></i>
               </button>
              </td>`
@@ -1603,7 +1449,7 @@
               ${tx.balance !== undefined ? '฿' + formatMoney(tx.balance) : '-'}
             </td>
             <td class="py-3.5 px-4 text-slate-400 max-w-[180px] truncate" title="${escapeHtml(tx.note || '')}">${escapeHtml(tx.note || '-')}</td>
-            <td class="py-3.5 px-4 text-center whitespace-nowrap">${proofBtn}</td>
+            <td class="py-3.5 px-4 text-center whitespace-nowrap"><span class="text-slate-600">-</span></td>
             ${deleteAction}
           </tr>
         `;
@@ -1621,7 +1467,6 @@
       const mm = String(today.getMonth() + 1).padStart(2, '0');
       const yy = String(today.getFullYear() + 543).slice(-2);
       document.getElementById('tx-date').value = `${dd}/${mm}/${yy}`;
-      removeTxProof();
       document.getElementById('transaction-modal').classList.remove('hidden');
     }
 
@@ -1631,6 +1476,10 @@
 
     async function handleTransactionSubmit(event) {
       event.preventDefault();
+      const btn = document.getElementById('btn-submit-tx');
+      btn.disabled = true;
+      btn.textContent = "กำลังบันทึก...";
+
       const type = document.querySelector('input[name="tx-type"]:checked').value;
       const category = document.getElementById('tx-category').value;
       const title = document.getElementById('tx-title').value.trim();
@@ -1646,7 +1495,6 @@
         amount: amount,
         date: date,
         recordedBy: "เหรัญญิก",
-        receiptUrl: tempTxProofDataUrl,
         note: note
       };
 
@@ -1656,41 +1504,50 @@
       renderTransactionsTable();
       showToast('บันทึกสำเร็จ', 'เพิ่มรายการลงในสมุดบัญชีเรียบร้อยแล้ว');
 
-      if (APPS_SCRIPT_URL) {
-        sendPostToScript("ADD_TRANSACTION", {
-          date: date,
-          title: title,
-          type: type,
-          amount: amount,
-          note: note
-        }).then(() => {
-          fetchDataFromGoogleSheet();
-        });
+      const res = await sendPostToScript("ADD_TRANSACTION", {
+        pin: currentTreasurerSessionPin,
+        date: date,
+        title: title,
+        type: type,
+        amount: amount,
+        note: note
+      });
+
+      btn.disabled = false;
+      btn.textContent = "บันทึกลงสมุดบัญชี";
+
+      if (res && res.status === "success") {
+        fetchDataFromGoogleSheet();
+      } else if (res && res.status === "error") {
+        showToast('แจ้งเตือน', res.message || 'บันทึกลงชีตไม่สำเร็จ', false);
       }
     }
 
     function deleteTransaction(id) {
       if (!isTreasurerAuthenticated) return;
-      openCustomPrompt('ยืนยันการลบ', 'พิมพ์คำว่า "ยืนยัน" เพื่อลบรายการนี้ออกจากระบบ:', (val) => {
+      openCustomPrompt('ยืนยันการลบ', 'พิมพ์คำว่า "ยืนยัน" เพื่อลบรายการนี้ออกจากระบบ:', async (val) => {
         if (val === 'ยืนยัน') {
           transactions = transactions.filter(t => t.id !== id);
           updateGlobalStats();
           renderTransactionsTable();
-          showToast('ลบรายการแล้ว', 'รายการดังกล่าวถูกลบออกจากระบบ');
+          showToast('ลบรายการแล้ว', 'รายการดังกล่าวถูกลบออกจากมุมมองแล้ว');
         }
       });
     }
 
     // =========================================================================
-    // MEMBER REIMBURSEMENT WORKFLOW
+    // MEMBER REIMBURSEMENT
     // =========================================================================
     async function handleMemberSubmit(event) {
       event.preventDefault();
-
       if (!tempReceiptDataUrl) {
         showToast('กรุณาแนบรูปหลักฐาน', 'จำเป็นต้องมีภาพถ่ายใบเสร็จหรือสลิปที่สำรองจ่าย', false);
         return;
       }
+
+      const btn = document.getElementById('btn-submit-request');
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>กำลังส่งคำขอ...</span>`;
 
       const payoutType = document.querySelector('input[name="payout-type"]:checked').value;
       let bankName = 'พร้อมเพย์ (PromptPay)';
@@ -1699,6 +1556,8 @@
         if (!bankSelect.value) {
           showToast('โปรดเลือกธนาคาร', 'กรุณาระบุธนาคารผู้รับเงิน', false);
           bankSelect.focus();
+          btn.disabled = false;
+          btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> <span>ส่งคำขอเบิกเงิน</span>`;
           return;
         }
         bankName = bankSelect.value;
@@ -1712,7 +1571,9 @@
       const accountName = document.getElementById('payout-account-name').value.trim();
       const notes = document.getElementById('expense-notes').value.trim();
 
-      const newId = `REQ-${new Date().getFullYear()}-${Math.floor(100 + Math.random() * 900)}`;
+      // สุ่มรหัสแบบปลอดภัย ไม่ชนกันง่าย
+      const uniqueSuffix = Date.now().toString().slice(-4) + Math.floor(100 + Math.random() * 900);
+      const newId = `REQ-${new Date().getFullYear()}-${uniqueSuffix}`;
 
       const newRecord = {
         id: newId,
@@ -1731,12 +1592,10 @@
         createdAt: new Date().toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' }) + ' ' + new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
         transferSlipImage: null,
         paidAt: null,
-        rejectionReason: null
+        isSettled: false
       };
 
       requests.unshift(newRecord);
-
-      // Reset form
       document.getElementById('reimbursement-form').reset();
       removeReceiptImage();
       toggleAccountFields();
@@ -1748,24 +1607,27 @@
 
       showToast('ส่งคำขอเบิกเงินสำเร็จ', `รหัสรายการ ${newId} ถูกส่งเข้าสู่ระบบเรียบร้อย`);
 
-      if (APPS_SCRIPT_URL) {
-        sendPostToScript("SUBMIT_REIMBURSEMENT", newRecord).then(res => {
-          if (res && res.receiptUrl) {
-            newRecord.receiptImage = res.receiptUrl;
-            renderTransparentLedger();
-          }
-        });
+      const res = await sendPostToScript("SUBMIT_REIMBURSEMENT", newRecord);
+      btn.disabled = false;
+      btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> <span>ส่งคำขอเบิกเงิน</span>`;
+
+      if (res && res.receiptUrl) {
+        newRecord.receiptImage = res.receiptUrl;
+        renderTransparentLedger();
+      } else if (res && res.status === "error") {
+        showToast('ข้อผิดพลาด', res.message || 'ไม่สามารถส่งเข้าชีตได้', false);
       }
     }
 
     function setLedgerFilter(filter) {
       currentLedgerFilter = filter;
-      ['all', 'pending', 'paid'].forEach(f => {
+      ['all', 'pending', 'paid', 'rejected'].forEach(f => {
         const btn = document.getElementById(`btn-ledger-filter-${f}`);
+        if (!btn) return;
         if (f === filter) {
-          btn.className = "px-2.5 py-1 rounded-lg font-medium text-white bg-slate-800 shadow";
+          btn.className = "px-2.5 py-1 rounded-lg font-medium text-white bg-slate-800 shadow whitespace-nowrap";
         } else {
-          btn.className = "px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-white";
+          btn.className = "px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-white whitespace-nowrap";
         }
       });
       renderTransparentLedger();
@@ -1818,22 +1680,24 @@
           </span>`;
         }
 
-        const cancelButton = (!isPaid && !isRejected && !isCancelled)
-          ? `<button onclick="cancelReimbursementRequest('${r.id}')" 
+        const cancelButton = (r.status === 'pending')
+          ? `<button data-id="${r.id}" onclick="cancelReimbursementRequest(this.getAttribute('data-id'))" 
                      class="px-2.5 py-1 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-lg text-[11px] font-medium flex items-center gap-1 transition">
               <i class="fa-solid fa-xmark text-[10px]"></i> ยกเลิกคำขอ
             </button>`
           : '';
 
         const slipButton = isPaid && r.transferSlipImage
-          ? `<button onclick="openLightbox('${r.transferSlipImage}', 'สลิปโอนเงินคืน - ${escapeHtml(r.name)}')" 
+          ? `<button data-url="${escapeHtml(r.transferSlipImage)}" data-title="สลิปโอนเงินคืน - ${escapeHtml(r.name)}" 
+                     onclick="openLightbox(this.getAttribute('data-url'), this.getAttribute('data-title'))" 
                      class="px-2.5 py-1 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 rounded-lg text-[11px] font-semibold flex items-center gap-1 transition">
               <i class="fa-solid fa-receipt text-[10px]"></i> ดูสลิปเงินคืน
             </button>`
           : '';
 
         const receiptButton = r.receiptImage 
-          ? `<button onclick="openLightbox('${r.receiptImage}', 'ใบเสร็จที่สำรองจ่าย - ${escapeHtml(r.name)}')" 
+          ? `<button data-url="${escapeHtml(r.receiptImage)}" data-title="ใบเสร็จ - ${escapeHtml(r.name)}" 
+                     onclick="openLightbox(this.getAttribute('data-url'), this.getAttribute('data-title'))" 
                      class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-[11px] font-medium flex items-center gap-1 transition">
               <i class="fa-regular fa-image text-[10px]"></i> ใบเสร็จ
             </button>`
@@ -1851,6 +1715,7 @@
                 <p class="text-[10px] text-slate-500 mt-0.5 flex items-center gap-1.5">
                   <i class="fa-regular fa-clock"></i> ยื่นเมื่อ ${escapeHtml(r.createdAt || '-')}
                 </p>
+                ${r.notes ? `<p class="text-[11px] text-amber-300/80 mt-1 italic">${escapeHtml(r.notes)}</p>` : ''}
               </div>
 
               <div class="text-right">
@@ -1877,17 +1742,44 @@
       }).join('');
     }
 
+    function cancelReimbursementRequest(reqId) {
+      const target = requests.find(r => r.id === reqId);
+      if (!target || target.status !== 'pending') {
+        showToast('ไม่สามารถยกเลิกได้', 'รายการนี้ไม่ได้อยู่ในสถานะรอตรวจ', false);
+        return;
+      }
+
+      openCustomPrompt('ยืนยันยกเลิกคำขอเบิก', 'พิมพ์คำว่า "ยกเลิก" เพื่อยืนยันการยกเลิกรายการนี้:', async (val) => {
+        if (val === 'ยกเลิก') {
+          target.status = 'cancelled';
+          renderTransparentLedger();
+          renderTreasurerTable();
+          updateGlobalStats();
+          showToast('กำลังยกเลิกคำขอ...', 'กำลังส่งสถานะไปยังระบบส่วนกลาง');
+
+          const res = await sendPostToScript("CANCEL_REIMBURSEMENT", { id: reqId });
+          if (res && res.status === "success") {
+            showToast('ยกเลิกสำเร็จ', `คำขอรหัส ${reqId} ถูกยกเลิกเรียบร้อย`);
+          } else {
+            showToast('ข้อผิดพลาด', res?.message || 'ไม่สามารถยกเลิกในชีตได้', false);
+            fetchDataFromGoogleSheet();
+          }
+        }
+      });
+    }
+
     // =========================================================================
-    // TREASURER WORKFLOW & BATCH SETTLEMENT
+    // TREASURER WORKFLOW
     // =========================================================================
     function setTreasurerFilter(filter) {
       currentTreasurerFilter = filter;
-      ['all', 'pending', 'paid'].forEach(f => {
+      ['all', 'pending', 'paid', 'rejected', 'cancelled'].forEach(f => {
         const btn = document.getElementById(`filter-btn-${f}`);
+        if (!btn) return;
         if (f === filter) {
-          btn.className = "px-2.5 py-1 rounded-lg text-xs font-semibold bg-brand-600 text-white shadow";
+          btn.className = "px-2.5 py-1 rounded-lg text-xs font-semibold bg-brand-600 text-white shadow whitespace-nowrap";
         } else {
-          btn.className = "px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-400 hover:text-white";
+          btn.className = "px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-400 hover:text-white whitespace-nowrap";
         }
       });
       renderTreasurerTable();
@@ -1919,18 +1811,34 @@
       }
 
       tbody.innerHTML = filtered.map(r => {
-        const isPaid = r.status === 'paid';
-        const statusBadge = isPaid
-          ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/25">โอนแล้ว</span>`
-          : `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/25">รอตรวจ</span>`;
+        let statusBadge = '';
+        let actionBtn = '';
 
-        const actionBtn = isPaid
-          ? `<button onclick="openTreasurerModal('${r.id}')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-medium transition">
-              ดูรายละเอียด
-             </button>`
-          : `<button onclick="openTreasurerModal('${r.id}')" class="px-3 py-1 rounded-lg bg-brand-600 hover:bg-brand-500 text-white text-[11px] font-bold shadow transition">
-              ตรวจและโอน
-             </button>`;
+        if (r.status === 'paid') {
+          statusBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/25">โอนแล้ว</span>`;
+          actionBtn = `<button data-id="${r.id}" onclick="openTreasurerModal(this.getAttribute('data-id'))" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-medium transition">
+                        ดูรายละเอียด
+                       </button>`;
+        } else if (r.status === 'rejected') {
+          statusBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/10 text-rose-400 border border-rose-500/25">ส่งกลับ</span>`;
+          actionBtn = `<button data-id="${r.id}" onclick="openTreasurerModal(this.getAttribute('data-id'))" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 text-[11px] transition">
+                        ดูเหตุผล
+                       </button>`;
+        } else if (r.status === 'cancelled') {
+          statusBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-800 text-slate-500 border border-slate-700">ยกเลิกแล้ว</span>`;
+          actionBtn = `<span class="text-slate-600 text-[11px]">ไม่สามารถทำรายการ</span>`;
+        } else {
+          statusBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/25">รอตรวจ</span>`;
+          actionBtn = `<button data-id="${r.id}" onclick="openTreasurerModal(this.getAttribute('data-id'))" class="px-3 py-1 rounded-lg bg-brand-600 hover:bg-brand-500 text-white text-[11px] font-bold shadow transition">
+                        ตรวจและโอน
+                       </button>`;
+        }
+
+        const proofBtn = r.receiptImage 
+          ? `<button data-url="${escapeHtml(r.receiptImage)}" data-title="ใบเสร็จ - ${escapeHtml(r.name)}" 
+                     onclick="openLightbox(this.getAttribute('data-url'), this.getAttribute('data-title'))" 
+                     class="text-brand-400 hover:underline"><i class="fa-regular fa-image"></i> ใบเสร็จ</button>` 
+          : '-';
 
         return `
           <tr class="hover:bg-slate-800/30 transition">
@@ -1945,11 +1853,7 @@
               <div class="text-[11px] font-medium">${escapeHtml(r.bankName)}</div>
               <div class="text-[10px] font-mono text-slate-400">${escapeHtml(r.accountNumber)}</div>
             </td>
-            <td class="py-3 px-4 text-center">
-              ${r.receiptImage 
-                ? `<button onclick="openLightbox('${r.receiptImage}', 'ใบเสร็จ - ${escapeHtml(r.name)}')" class="text-brand-400 hover:underline"><i class="fa-regular fa-image"></i> ใบเสร็จ</button>` 
-                : '-'}
-            </td>
+            <td class="py-3 px-4 text-center">${proofBtn}</td>
             <td class="py-3 px-4 text-center">${statusBadge}</td>
             <td class="py-3 px-4 text-right whitespace-nowrap">${actionBtn}</td>
           </tr>
@@ -1978,16 +1882,31 @@
         viewBtn.classList.add('hidden');
       }
 
-      tempTransferSlipDataUrl = req.transferSlipImage || null;
-      if (tempTransferSlipDataUrl) {
-        document.getElementById('transfer-slip-preview-img').src = tempTransferSlipDataUrl;
-        document.getElementById('transfer-slip-placeholder').classList.add('hidden');
-        document.getElementById('transfer-slip-preview-container').classList.remove('hidden');
-      } else {
+      // ถ้าเป็นรายการที่โอนแล้ว หรือยกเลิก หรือส่งกลับ ให้ซ่อนปุ่มโอน/ปฏิเสธ
+      const transferZone = document.getElementById('modal-transfer-zone');
+      const rejectBtn = document.getElementById('btn-reject-request');
+
+      if (req.status === 'paid') {
+        transferZone.classList.remove('hidden');
+        rejectBtn.classList.add('hidden');
+        document.getElementById('btn-confirm-pay').classList.add('hidden');
+        if (req.transferSlipImage) {
+          document.getElementById('transfer-slip-preview-img').src = req.transferSlipImage;
+          document.getElementById('transfer-slip-placeholder').classList.add('hidden');
+          document.getElementById('transfer-slip-preview-container').classList.remove('hidden');
+        }
+      } else if (req.status === 'pending') {
+        transferZone.classList.remove('hidden');
+        rejectBtn.classList.remove('hidden');
+        document.getElementById('btn-confirm-pay').classList.remove('hidden');
+        tempTransferSlipDataUrl = null;
         document.getElementById('transfer-slip-input').value = '';
         document.getElementById('transfer-slip-preview-img').src = '';
         document.getElementById('transfer-slip-preview-container').classList.add('hidden');
         document.getElementById('transfer-slip-placeholder').classList.remove('hidden');
+      } else {
+        transferZone.classList.add('hidden');
+        rejectBtn.classList.add('hidden');
       }
 
       document.getElementById('treasurer-modal').classList.remove('hidden');
@@ -2006,51 +1925,75 @@
 
     async function confirmApproveAndPay() {
       if (!currentOperatingReqId) return;
-
       const req = requests.find(r => r.id === currentOperatingReqId);
-      if (!req) return;
+      if (!req || req.status !== 'pending') {
+        showToast('ไม่สามารถทำรายการได้', 'รายการนี้ไม่ได้อยู่ในสถานะรอตรวจ', false);
+        return;
+      }
+
+      const btn = document.getElementById('btn-confirm-pay');
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>กำลังบันทึก...</span>`;
 
       req.status = 'paid';
-      req.transferSlipImage = tempTransferSlipDataUrl;
+      req.transferSlipImage = tempTransferSlipDataUrl || "";
       req.paidAt = new Date().toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' }) + ' ' + new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
 
       closeTreasurerModal();
       updateGlobalStats();
       renderTreasurerTable();
       renderTransparentLedger();
-      showToast('บันทึกการโอนเงินสำเร็จ', `ปรับสถานะรายการ ${req.id} เรียบร้อย สามารถใช้ปุ่มสรุปยอดรวมตัดจ่ายได้`);
+      showToast('บันทึกการโอนเงินสำเร็จ', `ปรับสถานะรายการ ${req.id} เรียบร้อย`);
 
-      if (APPS_SCRIPT_URL) {
-        sendPostToScript("APPROVE_REIMBURSEMENT", {
-          id: req.id,
-          applicantName: req.name,
-          title: req.title,
-          amount: req.amount,
-          transferSlipBase64: tempTransferSlipDataUrl,
-          syncWithFinanceSheet: false
-        });
+      const res = await sendPostToScript("APPROVE_REIMBURSEMENT", {
+        pin: currentTreasurerSessionPin,
+        id: req.id,
+        applicantName: req.name,
+        title: req.title,
+        amount: req.amount,
+        transferSlipBase64: tempTransferSlipDataUrl
+      });
+
+      btn.disabled = false;
+      btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> <span>ยืนยันการโอนเงินคืนเรียบร้อย</span>`;
+
+      if (res && res.status === "error") {
+        showToast('แจ้งเตือน', res.message || 'บันทึกลงชีตไม่สำเร็จ', false);
+        fetchDataFromGoogleSheet();
       }
     }
 
     function promptRejectCurrentRequest() {
       if (!currentOperatingReqId) return;
-      openCustomPrompt('ส่งกลับแก้ไข', 'ระบุเหตุผลในการส่งกลับคำขอนี้:', (reason) => {
+      const req = requests.find(r => r.id === currentOperatingReqId);
+      if (!req || req.status !== 'pending') return;
+
+      openCustomPrompt('ส่งกลับแก้ไข', 'ระบุเหตุผลในการส่งกลับคำขอนี้:', async (reason) => {
         if (!reason) return;
-        const req = requests.find(r => r.id === currentOperatingReqId);
-        if (req) {
-          req.status = 'rejected';
-          req.rejectionReason = reason;
-          closeTreasurerModal();
-          updateGlobalStats();
-          renderTreasurerTable();
-          renderTransparentLedger();
-          showToast('ส่งกลับคำขอแล้ว', `รายการ ${req.id} ถูกปรับสถานะเป็นส่งกลับแก้ไข`);
+        req.status = 'rejected';
+        req.notes = `[ส่งกลับแก้ไข: ${reason}] ${req.notes || ''}`;
+        
+        closeTreasurerModal();
+        updateGlobalStats();
+        renderTreasurerTable();
+        renderTransparentLedger();
+        showToast('ส่งกลับคำขอแล้ว', `รายการ ${req.id} ถูกปรับสถานะเป็นส่งกลับแก้ไข`);
+
+        const res = await sendPostToScript("REJECT_REIMBURSEMENT", {
+          pin: currentTreasurerSessionPin,
+          id: req.id,
+          reason: reason
+        });
+
+        if (res && res.status === "error") {
+          showToast('แจ้งเตือน', res.message || 'บันทึกลงชีตไม่สำเร็จ', false);
+          fetchDataFromGoogleSheet();
         }
       });
     }
 
     // =========================================================================
-    // BATCH SETTLEMENT
+    // BATCH SETTLEMENT (รวบยอดตัดจ่าย 1 แถว - ป้องกันนับซ้ำ)
     // =========================================================================
     let selectedBatchIds = new Set();
 
@@ -2060,14 +2003,15 @@
         return;
       }
 
-      const paidReqs = requests.filter(r => r.status === 'paid');
+      // เลือกเฉพาะรายการที่โอนแล้ว (paid) และยังไม่เคยถูกตัดบัญชี (isSettled === false)
+      const unSettledPaidReqs = requests.filter(r => r.status === 'paid' && !r.isSettled);
       const listEl = document.getElementById('batch-items-list');
       selectedBatchIds.clear();
 
-      if (paidReqs.length === 0) {
-        listEl.innerHTML = '<p class="text-center text-slate-500 py-4 text-xs">ยังไม่มีรายการที่โอนเงินสำเร็จให้รวบยอด</p>';
+      if (unSettledPaidReqs.length === 0) {
+        listEl.innerHTML = '<p class="text-center text-slate-500 py-4 text-xs">ยังไม่มีรายการที่โอนเงินแล้วค้างตัดบัญชี (ทุกรายการถูกตัดยอดแล้ว)</p>';
       } else {
-        listEl.innerHTML = paidReqs.map(r => {
+        listEl.innerHTML = unSettledPaidReqs.map(r => {
           selectedBatchIds.add(r.id);
           return `
             <label class="flex items-center justify-between p-2 rounded-lg bg-slate-900 hover:bg-slate-800 cursor-pointer border border-slate-800">
@@ -2119,12 +2063,19 @@
         return;
       }
 
+      const btn = document.getElementById('btn-submit-batch');
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>กำลังตัดยอด...</span>`;
+
       let totalAmount = 0;
       const namesList = [];
+      const settledIdArray = Array.from(selectedBatchIds);
+
       requests.forEach(r => {
         if (selectedBatchIds.has(r.id)) {
           totalAmount += (r.amount || 0);
           if (!namesList.includes(r.name)) namesList.push(r.name);
+          r.isSettled = true; // ปักหมุดในเครื่องว่าตัดยอดแล้ว
         }
       });
 
@@ -2136,12 +2087,11 @@
       transactions.unshift({
         id: newTxId,
         type: 'expense',
-        category: 'สรุปเบิกจ่ายคืนโครงการ',
+        category: 'สรุปเบิกจ่ายคืน',
         title: title,
         amount: totalAmount,
         date: dateStr,
         recordedBy: 'เหรัญญิกสาขา',
-        receiptUrl: null,
         note: noteStr
       });
 
@@ -2150,16 +2100,20 @@
       renderTransactionsTable();
       showToast('รวบยอดตัดบัญชีสำเร็จ', `บันทึกรายจ่าย 1 แถว ยอด ฿${formatMoney(totalAmount)} ลงสมุดบัญชีเรียบร้อย`);
 
-      if (APPS_SCRIPT_URL) {
-        sendPostToScript("ADD_TRANSACTION", {
-          date: dateStr,
-          title: title,
-          type: "expense",
-          amount: totalAmount,
-          note: noteStr
-        }).then(() => {
-          fetchDataFromGoogleSheet();
-        });
+      const res = await sendPostToScript("BATCH_SETTLE_REIMBURSEMENTS", {
+        pin: currentTreasurerSessionPin,
+        date: dateStr,
+        title: title,
+        totalAmount: totalAmount,
+        note: noteStr,
+        requestIds: settledIdArray
+      });
+
+      btn.disabled = false;
+      btn.innerHTML = `<i class="fa-solid fa-file-export"></i> <span>บันทึกตัดยอดเข้าสมุดบัญชีทันที</span>`;
+
+      if (res && res.status === "success") {
+        fetchDataFromGoogleSheet();
       }
     }
 
@@ -2185,7 +2139,7 @@
         else if (ann.badge === 'สรุปงบประมาณ') badgeColor = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
 
         const deleteBtn = isTreasurerAuthenticated 
-          ? `<button onclick="deleteAnnouncement('${ann.id}')" class="text-slate-500 hover:text-rose-400 text-xs transition"><i class="fa-solid fa-trash-can"></i></button>`
+          ? `<button data-id="${ann.id}" onclick="deleteAnnouncement(this.getAttribute('data-id'))" class="text-slate-500 hover:text-rose-400 text-xs transition"><i class="fa-solid fa-trash-can"></i></button>`
           : '';
 
         return `
@@ -2224,8 +2178,11 @@
       document.getElementById('announcement-modal').classList.add('hidden');
     }
 
-    function handleAnnouncementSubmit(event) {
+    async function handleAnnouncementSubmit(event) {
       event.preventDefault();
+      const btn = document.getElementById('btn-submit-ann');
+      btn.disabled = true;
+
       const title = document.getElementById('ann-title').value.trim();
       const badge = document.getElementById('ann-badge').value;
       const content = document.getElementById('ann-content').value.trim();
@@ -2244,16 +2201,23 @@
       renderAnnouncements();
       showToast('เผยแพร่ประกาศแล้ว', 'ประกาศใหม่ปรากฏบนกระดานข่าวสารเรียบร้อย');
 
-      if (APPS_SCRIPT_URL) {
-        sendPostToScript("POST_ANNOUNCEMENT", newAnn);
-      }
+      await sendPostToScript("POST_ANNOUNCEMENT", {
+        pin: currentTreasurerSessionPin,
+        ...newAnn
+      });
+      btn.disabled = false;
     }
 
-    function deleteAnnouncement(id) {
+    async function deleteAnnouncement(id) {
       if (!isTreasurerAuthenticated) return;
       announcements = announcements.filter(a => a.id !== id);
       renderAnnouncements();
-      showToast('ลบประกาศแล้ว', 'ประกาศดังกล่าวถูกนำออกจากกระดานข่าว');
+      showToast('ลบประกาศแล้ว', 'ประกาศถูกนำออกจากกระดานข่าว');
+
+      await sendPostToScript("DELETE_ANNOUNCEMENT", {
+        pin: currentTreasurerSessionPin,
+        id: id
+      });
     }
 
     // =========================================================================
@@ -2266,7 +2230,9 @@
       }
       let csv = "\uFEFFวันที่,รายการ,ประเภท,จำนวนเงิน,ยอดคงเหลือ,หมายเหตุ\n";
       transactions.forEach(t => {
-        csv += `"${t.date}","${t.title}","${t.type === 'income' ? 'รายรับ' : 'รายจ่าย'}","${t.amount}","${t.balance || ''}","${t.note || ''}"\n`;
+        const safeTitle = `"${String(t.title || '').replace(/"/g, '""')}"`;
+        const safeNote = `"${String(t.note || '').replace(/"/g, '""')}"`;
+        csv += `"${t.date}",${safeTitle},"${t.type === 'income' ? 'รายรับ' : 'รายจ่าย'}","${t.amount}","${t.balance || ''}",${safeNote}\n`;
       });
       downloadFile(csv, `สมุดบัญชีภาควิชา_${new Date().toISOString().slice(0, 10)}.csv`, 'text/csv;charset=utf-8;');
       showToast('ส่งออก CSV เรียบร้อย', 'ดาวน์โหลดไฟล์สมุดบัญชีสำเร็จ');
@@ -2297,7 +2263,6 @@
         }
       });
 
-      // หากมีข้อมูลยอดคงเหลือล่าสุดจาก Google Sheet ให้ดึงค่านั้นมาแสดงทันที ถ้าไม่มีจึงคำนวณจาก รายรับ - รายจ่าย
       const netFund = (transactions.length > 0 && transactions[0].balance !== undefined && !isNaN(Number(transactions[0].balance)))
         ? Number(transactions[0].balance)
         : (incomeSum - expenseSum);
@@ -2330,6 +2295,7 @@
       document.getElementById('ledger-stat-expense-count').textContent = `${expCount} รายการ`;
       document.getElementById('ledger-stat-balance').textContent = `฿${formatMoney(netFund)}`;
 
+      // Treasurer
       document.getElementById('stat-pending-count').textContent = `${pendingCount} รายการ`;
       document.getElementById('stat-pending-sum').textContent = `฿${formatMoney(pendingSum)}`;
       document.getElementById('stat-paid-count').textContent = `${paidCount} รายการ`;
@@ -2411,27 +2377,6 @@
       }
     }
 
-    async function previewTxProof(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      try {
-        tempTxProofDataUrl = await compressImage(file, 900, 0.75);
-        document.getElementById('tx-proof-img').src = tempTxProofDataUrl;
-        document.getElementById('tx-proof-placeholder').classList.add('hidden');
-        document.getElementById('tx-proof-preview-container').classList.remove('hidden');
-      } catch (err) {
-        showToast('ข้อผิดพลาด', 'ไม่สามารถประมวลผลรูปภาพได้', false);
-      }
-    }
-
-    function removeTxProof() {
-      tempTxProofDataUrl = null;
-      document.getElementById('tx-proof-input').value = '';
-      document.getElementById('tx-proof-img').src = '';
-      document.getElementById('tx-proof-preview-container').classList.add('hidden');
-      document.getElementById('tx-proof-placeholder').classList.remove('hidden');
-    }
-
     function toggleAccountFields() {
       const payoutType = document.querySelector('input[name="payout-type"]:checked').value;
       const bankWrapper = document.getElementById('bank-select-wrapper');
@@ -2482,16 +2427,14 @@
     }
 
     function openLightbox(imgSrc, title) {
-    if (!imgSrc) return;
-    // แปลงลิงก์ Google Drive ธรรมดาให้กลายเป็นลิงก์รูปภาพโดยตรง
-    let directImgUrl = imgSrc;
-    if (imgSrc.includes('drive.google.com')) {
-    const match = imgSrc.match(/\/d\/([a-zA-Z0-9_-]+)/) || imgSrc.match(/id=([a-zA-Z0-9_-]+)/);
-    if (match && match[1]) {
-      directImgUrl = `https://lh3.googleusercontent.com/d/${match[1]}`;
+      if (!imgSrc) return;
+      let directImgUrl = imgSrc;
+      if (imgSrc.includes('drive.google.com')) {
+        const match = imgSrc.match(/\/d\/([a-zA-Z0-9_-]+)/) || imgSrc.match(/id=([a-zA-Z0-9_-]+)/);
+        if (match && match[1]) {
+          directImgUrl = `https://lh3.googleusercontent.com/d/${match[1]}`;
+        }
       }
-    }
-
       document.getElementById('lightbox-img').src = directImgUrl;
       document.getElementById('lightbox-title').innerHTML = `<i class="fa-solid fa-file-image text-brand-400"></i> ${escapeHtml(title)}`;
       document.getElementById('lightbox-modal').classList.remove('hidden');
@@ -2535,7 +2478,7 @@
 
     function maskAccountNumber(number) {
       if (!number) return '-';
-      const clean = number.replace(/-/g, '');
+      const clean = number.replace(/-/g, '').replace(/^'/, '');
       if (clean.length < 5) return '***';
       return clean.slice(0, 3) + '-XXX-' + clean.slice(-3);
     }
@@ -2552,25 +2495,6 @@
       }
     }
 
-    function cancelReimbursementRequest(reqId) {
-      openCustomPrompt('ยืนยันยกเลิกคำขอเบิก', 'พิมพ์คำว่า "ยกเลิก" เพื่อยืนยันการยกเลิกรายการนี้:', async (val) => {
-        if (val === 'ยกเลิก') {
-          const target = requests.find(r => r.id === reqId);
-          if (target) {
-            target.status = 'cancelled';
-            renderTransparentLedger();
-            renderTreasurerTable();
-            updateGlobalStats();
-            showToast('ยกเลิกคำขอสำเร็จ', `คำขอรหัส ${reqId} ถูกยกเลิกแล้ว`);
-
-            if (APPS_SCRIPT_URL) {
-              sendPostToScript("CANCEL_REIMBURSEMENT", { id: reqId });
-            }
-          }
-        }
-      });
-    }
-
     function escapeHtml(str) {
       if (!str) return '';
       return String(str)
@@ -2581,7 +2505,7 @@
         .replace(/'/g, '&#039;');
     }
 
-    // Export functions to global scope
+    // Exports
     window.switchMainTab = switchMainTab;
     window.requestTreasurerAccess = requestTreasurerAccess;
     window.openPinModal = openPinModal;
@@ -2592,8 +2516,6 @@
     window.previewReceiptImage = previewReceiptImage;
     window.removeReceiptImage = removeReceiptImage;
     window.previewTransferSlip = previewTransferSlip;
-    window.previewTxProof = previewTxProof;
-    window.removeTxProof = removeTxProof;
     window.filterTransactions = filterTransactions;
     window.renderTransactionsTable = renderTransactionsTable;
     window.openAddTransactionModal = openAddTransactionModal;
@@ -2633,9 +2555,7 @@
     window.toggleTheme = toggleTheme;
     window.cancelReimbursementRequest = cancelReimbursementRequest;
 
-    // Initialize
     window.addEventListener('DOMContentLoaded', () => {
-      // Check stored theme
       const savedTheme = localStorage.getItem('dept_treasury_theme');
       if (savedTheme === 'light') {
         document.body.classList.add('light-theme');
@@ -2652,8 +2572,9 @@
       renderAnnouncements();
       updateGlobalStats();
 
-      if (APPS_SCRIPT_URL) {
-        fetchDataFromGoogleSheet();
+      // โหลดข้อมูลแบบเงียบ ไม่เด้งแจ้งเตือนกวนใจตอนเปิดเว็บ
+      if (APPS_SCRIPT_URL && !APPS_SCRIPT_URL.includes("YOUR_ACTUAL_SCRIPT_ID")) {
+        fetchDataFromGoogleSheet(false);
       }
     });
   </script>
