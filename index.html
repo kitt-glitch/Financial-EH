@@ -1202,7 +1202,7 @@
 
     // เปลี่ยนเป็น URL ของ Google Apps Script หลังจาก Deploy (New version)
     const DEFAULT_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby6XsK8TWv-gWgchFOt8XPeF8zTkNJhHnVHzD_WLkBpK6-LOWMkPDkcfHvBPEiP_4LfRg/exec";
-    let APPS_SCRIPT_URL = localStorage.getItem("dept_treasury_script_url") || DEFAULT_SCRIPT_URL;
+    let APPS_SCRIPT_URL = DEFAULT_SCRIPT_URL;
 
     let isTreasurerAuthenticated = false;
     let currentMainTab = 'ledger';
