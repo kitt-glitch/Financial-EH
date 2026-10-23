@@ -2161,6 +2161,74 @@
       customPromptCallback = null; 
     }
 
+    // =========================================================================
+    // ANNOUNCEMENTS
+    // =========================================================================
+    function renderAnnouncements() {
+      const container = document.getElementById('announcements-container');
+      if (!container) return;
+      if (!announcements || announcements.length === 0) {
+        container.innerHTML = `<div class="col-span-full text-center py-12 text-slate-500 text-xs"><i class="fa-solid fa-bullhorn text-3xl mb-2 opacity-40"></i><p>ยังไม่มีประกาศข่าวสารในขณะนี้</p></div>`;
+        return;
+      }
+      container.innerHTML = announcements.map(a => `
+        <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-5 shadow-xl flex flex-col justify-between space-y-3">
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-brand-500/10 text-indigo-400 border border-brand-500/20">${escapeHtml(a.badge || 'ทั่วไป')}</span>
+              <span class="text-[10px] text-slate-500 font-mono">${escapeHtml(a.date || '')}</span>
+            </div>
+            <h4 class="font-bold text-white text-sm">${escapeHtml(a.title)}</h4>
+            <p class="text-xs text-slate-300 leading-relaxed whitespace-pre-line">${escapeHtml(a.content)}</p>
+          </div>
+          ${isTreasurerAuthenticated ? `<div class="pt-2 border-t border-slate-800/80 flex justify-end"><button onclick="deleteAnnouncement('${a.id}')" class="text-rose-400 hover:text-rose-300 text-xs flex items-center gap-1"><i class="fa-solid fa-trash-can text-[10px]"></i> ลบประกาศ</button></div>` : ''}
+        </div>
+      `).join('');
+    }
+
+    function openPostAnnouncementModal() {
+      if (!isTreasurerAuthenticated) { openPinModal(); return; }
+      document.getElementById('ann-form')?.reset();
+      document.getElementById('announcement-modal')?.classList.remove('hidden');
+    }
+
+    function closePostAnnouncementModal() {
+      document.getElementById('announcement-modal')?.classList.add('hidden');
+    }
+
+    async function handleAnnouncementSubmit(event) {
+      event.preventDefault();
+      const title = document.getElementById('ann-title').value.trim();
+      const badge = document.getElementById('ann-badge').value;
+      const content = document.getElementById('ann-content').value.trim();
+      const newAnn = {
+        id: "ANN-" + Date.now(),
+        title, badge, content,
+        date: new Date().toLocaleDateString('th-TH', { day: '2-digit', month: '2-digit', year: '2-digit' })
+      };
+      announcements.unshift(newAnn);
+      closePostAnnouncementModal();
+      renderAnnouncements();
+      showToast('เผยแพร่สำเร็จ', 'เพิ่มประกาศใหม่เรียบร้อย');
+      if (APPS_SCRIPT_URL) {
+        sendPostToScript("POST_ANNOUNCEMENT", { pin: currentTreasurerSessionPin, title, badge, content });
+      }
+    }
+
+    function deleteAnnouncement(id) {
+      if (!isTreasurerAuthenticated) return;
+      openCustomPrompt('ยืนยันการลบ', 'พิมพ์ "ลบ" เพื่อลบประกาศนี้:', async (val) => {
+        if (val === 'ลบ') {
+          announcements = announcements.filter(a => a.id !== id);
+          renderAnnouncements();
+          showToast('ลบประกาศแล้ว', 'ประกาศถูกลบออกจากระบบ');
+          if (APPS_SCRIPT_URL) {
+            sendPostToScript("DELETE_ANNOUNCEMENT", { pin: currentTreasurerSessionPin, id });
+          }
+        }
+      });
+    }
+
     function updateGlobalStats() {
       let incomeSum = 0;
       let expenseSum = 0;
