@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Department Financial Hub</title>
+  <title>ระบบการเงินของภาควิชา | Department Financial Hub</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Prompt & Plus Jakarta Sans -->
@@ -1200,11 +1200,15 @@
     const PASSWORD_SALT = "dept-reimburse-secure-2026";
     let storedTreasurerHash = "e87b7a70a8d6f51cb3298ec48c5b05611f71f654b0ebf84d08e515d688fa53d5";
 
-    // เปลี่ยนเป็น URL ของ Google Apps Script หลังจาก Deploy (New version)
+    // ใส่ลิงก์ของคุณที่นี่ และลบ localStorage เพื่อป้องกันเบราว์เซอร์จำลิงก์พังๆ
     const DEFAULT_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby6XsK8TWv-gWgchFOt8XPeF8zTkNJhHnVHzD_WLkBpK6-LOWMkPDkcfHvBPEiP_4LfRg/exec";
-    let APPS_SCRIPT_URL = DEFAULT_SCRIPT_URL;
+    
+    // หากใช้ฟันเฟืองหน้าเว็บ จะอ่านจากเครื่องก่อน ถ้าไม่เคยตั้ง จะใช้จากโค้ด
+    let APPS_SCRIPT_URL = localStorage.getItem("dept_treasury_script_url") || DEFAULT_SCRIPT_URL;
 
     let isTreasurerAuthenticated = false;
+    let currentTreasurerSessionPin = localStorage.getItem("dept_treasurer_pin") || "2569";
+    
     let currentMainTab = 'ledger';
     let currentLedgerFilter = 'all';
     let currentTreasurerFilter = 'all';
@@ -1311,10 +1315,10 @@
 
     function saveSheetConfig() {
       const url = document.getElementById('input-apps-script-url').value.trim();
-      APPS_SCRIPT_URL = url;
-      localStorage.setItem("dept_treasury_script_url", url);
+      APPS_SCRIPT_URL = url || DEFAULT_SCRIPT_URL;
+      localStorage.setItem("dept_treasury_script_url", url); // ถ้าว่างจะกลับไปใช้ค่า Default ตอนโหลด
       closeSheetConfigModal();
-      if (url) fetchDataFromGoogleSheet();
+      fetchDataFromGoogleSheet();
     }
 
     // =========================================================================
@@ -1382,6 +1386,7 @@
 
       if (isValid) {
         isTreasurerAuthenticated = true;
+        currentTreasurerSessionPin = pinInput;
         closePinModal();
         const navLock = document.getElementById('nav-treasurer-lock-icon');
         const mobileLock = document.getElementById('mobile-treasurer-lock-icon');
@@ -1413,9 +1418,19 @@
           showToast('ไม่สำเร็จ', 'รหัสผ่านต้องมีความยาวอย่างน้อย 4 ตัวอักษร', false);
           return;
         }
-        localStorage.setItem("dept_treasurer_pin", newPin);
-        storedTreasurerHash = await hashString(newPin);
-        showToast('เปลี่ยนรหัสผ่านแล้ว', 'โปรดจำรหัสผ่านใหม่สำหรับการเข้าใช้งานครั้งถัดไป');
+
+        // ส่งรหัสไปเปลี่ยนที่เซิร์ฟเวอร์ด้วย เพื่อให้เว็บส่งอนุมัติผ่าน
+        showToast('กำลังบันทึก...', 'ระบบกำลังบันทึกรหัสผ่านใหม่');
+        const res = await sendPostToScript("CHANGE_PIN", { oldPin: currentTreasurerSessionPin, newPin: newPin });
+        
+        if(res && res.status === "success") {
+           localStorage.setItem("dept_treasurer_pin", newPin);
+           currentTreasurerSessionPin = newPin;
+           storedTreasurerHash = await hashString(newPin);
+           showToast('เปลี่ยนรหัสผ่านแล้ว', 'รหัสผ่านถูกอัปเดตทั้งในระบบและเซิร์ฟเวอร์แล้ว');
+        } else {
+           showToast('ข้อผิดพลาด', 'ไม่สามารถเปลี่ยนรหัสผ่านบนฐานข้อมูลได้', false);
+        }
       });
     }
 
@@ -1517,7 +1532,7 @@
 
       if (APPS_SCRIPT_URL) {
         sendPostToScript("ADD_TRANSACTION", {
-          date: date, title: title, type: type, amount: amount, note: note
+          pin: currentTreasurerSessionPin, date: date, title: title, type: type, amount: amount, note: note
         }).then(() => fetchDataFromGoogleSheet());
       }
       btn.disabled = false; btn.textContent = "บันทึกลงสมุดบัญชี";
@@ -2023,9 +2038,6 @@
       document.getElementById('lightbox-title').innerHTML = `<i class="fa-solid fa-file-image text-brand-400"></i> ${escapeHtml(title)}`;
       document.getElementById('lightbox-modal').classList.remove('hidden');
     }
-    
-    // (Other existing helpers remain the same: openCustomPrompt, formatMoney, hideToast, toggleTheme...)
-    // Due to character efficiency, maintaining the fully optimized script structure below:
     
     function formatMoney(amount) { return (Number(amount) || 0).toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
     function maskAccountNumber(number) { if (!number) return '-'; const clean = String(number).replace(/-/g, '').replace(/^'/, ''); if (clean.length < 5) return '***'; return clean.slice(0, 3) + '-XXX-' + clean.slice(-3); }
