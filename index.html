@@ -2024,6 +2024,23 @@
       document.getElementById(containerId).classList.add('hidden'); document.getElementById(placeholderId).classList.remove('hidden');
     }
 
+    function toggleAccountFields() {
+      const payoutType = document.querySelector('input[name="payout-type"]:checked').value;
+      const bankWrapper = document.getElementById('bank-select-wrapper');
+      const accountLabel = document.getElementById('account-number-label');
+      const accountInput = document.getElementById('payout-account-number');
+
+      if (payoutType === 'promptpay') {
+        bankWrapper.classList.add('hidden');
+        accountLabel.textContent = 'หมายเลขพร้อมเพย์ หรือ หมายเลขบัญชีธนาคาร';
+        accountInput.placeholder = 'เช่น 063xxxxxxx';
+      } else {
+        bankWrapper.classList.remove('hidden');
+        accountLabel.textContent = 'หมายเลขพร้อมเพย์ หรือ หมายเลขบัญชีธนาคาร';
+        accountInput.placeholder = 'เช่น 123-4-56789-0';
+      }
+    }
+
     // =========================================================================
     // GENERAL HELPERS
     // =========================================================================
