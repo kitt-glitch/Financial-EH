@@ -2056,6 +2056,91 @@
       document.getElementById('lightbox-modal').classList.remove('hidden');
     }
     
+    function updateGlobalStats() {
+      let incomeSum = 0;
+      let expenseSum = 0;
+      let incCount = 0;
+      let expCount = 0;
+
+      transactions.forEach(t => {
+        if (t.type === 'income') {
+          incomeSum += Number(t.amount) || 0;
+          incCount++;
+        } else {
+          expenseSum += Number(t.amount) || 0;
+          expCount++;
+        }
+      });
+
+      const netFund = (transactions.length > 0 && transactions[0].balance !== undefined && !isNaN(Number(transactions[0].balance)))
+        ? Number(transactions[0].balance)
+        : (incomeSum - expenseSum);
+
+      let pendingSum = 0;
+      let pendingCount = 0;
+      let paidSum = 0;
+      let paidCount = 0;
+
+      requests.forEach(r => {
+        if (r.status === 'pending') {
+          pendingSum += Number(r.amount) || 0;
+          pendingCount++;
+        } else if (r.status === 'paid') {
+          paidSum += Number(r.amount) || 0;
+          paidCount++;
+        }
+      });
+
+      const tickerNet = document.getElementById('ticker-net-fund');
+      if (tickerNet) tickerNet.textContent = `฿${formatMoney(netFund)}`;
+      const tickerInc = document.getElementById('ticker-income-sum');
+      if (tickerInc) tickerInc.textContent = `฿${formatMoney(incomeSum)}`;
+      const tickerExp = document.getElementById('ticker-expense-sum');
+      if (tickerExp) tickerExp.textContent = `฿${formatMoney(expenseSum)}`;
+      const tickerPending = document.getElementById('ticker-pending-reimburse');
+      if (tickerPending) tickerPending.textContent = `฿${formatMoney(pendingSum)}`;
+
+      const statInc = document.getElementById('ledger-stat-income');
+      if (statInc) statInc.textContent = `฿${formatMoney(incomeSum)}`;
+      const statIncCount = document.getElementById('ledger-stat-income-count');
+      if (statIncCount) statIncCount.textContent = `${incCount} รายการ`;
+
+      const statExp = document.getElementById('ledger-stat-expense');
+      if (statExp) statExp.textContent = `฿${formatMoney(expenseSum)}`;
+      const statExpCount = document.getElementById('ledger-stat-expense-count');
+      if (statExpCount) statExpCount.textContent = `${expCount} รายการ`;
+
+      const statBal = document.getElementById('ledger-stat-balance');
+      if (statBal) statBal.textContent = `฿${formatMoney(netFund)}`;
+
+      const tPendingCount = document.getElementById('stat-pending-count');
+      if (tPendingCount) tPendingCount.textContent = `${pendingCount} รายการ`;
+      const tPendingSum = document.getElementById('stat-pending-sum');
+      if (tPendingSum) tPendingSum.textContent = `฿${formatMoney(pendingSum)}`;
+      const tPaidCount = document.getElementById('stat-paid-count');
+      if (tPaidCount) tPaidCount.textContent = `${paidCount} รายการ`;
+      const tPaidSum = document.getElementById('stat-paid-sum');
+      if (tPaidSum) tPaidSum.textContent = `฿${formatMoney(paidSum)}`;
+      const tInc = document.getElementById('stat-treasurer-income');
+      if (tInc) tInc.textContent = `฿${formatMoney(incomeSum)}`;
+      const tIncCount = document.getElementById('stat-treasurer-income-count');
+      if (tIncCount) tIncCount.textContent = `${incCount} รายการ`;
+      const tExp = document.getElementById('stat-treasurer-expense');
+      if (tExp) tExp.textContent = `฿${formatMoney(expenseSum)}`;
+      const tExpCount = document.getElementById('stat-treasurer-expense-count');
+      if (tExpCount) tExpCount.textContent = `${expCount} รายการ`;
+
+      const pendingBadge = document.getElementById('nav-pending-badge');
+      if (pendingBadge) {
+        if (pendingCount > 0) {
+          pendingBadge.textContent = pendingCount;
+          pendingBadge.classList.remove('hidden');
+        } else {
+          pendingBadge.classList.add('hidden');
+        }
+      }
+    }
+
     function formatMoney(amount) { return (Number(amount) || 0).toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
     function maskAccountNumber(number) { if (!number) return '-'; const clean = String(number).replace(/-/g, '').replace(/^'/, ''); if (clean.length < 5) return '***'; return clean.slice(0, 3) + '-XXX-' + clean.slice(-3); }
     function toggleTheme() { const isLight = document.body.classList.toggle('light-theme'); const icon = document.getElementById('theme-toggle-icon'); if (isLight) { localStorage.setItem('dept_treasury_theme', 'light'); if (icon) icon.className = 'fa-solid fa-moon text-indigo-400 text-sm'; } else { localStorage.setItem('dept_treasury_theme', 'dark'); if (icon) icon.className = 'fa-solid fa-sun text-amber-400 text-sm'; } }
