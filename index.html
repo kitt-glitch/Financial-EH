@@ -2041,9 +2041,6 @@
       }
     }
 
-    // =========================================================================
-    // GENERAL HELPERS
-    // =========================================================================
     function openLightbox(imgSrc, title) {
       if (!imgSrc) return;
       let directImgUrl = imgSrc;
@@ -2056,8 +2053,113 @@
       document.getElementById('lightbox-modal').classList.remove('hidden');
     }
 
-     // Exports
-    window.switchMainTab = switchMainTab; window.requestTreasurerAccess = requestTreasurerAccess; window.openPinModal = openPinModal; window.closePinModal = closePinModal; window.submitTreasurerPin = submitTreasurerPin; window.lockTreasurerSession = lockTreasurerSession; window.toggleAccountFields = toggleAccountFields; window.previewReceiptImage = previewReceiptImage; window.removeReceiptImage = removeReceiptImage; window.previewTransferSlip = previewTransferSlip; window.previewTxProof = previewTxProof; window.removeTxProof = removeTxProof; window.filterTransactions = filterTransactions; window.renderTransactionsTable = renderTransactionsTable; window.openAddTransactionModal = openAddTransactionModal; window.closeAddTransactionModal = closeAddTransactionModal; window.handleTransactionSubmit = handleTransactionSubmit; window.deleteTransaction = deleteTransaction; window.handleMemberSubmit = handleMemberSubmit; window.renderTransparentLedger = renderTransparentLedger; window.setLedgerFilter = setLedgerFilter; window.renderTreasurerTable = renderTreasurerTable; window.setTreasurerFilter = setTreasurerFilter; window.openTreasurerModal = openTreasurerModal; window.closeTreasurerModal = closeTreasurerModal; window.copyModalAccount = copyModalAccount; window.confirmApproveAndPay = confirmApproveAndPay; window.promptRejectCurrentRequest = promptRejectCurrentRequest; window.openBatchSettleModal = openBatchSettleModal; window.closeBatchSettleModal = closeBatchSettleModal; window.toggleBatchItem = toggleBatchItem; window.submitBatchSettlement = submitBatchSettlement; window.openSheetConfigModal = openSheetConfigModal; window.closeSheetConfigModal = closeSheetConfigModal; window.saveSheetConfig = saveSheetConfig; window.fetchDataFromGoogleSheet = fetchDataFromGoogleSheet; window.renderAnnouncements = renderAnnouncements; window.openPostAnnouncementModal = openPostAnnouncementModal; window.closePostAnnouncementModal = closePostAnnouncementModal; window.handleAnnouncementSubmit = handleAnnouncementSubmit; window.deleteAnnouncement = deleteAnnouncement; window.exportTransactionsCSV = exportTransactionsCSV; window.promptChangePin = promptChangePin; window.openCustomPrompt = openCustomPrompt; window.closeCustomPrompt = closeCustomPrompt; window.openLightbox = openLightbox; window.closeLightbox = closeLightbox; window.hideToast = hideToast; window.toggleTheme = toggleTheme; window.verifyAndAction = verifyAndAction; window.openEditRequestModal = openEditRequestModal; window.closeEditModal = closeEditModal; window.handleEditSubmit = handleEditSubmit;
+    // =========================================================================
+    // GENERAL HELPERS & UI CONTROLS
+    // =========================================================================
+    function toggleAccountFields() {
+      const payoutType = document.querySelector('input[name="payout-type"]:checked')?.value;
+      const bankWrapper = document.getElementById('bank-select-wrapper');
+      const accountLabel = document.getElementById('account-number-label');
+      const accountInput = document.getElementById('payout-account-number');
+      if (!bankWrapper || !accountLabel || !accountInput) return;
+
+      if (payoutType === 'promptpay') {
+        bankWrapper.classList.add('hidden');
+        accountLabel.textContent = 'หมายเลขพร้อมเพย์ หรือ หมายเลขบัญชีธนาคาร';
+        accountInput.placeholder = 'เช่น 063xxxxxxx';
+      } else {
+        bankWrapper.classList.remove('hidden');
+        accountLabel.textContent = 'หมายเลขพร้อมเพย์ หรือ หมายเลขบัญชีธนาคาร';
+        accountInput.placeholder = 'เช่น 123-4-56789-0';
+      }
+    }
+
+    function formatMoney(amount) { 
+      return (Number(amount) || 0).toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); 
+    }
+
+    function maskAccountNumber(number) { 
+      if (!number) return '-'; 
+      const clean = String(number).replace(/-/g, '').replace(/^'/, ''); 
+      if (clean.length < 5) return '***'; 
+      return clean.slice(0, 3) + '-XXX-' + clean.slice(-3); 
+    }
+
+    function toggleTheme() { 
+      const isLight = document.body.classList.toggle('light-theme'); 
+      const icon = document.getElementById('theme-toggle-icon'); 
+      if (isLight) { 
+        localStorage.setItem('dept_treasury_theme', 'light'); 
+        if (icon) icon.className = 'fa-solid fa-moon text-indigo-400 text-sm'; 
+      } else { 
+        localStorage.setItem('dept_treasury_theme', 'dark'); 
+        if (icon) icon.className = 'fa-solid fa-sun text-amber-400 text-sm'; 
+      } 
+    }
+
+    function escapeHtml(str) { 
+      if (!str) return ''; 
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;'); 
+    }
+
+    function showToast(title, desc, isSuccess = true) { 
+      const toast = document.getElementById('toast'); 
+      if (!toast) return;
+      document.getElementById('toast-title').textContent = title; 
+      document.getElementById('toast-desc').textContent = desc; 
+      const icon = document.getElementById('toast-icon'); 
+      const wrapper = document.getElementById('toast-icon-wrapper'); 
+      if (isSuccess) { 
+        if (wrapper) wrapper.className = "w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 text-sm"; 
+        if (icon) icon.className = "fa-solid fa-check"; 
+      } else { 
+        if (wrapper) wrapper.className = "w-8 h-8 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0 text-sm"; 
+        if (icon) icon.className = "fa-solid fa-triangle-exclamation"; 
+      } 
+      toast.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none'); 
+      clearTimeout(window.toastTimer); 
+      window.toastTimer = setTimeout(hideToast, 4000); 
+    }
+
+    function hideToast() { 
+      const toast = document.getElementById('toast');
+      if (toast) toast.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none'); 
+    }
+
+    function copyToClipboard(text) { 
+      const t = document.createElement("textarea"); 
+      t.value = text; 
+      document.body.appendChild(t); 
+      t.select(); 
+      try { document.execCommand('copy'); } catch (err) {} 
+      document.body.removeChild(t); 
+    }
+
+    function closeLightbox() { 
+      const lb = document.getElementById('lightbox-modal');
+      if (lb) lb.classList.add('hidden'); 
+      const img = document.getElementById('lightbox-img');
+      if (img) img.src = ''; 
+    }
+
+    let customPromptCallback = null;
+    function openCustomPrompt(title, desc, callback) { 
+      document.getElementById('custom-prompt-title').textContent = title; 
+      document.getElementById('custom-prompt-desc').textContent = desc; 
+      const input = document.getElementById('custom-prompt-input'); 
+      input.value = ''; 
+      customPromptCallback = callback; 
+      document.getElementById('custom-prompt-modal').classList.remove('hidden'); 
+      setTimeout(() => input.focus(), 100); 
+    }
+
+    function closeCustomPrompt(isOk) { 
+      const modal = document.getElementById('custom-prompt-modal'); 
+      const val = document.getElementById('custom-prompt-input').value.trim(); 
+      modal.classList.add('hidden'); 
+      if (isOk && customPromptCallback) customPromptCallback(val); 
+      customPromptCallback = null; 
+    }
 
     function updateGlobalStats() {
       let incomeSum = 0;
@@ -2144,24 +2246,67 @@
       }
     }
 
-    function formatMoney(amount) { return (Number(amount) || 0).toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
-    function maskAccountNumber(number) { if (!number) return '-'; const clean = String(number).replace(/-/g, '').replace(/^'/, ''); if (clean.length < 5) return '***'; return clean.slice(0, 3) + '-XXX-' + clean.slice(-3); }
-    function toggleTheme() { const isLight = document.body.classList.toggle('light-theme'); const icon = document.getElementById('theme-toggle-icon'); if (isLight) { localStorage.setItem('dept_treasury_theme', 'light'); if (icon) icon.className = 'fa-solid fa-moon text-indigo-400 text-sm'; } else { localStorage.setItem('dept_treasury_theme', 'dark'); if (icon) icon.className = 'fa-solid fa-sun text-amber-400 text-sm'; } }
-    function escapeHtml(str) { if (!str) return ''; return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;'); }
-    function showToast(title, desc, isSuccess = true) { const toast = document.getElementById('toast'); document.getElementById('toast-title').textContent = title; document.getElementById('toast-desc').textContent = desc; const icon = document.getElementById('toast-icon'); const wrapper = document.getElementById('toast-icon-wrapper'); if (isSuccess) { wrapper.className = "w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 text-sm"; icon.className = "fa-solid fa-check"; } else { wrapper.className = "w-8 h-8 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0 text-sm"; icon.className = "fa-solid fa-triangle-exclamation"; } toast.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none'); clearTimeout(window.toastTimer); window.toastTimer = setTimeout(hideToast, 4000); }
-    function hideToast() { document.getElementById('toast').classList.add('translate-y-24', 'opacity-0', 'pointer-events-none'); }
-    function copyToClipboard(text) { const t = document.createElement("textarea"); t.value = text; document.body.appendChild(t); t.select(); try { document.execCommand('copy'); } catch (err) {} document.body.removeChild(t); }
-    function closeLightbox() { document.getElementById('lightbox-modal').classList.add('hidden'); document.getElementById('lightbox-img').src = ''; }
-    let customPromptCallback = null;
-    function openCustomPrompt(title, desc, callback) { document.getElementById('custom-prompt-title').textContent = title; document.getElementById('custom-prompt-desc').textContent = desc; const input = document.getElementById('custom-prompt-input'); input.value = ''; customPromptCallback = callback; document.getElementById('custom-prompt-modal').classList.remove('hidden'); setTimeout(() => input.focus(), 100); }
-    function closeCustomPrompt(isOk) { const modal = document.getElementById('custom-prompt-modal'); const val = document.getElementById('custom-prompt-input').value.trim(); modal.classList.add('hidden'); if (isOk && customPromptCallback) customPromptCallback(val); customPromptCallback = null; }
+    // Exports
+    window.switchMainTab = switchMainTab; 
+    window.requestTreasurerAccess = requestTreasurerAccess; 
+    window.openPinModal = openPinModal; 
+    window.closePinModal = closePinModal; 
+    window.submitTreasurerPin = submitTreasurerPin; 
+    window.lockTreasurerSession = lockTreasurerSession; 
+    window.toggleAccountFields = toggleAccountFields; 
+    window.previewReceiptImage = previewReceiptImage; 
+    window.removeReceiptImage = removeReceiptImage; 
+    window.filterTransactions = filterTransactions; 
+    window.renderTransactionsTable = renderTransactionsTable; 
+    window.openAddTransactionModal = openAddTransactionModal; 
+    window.closeAddTransactionModal = closeAddTransactionModal; 
+    window.handleTransactionSubmit = handleTransactionSubmit; 
+    window.deleteTransaction = deleteTransaction; 
+    window.handleMemberSubmit = handleMemberSubmit; 
+    window.renderTransparentLedger = renderTransparentLedger; 
+    window.setLedgerFilter = setLedgerFilter; 
+    window.renderTreasurerTable = renderTreasurerTable; 
+    window.setTreasurerFilter = setTreasurerFilter; 
+    window.openTreasurerModal = openTreasurerModal; 
+    window.closeTreasurerModal = closeTreasurerModal; 
+    window.copyModalAccount = copyModalAccount; 
+    window.confirmApproveAndPay = confirmApproveAndPay; 
+    window.promptRejectCurrentRequest = promptRejectCurrentRequest; 
+    window.openBatchSettleModal = openBatchSettleModal; 
+    window.closeBatchSettleModal = closeBatchSettleModal; 
+    window.toggleBatchItem = toggleBatchItem; 
+    window.submitBatchSettlement = submitBatchSettlement; 
+    window.openSheetConfigModal = openSheetConfigModal; 
+    window.closeSheetConfigModal = closeSheetConfigModal; 
+    window.saveSheetConfig = saveSheetConfig; 
+    window.fetchDataFromGoogleSheet = fetchDataFromGoogleSheet; 
+    window.promptChangePin = promptChangePin; 
+    window.openCustomPrompt = openCustomPrompt; 
+    window.closeCustomPrompt = closeCustomPrompt; 
+    window.openLightbox = openLightbox; 
+    window.closeLightbox = closeLightbox; 
+    window.hideToast = hideToast; 
+    window.toggleTheme = toggleTheme; 
+    window.verifyAndAction = verifyAndAction; 
+    window.openEditRequestModal = openEditRequestModal; 
+    window.closeEditModal = closeEditModal; 
+    window.handleEditSubmit = handleEditSubmit;
 
     window.addEventListener('DOMContentLoaded', () => {
       const savedTheme = localStorage.getItem('dept_treasury_theme');
-      if (savedTheme === 'light') { document.body.classList.add('light-theme'); const icon = document.getElementById('theme-toggle-icon'); if (icon) icon.className = 'fa-solid fa-moon text-indigo-400 text-sm'; }
-      const dateInput = document.getElementById('expense-date'); if (dateInput) dateInput.value = new Date().toISOString().slice(0, 10);
-      renderTransactionsTable(); renderTransparentLedger(); renderAnnouncements(); updateGlobalStats();
-      if (APPS_SCRIPT_URL && !APPS_SCRIPT_URL.includes("YOUR_ACTUAL_SCRIPT_ID")) fetchDataFromGoogleSheet(false);
+      if (savedTheme === 'light') { 
+        document.body.classList.add('light-theme'); 
+        const icon = document.getElementById('theme-toggle-icon'); 
+        if (icon) icon.className = 'fa-solid fa-moon text-indigo-400 text-sm'; 
+      }
+      const dateInput = document.getElementById('expense-date'); 
+      if (dateInput) dateInput.value = new Date().toISOString().slice(0, 10);
+      renderTransactionsTable(); 
+      renderTransparentLedger(); 
+      updateGlobalStats();
+      if (APPS_SCRIPT_URL && !APPS_SCRIPT_URL.includes("YOUR_ACTUAL_SCRIPT_ID")) {
+        fetchDataFromGoogleSheet();
+      }
     });
   </script>
 </body>
